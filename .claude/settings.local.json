@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pandoc -t markdown \"C:\\\\Users\\\\Lenovo\\\\Downloads\\\\resume.docx\")",
+      "Bash(mkdir -p resume_unpacked)",
+      "Bash(unzip -o -q \"C:\\\\Users\\\\Lenovo\\\\Downloads\\\\resume.docx\" -d resume_unpacked)"
+    ]
+  }
+}
