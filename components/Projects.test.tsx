@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { Projects } from './Projects'
 import { projects } from '@/data/content'
 
@@ -18,5 +18,23 @@ describe('Projects', () => {
   it('never renders literal TODO text', () => {
     render(<Projects />)
     expect(screen.queryByText(/TODO/i)).not.toBeInTheDocument()
+  })
+
+  it('renders a link with the correct href and label only for projects that define one', () => {
+    render(<Projects />)
+    expect(projects.some((project) => project.link)).toBe(true)
+    expect(projects.some((project) => !project.link)).toBe(true)
+
+    projects.forEach((project) => {
+      const card = screen.getByText(project.title).closest('div') as HTMLElement
+      const links = within(card).queryAllByRole('link')
+      if (project.link) {
+        expect(links).toHaveLength(1)
+        expect(links[0]).toHaveAttribute('href', project.link)
+        expect(links[0]).toHaveTextContent(project.linkLabel ?? 'View Demo')
+      } else {
+        expect(links).toHaveLength(0)
+      }
+    })
   })
 })

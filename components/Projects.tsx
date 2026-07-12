@@ -12,7 +12,7 @@ export function Projects() {
           >
             <h3 className="mb-2 font-semibold">{project.title}</h3>
             <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">{project.description}</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="mb-4 flex flex-wrap gap-2">
               {project.tech.map((tech) => (
                 <span
                   key={tech}
@@ -22,6 +22,16 @@ export function Projects() {
                 </span>
               ))}
             </div>
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+              >
+                {project.linkLabel ?? 'View Demo'} →
+              </a>
+            )}
           </div>
         ))}
       </div>
