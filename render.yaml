@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: portfolio
+    runtime: node
+    plan: free
+    region: oregon
+    branch: master
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    autoDeployTrigger: commit
