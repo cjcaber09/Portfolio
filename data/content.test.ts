@@ -34,7 +34,13 @@ describe('content data', () => {
     expect(projects.length).toBeGreaterThanOrEqual(3)
   })
 
-  it('defines an education entry', () => {
-    expect(education.school).toBe('Southland College')
+  it('defines three education entries', () => {
+    expect(education).toHaveLength(3)
+    education.forEach((entry) => {
+      expect(entry.school.length).toBeGreaterThan(0)
+      expect(entry.dates.length).toBeGreaterThan(0)
+      expect(entry.level.length).toBeGreaterThan(0)
+    })
+    expect(education[education.length - 1].school).toBe('Southland College')
   })
 })

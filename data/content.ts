@@ -30,10 +30,11 @@ export interface Project {
 }
 
 export interface EducationEntry {
-  degree: string
+  level: string
   school: string
   dates: string
-  location: string
+  degree?: string
+  location?: string
 }
 
 export const profile: Profile = {
@@ -182,9 +183,22 @@ export const projects: Project[] = [
   },
 ]
 
-export const education: EducationEntry = {
-  degree: 'Bachelor of Science in Information Technology',
-  school: 'Southland College',
-  dates: '2014 — 2018',
-  location: 'Kabankalan City, Negros Island, Philippines',
-}
+export const education: EducationEntry[] = [
+  {
+    level: 'Elementary',
+    school: 'Esteban R. Abada Memorial School - EAST',
+    dates: '2002 — 2008',
+  },
+  {
+    level: 'Highschool',
+    school: 'Southland College',
+    dates: '2008 — 2012',
+  },
+  {
+    level: 'College',
+    school: 'Southland College',
+    degree: 'Bachelor of Science in Information Technology',
+    dates: '2014 — 2018',
+    location: 'Kabankalan City, Negros Island, Philippines',
+  },
+]

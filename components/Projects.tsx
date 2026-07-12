@@ -27,9 +27,9 @@ export function Projects() {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                className="inline-block rounded-md bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-700"
               >
-                {project.linkLabel ?? 'View Demo'} →
+                {project.linkLabel ?? 'View Demo'}
               </a>
             )}
           </div>
