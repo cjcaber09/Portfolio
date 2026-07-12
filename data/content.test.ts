@@ -23,8 +23,8 @@ describe('content data', () => {
     })
   })
 
-  it('defines six skill groups', () => {
-    expect(skills).toHaveLength(6)
+  it('defines seven skill groups', () => {
+    expect(skills).toHaveLength(7)
     skills.forEach((group) => {
       expect(group.items.length).toBeGreaterThan(0)
     })

@@ -86,28 +86,50 @@ export const experience: ExperienceEntry[] = [
 ]
 
 export const skills: SkillGroup[] = [
-  { category: 'Languages', items: ['JavaScript (ES6+)', 'PHP', 'SQL'] },
+  { category: 'Languages', items: ['JavaScript (ES6+)', 'TypeScript', 'PHP', 'C++ (basic)', 'SQL'] },
   {
     category: 'Frontend',
     items: [
       'React.js',
-      'Vue.js (Router, Vuex)',
+      'Vue.js (Router, Vuex, Pinia)',
       'HTML5',
       'CSS3',
       'Sass',
       'Responsive Web Design',
       'UI Implementation',
+      'Zod',
     ],
   },
   {
     category: 'Backend',
-    items: ['Node.js', 'Express.js', 'Laravel', 'CodeIgniter', 'REST API Development', 'MySQL'],
+    items: [
+      'Node.js',
+      'Express.js',
+      'Laravel',
+      'CodeIgniter',
+      'REST API Development',
+      'Third-Party API Integration',
+      'MySQL',
+      'PostgreSQL',
+    ],
   },
   {
     category: 'Tools & Platforms',
-    items: ['Git', 'Chrome DevTools', 'Linux/Bash', 'Apache Server', 'npm', 'Postman', 'Vite', 'VS Code'],
+    items: [
+      'Git',
+      'Chrome DevTools',
+      'Linux/Bash',
+      'Apache Server',
+      'npm',
+      'Postman',
+      'Vite',
+      'VS Code',
+      'Slack',
+      'Jira',
+    ],
   },
-  { category: 'Design', items: ['Figma', 'Adobe Photoshop', 'Adobe Illustrator'] },
+  { category: 'Design', items: ['Figma', 'Adobe Photoshop', 'Adobe Illustrator', 'UI/UX Design'] },
+  { category: 'AI Tools', items: ['Claude'] },
   { category: 'Other', items: ['Microsoft Office', 'WordPress'] },
 ]
 
