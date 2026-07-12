@@ -3,7 +3,7 @@ services:
     name: portfolio
     runtime: node
     plan: free
-    region: oregon
+    region: singapore
     branch: master
     buildCommand: npm install && npm run build
     startCommand: npm start
