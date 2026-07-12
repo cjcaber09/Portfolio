@@ -16,9 +16,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   // Sync from whatever the anti-flash inline script (see app/layout.tsx)
-  // already applied to <html> before hydration.
+  // already applied to <html> before hydration. This intentionally runs
+  // post-mount (rather than as a lazy useState initializer reading
+  // `document` directly) so the initial client render matches the
+  // server-rendered "light" default and avoids a hydration mismatch in
+  // consumers like ThemeToggle that render theme-dependent text.
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark')
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- deliberate: see comment above
     setTheme(isDark ? 'dark' : 'light')
     setMounted(true)
   }, [])
