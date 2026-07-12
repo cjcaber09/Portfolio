@@ -129,7 +129,7 @@ export const skills: SkillGroup[] = [
     ],
   },
   { category: 'Design', items: ['Figma', 'Adobe Photoshop', 'Adobe Illustrator', 'UI/UX Design'] },
-  { category: 'AI Tools', items: ['Claude'] },
+  { category: 'AI Tools', items: ['Claude', 'ChatGPT', 'GitHub Copilot'] },
   { category: 'Other', items: ['Microsoft Office', 'WordPress'] },
 ]
 
@@ -154,6 +154,12 @@ export const projects: Project[] = [
     description:
       'Built custom, responsive web applications for freelance clients, translating Figma and Adobe design prototypes into pixel-perfect interfaces.',
     tech: ['React.js', 'PHP', 'Laravel'],
+  },
+  {
+    title: 'Multi-Tenant Hotel Booking SaaS',
+    description:
+      'Building a multi-tenant hotel reservations platform with a Node.js/Express + Prisma API and a React/Vite frontend for both guest booking and hotel admin workflows. Postgres (Supabase) enforces tenant isolation via Row-Level Security and a database-level exclusion constraint that prevents double-booking a room, with Zod schemas shared between API validation and frontend forms.',
+    tech: ['React', 'TypeScript', 'Express', 'Prisma', 'PostgreSQL', 'Zod'],
   },
 ]
 

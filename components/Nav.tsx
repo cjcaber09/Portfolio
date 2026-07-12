@@ -14,7 +14,7 @@ export function Nav() {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <a href="#hero" className="font-semibold">
-          Carl John Caber
+          CeeDev
         </a>
         <ul className="hidden gap-6 text-sm sm:flex">
           {links.map((link) => (
