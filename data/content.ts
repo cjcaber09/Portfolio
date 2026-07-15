@@ -163,7 +163,7 @@ export const projects: Project[] = [
     description:
       'Building a multi-tenant hotel reservations platform with a Node.js/Express + Prisma API and a React/Vite frontend for both guest booking and hotel admin workflows. Postgres (Supabase) enforces tenant isolation via Row-Level Security and a database-level exclusion constraint that prevents double-booking a room, with Zod schemas shared between API validation and frontend forms.',
     tech: ['React', 'TypeScript', 'Express', 'Prisma', 'PostgreSQL', 'Zod'],
-    link: 'https://booking-app-web.onrender.com/admin/login',
+    link: 'https://app.supademo.com/demo/cmrmhhh940dyqqm57eawx9chv?utm_source=link',
   },
   {
     title: 'Team Task Management App',
