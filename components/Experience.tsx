@@ -7,7 +7,7 @@ export function Experience() {
       <ol className="space-y-10 border-l border-slate-200 pl-6 dark:border-slate-800">
         {experience.map((role) => (
           <li key={`${role.company}-${role.title}`}>
-            <p className="text-sm text-sky-600 dark:text-sky-400">{role.dates}</p>
+            <p className="text-sm text-emerald-700 dark:text-emerald-400">{role.dates}</p>
             <h3 className="text-lg font-semibold">
               {role.title} · {role.company}
             </h3>

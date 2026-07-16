@@ -9,7 +9,7 @@ describe('Skills', () => {
     skills.forEach((group) => {
       expect(screen.getByText(group.category)).toBeInTheDocument()
       group.items.forEach((item) => {
-        expect(screen.getByText(item)).toBeInTheDocument()
+        expect(screen.getByText(item.name)).toBeInTheDocument()
       })
     })
   })
