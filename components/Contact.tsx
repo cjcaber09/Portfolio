@@ -11,12 +11,12 @@ export function Contact() {
       </p>
       <ul className="flex flex-wrap gap-6 text-sm">
         <li>
-          <a href={`mailto:${profile.email}`} className="hover:text-sky-600 dark:hover:text-sky-400">
+          <a href={`mailto:${profile.email}`} className="hover:text-emerald-700 dark:hover:text-emerald-400">
             {profile.email}
           </a>
         </li>
         <li>
-          <a href={telHref} className="hover:text-sky-600 dark:hover:text-sky-400">
+          <a href={telHref} className="hover:text-emerald-700 dark:hover:text-emerald-400">
             {profile.phone}
           </a>
         </li>
@@ -25,7 +25,7 @@ export function Contact() {
             href={profile.linkedin}
             target="_blank"
             rel="noreferrer"
-            className="hover:text-sky-600 dark:hover:text-sky-400"
+            className="hover:text-emerald-700 dark:hover:text-emerald-400"
           >
             LinkedIn
           </a>
@@ -35,7 +35,7 @@ export function Contact() {
             href={profile.github}
             target="_blank"
             rel="noreferrer"
-            className="hover:text-sky-600 dark:hover:text-sky-400"
+            className="hover:text-emerald-700 dark:hover:text-emerald-400"
           >
             GitHub
           </a>

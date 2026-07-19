@@ -7,7 +7,7 @@ export function Education() {
       <ol className="space-y-8 border-l border-slate-200 pl-6 dark:border-slate-800">
         {education.map((entry) => (
           <li key={`${entry.school}-${entry.level}`}>
-            <p className="text-sm text-sky-600 dark:text-sky-400">{entry.dates}</p>
+            <p className="text-sm text-emerald-700 dark:text-emerald-400">{entry.dates}</p>
             <h3 className="text-lg font-semibold">{entry.school}</h3>
             {entry.degree && (
               <p className="text-slate-600 dark:text-slate-300">{entry.degree}</p>

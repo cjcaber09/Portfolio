@@ -16,9 +16,14 @@ export interface ExperienceEntry {
   bullets: string[]
 }
 
+export interface SkillItem {
+  name: string
+  level: number // filled segments out of 10
+}
+
 export interface SkillGroup {
   category: string
-  items: string[]
+  items: SkillItem[]
 }
 
 export interface Project {
@@ -51,6 +56,16 @@ export const profile: Profile = {
 
 export const summary =
   'Web Developer with 5+ years of experience building and maintaining scalable web applications. Skilled in JavaScript, PHP/Laravel, Node.js, Vue.js, and React.js. Experienced in API integrations, frontend UI implementation, and database management. Proficient in translating Figma and Adobe design assets into responsive web interfaces. Adept at working in Linux environments, maintaining production systems, and providing IT support. Strong problem solver with a track record of modernizing legacy systems and delivering user-friendly solutions.'
+
+export const coreCompetencies: string[] = [
+  'Full-Stack Web Development',
+  'API Integration',
+  'UI Implementation',
+  'Responsive Design',
+  'System Maintenance',
+  'Technical Troubleshooting',
+  'Legacy System Modernization',
+]
 
 export const experience: ExperienceEntry[] = [
   {
@@ -88,52 +103,83 @@ export const experience: ExperienceEntry[] = [
   },
 ]
 
+// Levels are on a 0-10 scale (filled segments out of 10).
 export const skills: SkillGroup[] = [
-  { category: 'Languages', items: ['JavaScript (ES6+)', 'TypeScript', 'PHP', 'C++ (basic)', 'SQL'] },
+  {
+    category: 'Languages',
+    items: [
+      { name: 'JavaScript (ES6+)', level: 8 },
+      { name: 'TypeScript', level: 8 },
+      { name: 'PHP', level: 7 },
+      { name: 'C++ (basic)', level: 5 },
+      { name: 'SQL', level: 7 },
+    ],
+  },
   {
     category: 'Frontend',
     items: [
-      'React.js',
-      'Vue.js (Router, Vuex, Pinia)',
-      'HTML5',
-      'CSS3',
-      'Sass',
-      'Responsive Web Design',
-      'UI Implementation',
-      'Zod',
+      { name: 'React.js', level: 7 },
+      { name: 'Vue.js (Router, Vuex, Pinia)', level: 8 },
+      { name: 'HTML5', level: 8 },
+      { name: 'CSS3', level: 6 },
+      { name: 'Sass', level: 6 },
+      { name: 'Responsive Web Design', level: 6 },
+      { name: 'UI Implementation', level: 7 },
+      { name: 'Zod', level: 6 },
     ],
   },
   {
     category: 'Backend',
     items: [
-      'Node.js',
-      'Express.js',
-      'Laravel',
-      'CodeIgniter',
-      'REST API Development',
-      'Third-Party API Integration',
-      'MySQL',
-      'PostgreSQL',
+      { name: 'Node.js', level: 7 },
+      { name: 'Express.js', level: 7 },
+      { name: 'Laravel', level: 6 },
+      { name: 'CodeIgniter', level: 6 },
+      { name: 'REST API Development', level: 7 },
+      { name: 'Third-Party API Integration', level: 7 },
+      { name: 'MySQL', level: 7 },
+      { name: 'PostgreSQL', level: 8 },
     ],
   },
   {
     category: 'Tools & Platforms',
     items: [
-      'Git',
-      'Chrome DevTools',
-      'Linux/Bash',
-      'Apache Server',
-      'npm',
-      'Postman',
-      'Vite',
-      'VS Code',
-      'Slack',
-      'Jira',
+      { name: 'Git', level: 7 },
+      { name: 'Chrome DevTools', level: 8 },
+      { name: 'Linux/Bash', level: 5 },
+      { name: 'Apache Server', level: 5 },
+      { name: 'npm', level: 7 },
+      { name: 'Postman', level: 8 },
+      { name: 'Vite', level: 7 },
+      { name: 'VS Code', level: 8 },
+      { name: 'Slack', level: 7 },
+      { name: 'Jira', level: 7 },
     ],
   },
-  { category: 'Design', items: ['Figma', 'Adobe Photoshop', 'Adobe Illustrator', 'UI/UX Design'] },
-  { category: 'AI Tools', items: ['Claude', 'ChatGPT', 'GitHub Copilot'] },
-  { category: 'Other', items: ['Microsoft Office', 'WordPress'] },
+  {
+    category: 'Design',
+    items: [
+      { name: 'Figma', level: 8 },
+      { name: 'Adobe Photoshop', level: 7 },
+      { name: 'Adobe Illustrator', level: 6 },
+      { name: 'UI/UX Design', level: 7 },
+    ],
+  },
+  {
+    category: 'AI Tools',
+    items: [
+      { name: 'Claude', level: 7 },
+      { name: 'ChatGPT', level: 7 },
+      { name: 'GitHub Copilot', level: 7 },
+    ],
+  },
+  {
+    category: 'Other',
+    items: [
+      { name: 'Microsoft Office', level: 7 },
+      { name: 'WordPress', level: 7 },
+    ],
+  },
 ]
 
 export const projects: Project[] = [

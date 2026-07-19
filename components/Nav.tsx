@@ -19,7 +19,7 @@ export function Nav() {
         <ul className="hidden gap-6 text-sm sm:flex">
           {links.map((link) => (
             <li key={link.href}>
-              <a href={link.href} className="hover:text-sky-600 dark:hover:text-sky-400">
+              <a href={link.href} className="hover:text-emerald-700 dark:hover:text-emerald-400">
                 {link.label}
               </a>
             </li>

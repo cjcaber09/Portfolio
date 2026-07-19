@@ -16,7 +16,7 @@ export function Projects() {
               {project.tech.map((tech) => (
                 <span
                   key={tech}
-                  className="rounded-full bg-sky-50 px-2 py-1 text-xs text-sky-700 dark:bg-sky-950 dark:text-sky-300"
+                  className="rounded-full bg-emerald-50 px-2 py-1 text-xs text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
                 >
                   {tech}
                 </span>
@@ -27,7 +27,7 @@ export function Projects() {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block rounded-md bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-700"
+                className="inline-block rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-3 py-1.5 text-sm font-medium text-white transition hover:brightness-110"
               >
                 {project.linkLabel ?? 'View Demo'}
               </a>
