@@ -22,15 +22,24 @@ export function Projects() {
                 </span>
               ))}
             </div>
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-3 py-1.5 text-sm font-medium text-white transition hover:brightness-110"
-              >
-                {project.linkLabel ?? 'View Demo'}
-              </a>
+            {project.links && project.links.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {project.links.map((link, index) => (
+                  <a
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={
+                      index === 0
+                        ? 'inline-block rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-3 py-1.5 text-sm font-medium text-white transition hover:brightness-110'
+                        : 'inline-block rounded-md border border-emerald-700/50 px-3 py-1.5 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50 dark:border-emerald-400/50 dark:text-emerald-400 dark:hover:bg-emerald-950/40'
+                    }
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
             )}
           </div>
         ))}

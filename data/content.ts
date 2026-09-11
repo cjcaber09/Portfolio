@@ -26,12 +26,16 @@ export interface SkillGroup {
   items: SkillItem[]
 }
 
+export interface ProjectLink {
+  url: string
+  label: string
+}
+
 export interface Project {
   title: string
   description: string
   tech: string[]
-  link?: string
-  linkLabel?: string
+  links?: ProjectLink[]
 }
 
 export interface EducationEntry {
@@ -209,23 +213,30 @@ export const projects: Project[] = [
     description:
       'Building a multi-tenant hotel reservations platform with a Node.js/Express + Prisma API and a React/Vite frontend for both guest booking and hotel admin workflows. Postgres (Supabase) enforces tenant isolation via Row-Level Security and a database-level exclusion constraint that prevents double-booking a room, with Zod schemas shared between API validation and frontend forms.',
     tech: ['React', 'TypeScript', 'Express', 'Prisma', 'PostgreSQL', 'Zod'],
-    link: 'https://app.supademo.com/demo/cmrmhhh940dyqqm57eawx9chv?utm_source=link',
+    links: [
+      {
+        url: 'https://app.supademo.com/demo/cmrmhhh940dyqqm57eawx9chv?utm_source=link',
+        label: 'User-Facing Demo',
+      },
+      {
+        url: 'https://app.supademo.com/demo/cmrmhk97e0e1qqm57nxq2oj4k',
+        label: 'Admin-Facing Demo',
+      },
+    ],
   },
   {
     title: 'Team Task Management App',
     description:
       'A Trello/Jira-style project and task tracker with a Vue 3 + Pinia frontend and an Express + TypeScript API on Supabase Postgres. Supports JWT authentication, per-company project boards, task comments, notifications, and file uploads, with Zod-validated forms on both client and server.',
     tech: ['Vue.js', 'Pinia', 'Express', 'TypeScript', 'Supabase', 'Zod'],
-    link: 'https://github.com/cjcaber09/task-management',
-    linkLabel: 'View Source',
+    links: [{ url: 'https://github.com/cjcaber09/task-management', label: 'View Source' }],
   },
   {
     title: 'Messaging App',
     description:
       'A conversations-and-messaging application with a React + Redux Toolkit frontend and an Express + TypeScript REST API backed by PostgreSQL. Handles user conversations and threaded messages with JWT-based authentication and validated forms on both ends.',
     tech: ['React', 'Redux Toolkit', 'Express', 'TypeScript', 'PostgreSQL'],
-    link: 'https://github.com/cjcaber09/messaging-app',
-    linkLabel: 'View Source',
+    links: [{ url: 'https://github.com/cjcaber09/messaging-app', label: 'View Source' }],
   },
 ]
 

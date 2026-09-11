@@ -20,21 +20,21 @@ describe('Projects', () => {
     expect(screen.queryByText(/TODO/i)).not.toBeInTheDocument()
   })
 
-  it('renders a link with the correct href and label only for projects that define one', () => {
+  it('renders a link button for every project link, with correct href and label', () => {
     render(<Projects />)
-    expect(projects.some((project) => project.link)).toBe(true)
-    expect(projects.some((project) => !project.link)).toBe(true)
+    expect(projects.some((project) => (project.links?.length ?? 0) > 0)).toBe(true)
+    expect(projects.some((project) => (project.links?.length ?? 0) === 0)).toBe(true)
+    expect(projects.some((project) => (project.links?.length ?? 0) > 1)).toBe(true)
 
     projects.forEach((project) => {
       const card = screen.getByText(project.title).closest('div') as HTMLElement
       const links = within(card).queryAllByRole('link')
-      if (project.link) {
-        expect(links).toHaveLength(1)
-        expect(links[0]).toHaveAttribute('href', project.link)
-        expect(links[0]).toHaveTextContent(project.linkLabel ?? 'View Demo')
-      } else {
-        expect(links).toHaveLength(0)
-      }
+      const expectedLinks = project.links ?? []
+      expect(links).toHaveLength(expectedLinks.length)
+      expectedLinks.forEach((expected, index) => {
+        expect(links[index]).toHaveAttribute('href', expected.url)
+        expect(links[index]).toHaveTextContent(expected.label)
+      })
     })
   })
 })
