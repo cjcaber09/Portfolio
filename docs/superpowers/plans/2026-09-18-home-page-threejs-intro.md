@@ -763,11 +763,12 @@ Create `components/home/usePrefersReducedMotion.ts`. Note this uses a lazy
 `useState` initializer (not `useState(false)` + a set-on-mount effect):
 with a plain `false` initial value, `HomeIntro`'s first render would always
 take the animated `<Canvas>` branch — even for reduced-motion users — because
-React commits that first render before effects run, and mounting `<Canvas>`
-invokes `react-use-measure`, which throws under jsdom (no `ResizeObserver`)
-and would also cause a real one-frame Canvas flash in production for
-reduced-motion users. Reading `matchMedia` synchronously in the initializer
-fixes both. This is safe specifically because `HomeIntro` is only ever
+React uses that literal initial value for the first render regardless of what
+a later effect computes. Rendering `<Canvas>` under jsdom throws synchronously
+during that render (`react-use-measure` requires `ResizeObserver`, which
+jsdom lacks), and in a real browser it would cause a one-frame Canvas flash
+for reduced-motion users before falling back. Reading `matchMedia`
+synchronously in the initializer fixes both. This is safe specifically because `HomeIntro` is only ever
 rendered client-side via `dynamic(..., { ssr: false })` (Task 6), so there's
 no SSR/hydration mismatch from touching `window` at render time.
 
