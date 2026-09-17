@@ -759,19 +759,33 @@ Expected: FAIL — `Cannot find module './usePrefersReducedMotion'`
 
 - [ ] **Step 3: Implement usePrefersReducedMotion**
 
-Create `components/home/usePrefersReducedMotion.ts`:
+Create `components/home/usePrefersReducedMotion.ts`. Note this uses a lazy
+`useState` initializer (not `useState(false)` + a set-on-mount effect):
+with a plain `false` initial value, `HomeIntro`'s first render would always
+take the animated `<Canvas>` branch — even for reduced-motion users — because
+React commits that first render before effects run, and mounting `<Canvas>`
+invokes `react-use-measure`, which throws under jsdom (no `ResizeObserver`)
+and would also cause a real one-frame Canvas flash in production for
+reduced-motion users. Reading `matchMedia` synchronously in the initializer
+fixes both. This is safe specifically because `HomeIntro` is only ever
+rendered client-side via `dynamic(..., { ssr: false })` (Task 6), so there's
+no SSR/hydration mismatch from touching `window` at render time.
 
 ```ts
 'use client'
 
 import { useEffect, useState } from 'react'
 
+function getPrefersReducedMotion(): boolean {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
 export function usePrefersReducedMotion(): boolean {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getPrefersReducedMotion)
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(query.matches)
 
     function handleChange(event: MediaQueryListEvent) {
       setPrefersReducedMotion(event.matches)
