@@ -513,7 +513,9 @@ describe('fadeOpacity', () => {
   })
 
   it('fades out linearly across the trailing edge', () => {
-    expect(fadeOpacity(0.55, 0.4, 0.6, 0.05)).toBe(1)
+    // NOTE: 0.6 - 0.05 is not exactly 0.55 in IEEE 754 floating point, so this
+    // boundary uses toBeCloseTo rather than toBe.
+    expect(fadeOpacity(0.55, 0.4, 0.6, 0.05)).toBeCloseTo(1, 10)
     expect(fadeOpacity(0.575, 0.4, 0.6, 0.05)).toBeCloseTo(0.5, 5)
     expect(fadeOpacity(0.6, 0.4, 0.6, 0.05)).toBe(0)
   })
