@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { profile, summary, experience, skills, projects, education } from './content'
+import { profile, summary, experience, skills, projects, education, homeOneLiners } from './content'
 
 describe('content data', () => {
   it('defines a complete profile', () => {
@@ -42,5 +42,13 @@ describe('content data', () => {
       expect(entry.level.length).toBeGreaterThan(0)
     })
     expect(education[education.length - 1].school).toBe('Southland College')
+  })
+
+  it('defines three home page one-liners', () => {
+    expect(homeOneLiners).toEqual([
+      'Full-Stack Web Developer.',
+      'Building scalable web experiences.',
+      'From legacy IBM i to modern React.',
+    ])
   })
 })

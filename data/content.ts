@@ -259,3 +259,9 @@ export const education: EducationEntry[] = [
     location: 'Kabankalan City, Negros Island, Philippines',
   },
 ]
+
+export const homeOneLiners: string[] = [
+  'Full-Stack Web Developer.',
+  'Building scalable web experiences.',
+  'From legacy IBM i to modern React.',
+]
