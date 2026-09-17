@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
+  --background: linear-gradient(#ffffff, #ffffff);
   --foreground: #0f172a;
 }
 
@@ -24,7 +24,9 @@ html {
 }
 
 body {
-  background: var(--background);
+  background-image: radial-gradient(rgba(148, 163, 184, 0.18) 1px, transparent 1.4px), var(--background);
+  background-size: 22px 22px, auto;
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
