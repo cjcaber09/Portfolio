@@ -856,7 +856,7 @@ Create `components/home/HomeIntro.tsx`:
 ```tsx
 'use client'
 
-import { Suspense, useRef, type ReactNode } from 'react'
+import { Suspense, useEffect, useRef, type ReactNode } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ScrollControls, Scroll, useScroll } from '@react-three/drei'
 import { ParticleText } from './ParticleText'
@@ -872,7 +872,14 @@ const ONE_LINER_RANGES: Array<[number, number]> = [
   [0.55, 0.73],
   [0.7, 0.88],
 ]
-const CTA_RANGE: [number, number] = [0.85, 1]
+// Upper bound set safely beyond the reachable [0,1] scroll range. fadeOpacity
+// treats `to` as exclusive (offset >= to returns 0), so a CTA_RANGE of
+// [0.85, 1] would make the button fade back to invisible exactly at max
+// scroll (offset === 1) — the one moment it must stay visible/clickable.
+// [0.85, 2] fades it in once, starting at offset 0.85, and then holds it at
+// full opacity for the rest of the reachable range since offset can never
+// reach the fade-out zone near 2.
+const CTA_RANGE: [number, number] = [0.85, 2]
 
 function StaticIntro() {
   return (
@@ -938,6 +945,22 @@ function ScrollOverlay() {
 
 export function HomeIntro() {
   const prefersReducedMotion = usePrefersReducedMotion()
+
+  // Nudge react-use-measure (used internally by Canvas for sizing) to
+  // re-measure shortly after mount. Canvas is loaded via a client-only
+  // dynamic import (Task 6), which can resolve and mount before its
+  // container's final layout size is committed; the first ResizeObserver
+  // callback can then report the browser's default 300x150 canvas size and
+  // never fire again on its own. react-use-measure also listens for
+  // window 'resize' events as an additional remeasure trigger — dispatching
+  // one manually reliably corrects the size. Verified by manual testing:
+  // without this, the canvas stays stuck at 300x150 until the browser
+  // window is actually resized.
+  useEffect(() => {
+    if (prefersReducedMotion) return
+    const id = window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
+    return () => window.clearTimeout(id)
+  }, [prefersReducedMotion])
 
   if (prefersReducedMotion) {
     return <StaticIntro />
