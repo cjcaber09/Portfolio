@@ -483,7 +483,7 @@ export function interpolateParticle(particle: ScatteredParticle, progress: numbe
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run components/home/particlePositions.test.ts`
-Expected: `9 passed`
+Expected: `8 passed`
 
 - [ ] **Step 5: Write the failing fadeOpacity test**
 
