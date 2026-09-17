@@ -1,19 +1,19 @@
 import { ThemeToggle } from './ThemeToggle'
 
 const links = [
-  { href: '#about', label: 'About' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#education', label: 'Education' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/about#about', label: 'About' },
+  { href: '/about#experience', label: 'Experience' },
+  { href: '/about#skills', label: 'Skills' },
+  { href: '/about#projects', label: 'Projects' },
+  { href: '/about#education', label: 'Education' },
+  { href: '/about#contact', label: 'Contact' },
 ]
 
 export function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <a href="#hero" className="font-semibold">
+        <a href="/" className="font-semibold">
           CeeDev
         </a>
         <ul className="hidden gap-6 text-sm sm:flex">
