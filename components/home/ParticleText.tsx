@@ -98,7 +98,6 @@ export function ParticleText() {
       name: buildLattice(namePoints, centerX, centerY),
       bounds: combinedBounds,
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- rasterizes fixed, constant text; intentionally runs once
   }, [])
 
   const scale = useMemo(
@@ -108,7 +107,7 @@ export function ParticleText() {
         maxWidthPx: FIT_MAX_WIDTH_PX,
         canvasWidthPx,
       }),
-    [bounds, viewport.width, viewport.height, canvasWidthPx]
+    [bounds, viewport, canvasWidthPx]
   )
 
   // "CeeDev" never moves: its instance matrices are written once, here,
