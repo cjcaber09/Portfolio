@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, type ReactNode } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { ScrollControls, Scroll, useScroll } from '@react-three/drei'
+import { ScrollControls, useScroll } from '@react-three/drei'
 import { ParticleText } from './ParticleText'
 import { fadeOpacity } from './fadeOpacity'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
@@ -13,8 +13,8 @@ const CTA_HREF = '/about'
 const FADE_EDGE = 0.06
 // Must stay the same length as data/content.ts's homeOneLiners (matched by
 // index in ScrollOverlay below). If they ever fall out of sync, the missing
-// index falls back to UNREACHABLE_RANGE below rather than crashing the R3F
-// render loop.
+// index falls back to UNREACHABLE_RANGE below rather than crashing the render
+// loop.
 const ONE_LINER_RANGES: Array<[number, number]> = [
   [0.4, 0.58],
   [0.55, 0.73],
@@ -55,15 +55,49 @@ function StaticIntro() {
   )
 }
 
-function FadingLine({ range, children }: { range: [number, number]; children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null)
+// Runs inside <ScrollControls>, where useScroll() is available, and mirrors
+// its live offset into a plain ref every frame. The HTML overlay below reads
+// that ref from OUTSIDE the Canvas via requestAnimationFrame, rather than
+// using drei's <Scroll html> — that component mounts its children through
+// its own React root created with `useMemo(() => ReactDOM.createRoot(...))`
+// and no matching unmount, which React 19 Strict Mode's dev-only double
+// mount turns into a real "calling createRoot() on a container already
+// passed to createRoot()" error. Confirmed via `npm run build && npm run
+// start` that avoiding <Scroll html> removes the error entirely, and that
+// the original warning never reached a production build in the first place
+// — but a persistent dev-mode error is still worth designing around rather
+// than living with.
+function ScrollOffsetBridge({ offsetRef }: { offsetRef: { current: number } }) {
   const scroll = useScroll()
-
   useFrame(() => {
-    if (!ref.current) return
-    const opacity = fadeOpacity(scroll.offset, range[0], range[1], FADE_EDGE)
-    ref.current.style.opacity = String(opacity)
+    offsetRef.current = scroll.offset
   })
+  return null
+}
+
+function FadingLine({
+  offsetRef,
+  range,
+  children,
+}: {
+  offsetRef: { current: number }
+  range: [number, number]
+  children: ReactNode
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let frameId: number
+    const tick = () => {
+      if (ref.current) {
+        const opacity = fadeOpacity(offsetRef.current, range[0], range[1], FADE_EDGE)
+        ref.current.style.opacity = String(opacity)
+      }
+      frameId = requestAnimationFrame(tick)
+    }
+    frameId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frameId)
+  }, [offsetRef, range])
 
   return (
     <div ref={ref} className="absolute inset-x-0 flex justify-center" style={{ opacity: 0 }}>
@@ -72,32 +106,29 @@ function FadingLine({ range, children }: { range: [number, number]; children: Re
   )
 }
 
-function ScrollOverlay() {
+function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
   return (
-    <Scroll html style={{ width: '100%' }}>
-      <div className="relative h-[400vh] w-full">
-        <div className="sticky top-0 flex h-dvh w-full items-center justify-center">
-          {homeOneLiners.map((line, index) => (
-            <FadingLine key={line} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
-              <p className="text-lg text-slate-200">{line}</p>
-            </FadingLine>
-          ))}
-          <FadingLine range={CTA_RANGE}>
-            <a
-              href={CTA_HREF}
-              className="pointer-events-auto rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
-            >
-              {CTA_LABEL}
-            </a>
-          </FadingLine>
-        </div>
-      </div>
-    </Scroll>
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      {homeOneLiners.map((line, index) => (
+        <FadingLine key={line} offsetRef={offsetRef} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
+          <p className="text-lg text-slate-200">{line}</p>
+        </FadingLine>
+      ))}
+      <FadingLine offsetRef={offsetRef} range={CTA_RANGE}>
+        <a
+          href={CTA_HREF}
+          className="pointer-events-auto rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
+        >
+          {CTA_LABEL}
+        </a>
+      </FadingLine>
+    </div>
   )
 }
 
 export function HomeIntro() {
   const prefersReducedMotion = usePrefersReducedMotion()
+  const offsetRef = useRef(0)
 
   // Nudge react-use-measure (used internally by Canvas for sizing) to
   // re-measure shortly after mount. Canvas is loaded via a client-only
@@ -120,7 +151,7 @@ export function HomeIntro() {
   }
 
   return (
-    <div className="h-dvh w-full">
+    <div className="relative h-dvh w-full">
       {/* The word "CeeDev" exists only as pixels sampled onto the WebGL
           canvas below — this heading is the screen-reader-accessible
           equivalent, matching StaticIntro's visible <h1>. */}
@@ -130,9 +161,10 @@ export function HomeIntro() {
           <Suspense fallback={null}>
             <ParticleText />
           </Suspense>
-          <ScrollOverlay />
+          <ScrollOffsetBridge offsetRef={offsetRef} />
         </ScrollControls>
       </Canvas>
+      <ScrollOverlay offsetRef={offsetRef} />
     </div>
   )
 }

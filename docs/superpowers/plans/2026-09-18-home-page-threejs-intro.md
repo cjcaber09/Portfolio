@@ -874,7 +874,7 @@ Create `components/home/HomeIntro.tsx`:
 
 import { Suspense, useEffect, useRef, type ReactNode } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { ScrollControls, Scroll, useScroll } from '@react-three/drei'
+import { ScrollControls, useScroll } from '@react-three/drei'
 import { ParticleText } from './ParticleText'
 import { fadeOpacity } from './fadeOpacity'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
@@ -885,8 +885,8 @@ const CTA_HREF = '/about'
 const FADE_EDGE = 0.06
 // Must stay the same length as data/content.ts's homeOneLiners (matched by
 // index in ScrollOverlay below). If they ever fall out of sync, the missing
-// index falls back to UNREACHABLE_RANGE below rather than crashing the R3F
-// render loop.
+// index falls back to UNREACHABLE_RANGE below rather than crashing the render
+// loop.
 const ONE_LINER_RANGES: Array<[number, number]> = [
   [0.4, 0.58],
   [0.55, 0.73],
@@ -927,15 +927,49 @@ function StaticIntro() {
   )
 }
 
-function FadingLine({ range, children }: { range: [number, number]; children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null)
+// Runs inside <ScrollControls>, where useScroll() is available, and mirrors
+// its live offset into a plain ref every frame. The HTML overlay below reads
+// that ref from OUTSIDE the Canvas via requestAnimationFrame, rather than
+// using drei's <Scroll html> — that component mounts its children through
+// its own React root created with `useMemo(() => ReactDOM.createRoot(...))`
+// and no matching unmount, which React 19 Strict Mode's dev-only double
+// mount turns into a real "calling createRoot() on a container already
+// passed to createRoot()" error (confirmed by reading
+// node_modules/@react-three/drei/web/ScrollControls.js directly). This
+// never reached a production build, but it's a persistent dev-mode error
+// worth designing around rather than living with — hence no <Scroll html>
+// anywhere in this file.
+function ScrollOffsetBridge({ offsetRef }: { offsetRef: { current: number } }) {
   const scroll = useScroll()
-
   useFrame(() => {
-    if (!ref.current) return
-    const opacity = fadeOpacity(scroll.offset, range[0], range[1], FADE_EDGE)
-    ref.current.style.opacity = String(opacity)
+    offsetRef.current = scroll.offset
   })
+  return null
+}
+
+function FadingLine({
+  offsetRef,
+  range,
+  children,
+}: {
+  offsetRef: { current: number }
+  range: [number, number]
+  children: ReactNode
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let frameId: number
+    const tick = () => {
+      if (ref.current) {
+        const opacity = fadeOpacity(offsetRef.current, range[0], range[1], FADE_EDGE)
+        ref.current.style.opacity = String(opacity)
+      }
+      frameId = requestAnimationFrame(tick)
+    }
+    frameId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frameId)
+  }, [offsetRef, range])
 
   return (
     <div ref={ref} className="absolute inset-x-0 flex justify-center" style={{ opacity: 0 }}>
@@ -944,32 +978,29 @@ function FadingLine({ range, children }: { range: [number, number]; children: Re
   )
 }
 
-function ScrollOverlay() {
+function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
   return (
-    <Scroll html style={{ width: '100%' }}>
-      <div className="relative h-[400vh] w-full">
-        <div className="sticky top-0 flex h-dvh w-full items-center justify-center">
-          {homeOneLiners.map((line, index) => (
-            <FadingLine key={line} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
-              <p className="text-lg text-slate-200">{line}</p>
-            </FadingLine>
-          ))}
-          <FadingLine range={CTA_RANGE}>
-            <a
-              href={CTA_HREF}
-              className="pointer-events-auto rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
-            >
-              {CTA_LABEL}
-            </a>
-          </FadingLine>
-        </div>
-      </div>
-    </Scroll>
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      {homeOneLiners.map((line, index) => (
+        <FadingLine key={line} offsetRef={offsetRef} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
+          <p className="text-lg text-slate-200">{line}</p>
+        </FadingLine>
+      ))}
+      <FadingLine offsetRef={offsetRef} range={CTA_RANGE}>
+        <a
+          href={CTA_HREF}
+          className="pointer-events-auto rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
+        >
+          {CTA_LABEL}
+        </a>
+      </FadingLine>
+    </div>
   )
 }
 
 export function HomeIntro() {
   const prefersReducedMotion = usePrefersReducedMotion()
+  const offsetRef = useRef(0)
 
   // Nudge react-use-measure (used internally by Canvas for sizing) to
   // re-measure shortly after mount. Canvas is loaded via a client-only
@@ -992,7 +1023,7 @@ export function HomeIntro() {
   }
 
   return (
-    <div className="h-dvh w-full">
+    <div className="relative h-dvh w-full">
       {/* The word "CeeDev" exists only as pixels sampled onto the WebGL
           canvas below — this heading is the screen-reader-accessible
           equivalent, matching StaticIntro's visible <h1>. */}
@@ -1002,9 +1033,10 @@ export function HomeIntro() {
           <Suspense fallback={null}>
             <ParticleText />
           </Suspense>
-          <ScrollOverlay />
+          <ScrollOffsetBridge offsetRef={offsetRef} />
         </ScrollControls>
       </Canvas>
+      <ScrollOverlay offsetRef={offsetRef} />
     </div>
   )
 }
@@ -1023,7 +1055,27 @@ flagged three issues, all addressed above/below:
    3/3 times) due to CPU contention from other test files loading Three.js
    in parallel worker threads — see the Task 6 test file update below.
 
-If `@react-three/drei`'s `Scroll`/`ScrollControls`/`useScroll` API differs from what's used above for the installed `10.7.8` version, consult `node_modules/@react-three/drei/dist/index.d.ts` (or the package README) and adjust — the intent to preserve is: a scrollable region roughly `pages * 100vh` tall drives `scroll.offset` from 0 to 1, and each `FadingLine` fades in/out based on `fadeOpacity(scroll.offset, ...)` over its own range.
+**Post-approval fix (user-reported, after merge review):** the code above
+originally used drei's `<Scroll html>` for the HTML overlay, and a
+persistent dev-only `ReactDOMClient.createRoot()` console error was
+initially (incorrectly) treated as harmless noise to live with, since it
+never appeared in a production build. The user correctly pushed back on
+that — a persistent dev-mode error is a real problem worth fixing, not
+explaining away. Reading `@react-three/drei`'s source directly
+(`node_modules/@react-three/drei/web/ScrollControls.js`) showed `<Scroll
+html>` isn't actually needed: `ScrollControls` creates its own real
+scrollable capture element independently of it, and the Canvas already
+stays visually pinned in its `h-dvh` box without `<Scroll html>`'s
+sticky-positioning trick. The code above replaces `<Scroll html>` +
+`Scroll`-context `useScroll()` calls inside the overlay with the
+`ScrollOffsetBridge`/plain-ref/`requestAnimationFrame` approach, rendering
+the overlay as a normal sibling of `<Canvas>` instead of through drei's
+buggy HTML-in-WebGL mounting path. Verified via a fresh browser tab (to
+rule out stale HMR state) that the console is completely clean — no
+`createRoot` error — while particle formation and scroll-fade behavior are
+unchanged.
+
+If `@react-three/drei`'s `ScrollControls`/`useScroll` API differs from what's used above for the installed `10.7.8` version, consult `node_modules/@react-three/drei/dist/index.d.ts` (or the package README) and adjust — the intent to preserve is: a scrollable region roughly `pages * 100vh` tall drives `scroll.offset` from 0 to 1, and each `FadingLine` fades in/out based on `fadeOpacity(scroll.offset, ...)` over its own range.
 
 - [ ] **Step 8: Run test to verify it passes**
 
@@ -1176,4 +1228,4 @@ git commit -m "Assemble the new Home page with a client-only Three.js intro"
 - The particle count/step (`SAMPLE_STEP = 3`) and depth jitter in `ParticleText.tsx` are reasonable starting values, not tuned against a real rendered result. `SCATTER_RADIUS` was tuned (see the Task 4 fix above, `6` → `400`) after a real screenshot check found it made the scatter cloud collapse into a single block; the remaining values are still starting points — adjust if the cloud reads too sparse, too dense, or too shallow.
 - The `ONE_LINER_RANGES`/`CTA_RANGE` scroll offsets in `HomeIntro.tsx` are a reasonable starting split of the `pages={4}` scroll track, not tuned against real scroll feel. Adjust after the manual check if the pacing feels off.
 - **Formed "CeeDev" text doesn't fit narrow viewports.** At the current `RASTER_WIDTH`/camera settings, the fully-formed text fits and reads cleanly at desktop widths (confirmed at 1280px) but overflows a narrow (~622px) viewport, showing only part of the word. Not fixed as part of this plan — needs either a responsive `RASTER_WIDTH`/camera-distance adjustment or an intentional design decision about mobile behavior.
-- **Dev-only `ReactDOMClient.createRoot()` console warning/Next.js dev-overlay "1 Issue" badge**, sourced from `@react-three/drei`'s `Scroll` component (`node_modules/@react-three/drei/web/ScrollControls.js`), which creates its HTML-overlay React root via `useMemo(() => ReactDOM.createRoot(state.fixed), [state.fixed])` rather than an effect with matching `root.unmount()` cleanup. React 19's Strict Mode (dev-only, on by default in Next.js App Router dev mode) double-invokes component mounts to surface exactly this class of bug; since `state.fixed` is a persisted DOM node owned by the parent `ScrollControls` (via `useState(() => document.createElement('div'))`), Strict Mode's remount calls `createRoot` a second time on that same still-alive node. Confirmed via a real `npm run build && npm run start` (production mode, no Strict Mode double-invoke) that this warning does not appear and causes no visible defect in production — it's a third-party library implementation detail surfaced only by React's dev-mode Strict Mode checks, not something to patch in this codebase.
+- ~~Dev-only `ReactDOMClient.createRoot()` console warning/Next.js dev-overlay "1 Issue" badge~~ — **fixed**, not left as a follow-up. It was sourced from `@react-three/drei`'s `Scroll` component (`node_modules/@react-three/drei/web/ScrollControls.js`), which created its HTML-overlay React root via `useMemo(() => ReactDOM.createRoot(state.fixed), [state.fixed])` with no matching `root.unmount()` cleanup, tripped by React 19 Strict Mode's dev-only double-mount. Initially (incorrectly) accepted as harmless since it never appeared in a production build — the user correctly rejected that reasoning, since a persistent dev-mode error is still a real problem. See the "Post-approval fix (user-reported, after merge review)" note under Task 5's `HomeIntro.tsx` for the actual fix: `<Scroll html>` was removed entirely in favor of a plain ref + `requestAnimationFrame` bridge, verified clean via a fresh browser tab's console.
