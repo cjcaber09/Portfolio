@@ -636,7 +636,15 @@ const RASTER_WIDTH = 480
 const RASTER_HEIGHT = 160
 const SAMPLE_STEP = 3
 const ALPHA_THRESHOLD = 128
-const SCATTER_RADIUS = 6
+// Must be comparable to RASTER_WIDTH/RASTER_HEIGHT (both in the same raw,
+// pre-WORLD_SCALE unit space as the sampled text points). A radius of 6
+// here made the scattered starting cloud ~40x smaller than the formed
+// text (which spans roughly +/-240 x +/-80 raw units), so at rest,
+// before any scroll, every particle clustered into what looked like a
+// single tiny solid block instead of a spread-out cloud -- confirmed by
+// screenshot during manual verification, not visible from DOM/opacity
+// checks alone. 400 gives a cloud comparable in size to the text itself.
+const SCATTER_RADIUS = 400
 const DEPTH_JITTER = 1.2
 const WORLD_SCALE = 0.02
 const GATHER_END_OFFSET = 0.4
@@ -1165,5 +1173,7 @@ git commit -m "Assemble the new Home page with a client-only Three.js intro"
 
 ## Post-Plan Follow-Up (not part of this plan's scope)
 
-- The particle count/step (`SAMPLE_STEP = 3`), scatter radius, and depth jitter in `ParticleText.tsx` are reasonable starting values, not tuned against a real rendered result (Task 4 has no automated way to verify visual density). Adjust them after the Step 7 manual check in Task 6 if the cloud reads too sparse, too dense, or too shallow.
+- The particle count/step (`SAMPLE_STEP = 3`) and depth jitter in `ParticleText.tsx` are reasonable starting values, not tuned against a real rendered result. `SCATTER_RADIUS` was tuned (see the Task 4 fix above, `6` → `400`) after a real screenshot check found it made the scatter cloud collapse into a single block; the remaining values are still starting points — adjust if the cloud reads too sparse, too dense, or too shallow.
 - The `ONE_LINER_RANGES`/`CTA_RANGE` scroll offsets in `HomeIntro.tsx` are a reasonable starting split of the `pages={4}` scroll track, not tuned against real scroll feel. Adjust after the manual check if the pacing feels off.
+- **Formed "CeeDev" text doesn't fit narrow viewports.** At the current `RASTER_WIDTH`/camera settings, the fully-formed text fits and reads cleanly at desktop widths (confirmed at 1280px) but overflows a narrow (~622px) viewport, showing only part of the word. Not fixed as part of this plan — needs either a responsive `RASTER_WIDTH`/camera-distance adjustment or an intentional design decision about mobile behavior.
+- **Dev-only `ReactDOMClient.createRoot()` console warning/Next.js dev-overlay "1 Issue" badge**, sourced from `@react-three/drei`'s `Scroll` component (`node_modules/@react-three/drei/web/ScrollControls.js`), which creates its HTML-overlay React root via `useMemo(() => ReactDOM.createRoot(state.fixed), [state.fixed])` rather than an effect with matching `root.unmount()` cleanup. React 19's Strict Mode (dev-only, on by default in Next.js App Router dev mode) double-invokes component mounts to surface exactly this class of bug; since `state.fixed` is a persisted DOM node owned by the parent `ScrollControls` (via `useState(() => document.createElement('div'))`), Strict Mode's remount calls `createRoot` a second time on that same still-alive node. Confirmed via a real `npm run build && npm run start` (production mode, no Strict Mode double-invoke) that this warning does not appear and causes no visible defect in production — it's a third-party library implementation detail surfaced only by React's dev-mode Strict Mode checks, not something to patch in this codebase.
