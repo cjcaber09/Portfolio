@@ -33,6 +33,7 @@ contract from the 2026-09-18 design all stand.
 | One-liners | 18px regular, overlapping crossfades | 48px bold, clean handoffs, one at a time |
 | Overlay | Centred over the particles | Replaces the wordmark; CTA sits below the final sentence |
 | Scroll ranges | Split across two components | One `scrollTimeline` module, invariant under test |
+| Scroll length | `pages={4}` (3 heights of scroll) | `pages={5}` (4 heights of scroll) |
 | Composition scale | Fixed `WORLD_SCALE = 0.02` | Derived from content bounds + viewport, capped at 960px |
 | Narrow viewports | Particle canvas at any width | Real text below 640px |
 | Intro height | `h-dvh` below an in-flow nav; page overflows | Fills the visible area below the nav |
@@ -55,8 +56,8 @@ passes over the same grid is not.
   vertical centre at y = 145
 - Gap between the glyph blocks: ~28px, i.e. **7 grid rows** at step 4
 
-Spacing is specified in grid rows, not pixels, so it stays proportional if
-the sizes are retuned.
+The gap is a consequence of the two fixed y positions, not something
+derived from grid rows. Retuning either font size means re-checking it.
 
 #### Both lines share one world-space origin
 
@@ -97,17 +98,19 @@ The required order of operations is therefore:
 Step 4 is the outcome of a real constraint, not a preference. (Stroke
 widths below are estimates for a bold sans face; see Typeface.) A bold
 glyph's stroke is roughly one seventh of its font size, so the 42px name
-has ~6px strokes. At the step 8 that reads as a chunky contribution graph,
-most strokes catch one dot or none and the letterforms never resolve. Step
-4 is the coarsest lattice at which the smaller line stays legible. Chunky
-dots and a small readable second line are mutually exclusive at this text
-size; legibility wins.
+has ~6px strokes. At step 8, which reads as a chunky contribution graph,
+most strokes catch one dot or none and the letterforms never resolve. In a
+side-by-side mockup at steps 8, 5 and 4, step 5 rendered the name readable
+but soft and step 4 rendered it clearly; step 4 was chosen. Chunky dots
+and a small readable second line are mutually exclusive at this text size;
+legibility wins.
 
 ### Typeface
 
 The wordmark is rasterized in `system-ui, sans-serif` — unchanged from the
-current code, and the face every mockup in this design was reviewed in
-(Segoe UI on the owner's Windows machine; SF on macOS).
+current code. Every mockup in this design was reviewed on the owner's
+Windows machine, where that resolves to Segoe UI. On macOS it resolves to
+SF, which no mockup has shown.
 
 `StaticIntro`, which now also serves every visitor under 640px, renders in
 the site font, Geist. So the wordmark's typeface differs between phones and
@@ -159,8 +162,31 @@ the one specified here.
 The ramp is authored as sRGB hex and constructed with `new THREE.Color(hex)`
 so that `THREE.ColorManagement` (enabled by default in current three.js)
 performs the sRGB → working-space conversion. The renderer's output colour
-space is left at its default rather than overridden. Verification checks
-the rendered result against the ramp (see Testing).
+space is left at its default rather than overridden.
+
+**Tone mapping is turned off on the wordmark's materials
+(`toneMapped={false}`).** Colour-space conversion alone is not enough: R3F
+enables `ACESFilmicToneMapping` on every Canvas that is not `flat`, and
+materials are tone-mapped by default. Run through three.js's own ACES
+shader, the ramp renders as:
+
+| Authored | Rendered under ACES | Largest channel shift |
+| --- | --- | --- |
+| `#15503a` | `#00472d` | 21 |
+| `#05734f` | `#00794b` | 6 |
+| `#0f9e6b` | `#0aad77` | 15 |
+| `#2cc98c` | `#65cda1` | 57 |
+
+The floor would drop from 2.00:1 to **1.73:1** — into exactly the "holes
+punched in the glyphs" range this section warns about — and the brightest
+level would wash toward mint. ACES exists to compress high-dynamic-range
+lighting; this scene is flat, unlit, authored colour, so there is nothing
+for it to do but distort.
+
+The switch lives on the materials rather than as `flat` on the Canvas, so
+it sits next to the colours it protects and survives anyone later removing
+`flat`. Verification checks the rendered result against the ramp (see
+Testing).
 
 ### No background lattice
 
@@ -250,8 +276,17 @@ retune in one place that ignores the other is how handoffs start to
 collide.
 
 Every fade uses the existing `fadeOpacity(offset, from, to, edge)` with the
-shared `FADE_EDGE = 0.06`. At `pages={4}`, one unit of offset is four
-viewport-heights of scrolling.
+shared `FADE_EDGE = 0.06`.
+
+`ScrollControls` uses **`pages={5}`** (was 4). drei makes its scroll track
+`pages × 100%` of the intro's height and divides the scroll position by
+track height minus container height, so offset 0 → 1 spans `pages − 1` =
+**4** heights of the intro. "Viewport-heights" in this section means
+exactly that — heights of the intro area, which fills the visible space
+below the nav. At the old `pages={4}` every figure here would be a quarter
+shorter; an earlier revision of this document made that mistake and
+quoted pacing the page would not have delivered. Moving to 5 pages
+delivers the pacing as described, without changing any range.
 
 | Element | Range `[from, to]` | Full opacity | Full opacity, viewport-heights |
 | --- | --- | --- | --- |
@@ -336,9 +371,10 @@ would let shimmer flicker dots mid-flight.
 ### Wordmark fade-out
 
 Both instanced meshes share one opacity,
-`fadeOpacity(offset, ...WORDMARK_RANGE, FADE_EDGE)`, applied through their
-materials (`transparent: true`). It multiplies the per-dot colour above;
-it does not replace it.
+`fadeOpacity(offset, ...WORDMARK_RANGE, FADE_EDGE)`, applied as their
+materials' `opacity` (`transparent: true`). That is alpha: the dots blend
+toward the background as it falls, while the per-dot colours above stay
+exactly as computed.
 
 Once that opacity reaches 0, both meshes are set `visible = false` and the
 per-frame colour and matrix loops are skipped entirely — for the remaining
@@ -500,6 +536,19 @@ The new layout resolves both:
   its presence never shifts the slot. Built as a centred column holding
   both, the sentences would sit above the point where the wordmark was
   centred, and the handoff would visibly jump.
+- **The CTA is inert whenever it is invisible.** Today its wrapper is
+  hidden only by `opacity: 0` while the link inside carries
+  `pointer-events-auto`, so before it fades in it is still clickable
+  (navigating to `/about` from an empty-looking spot), still reachable by
+  Tab (focus lands on nothing visible), and still intercepts wheel events
+  over its box — scrolling there fails to advance the animation. Whenever
+  its opacity is 0, the CTA's wrapper also gets `visibility: hidden`,
+  which removes it from pointer hit-testing, the tab order and the
+  accessibility tree in one property; it becomes `visible` as soon as
+  opacity rises above 0. This applies to the CTA only: the sentences are
+  `pointer-events-none` and not focusable, and they should stay in the
+  accessibility tree so assistive technology reads all three regardless
+  of scroll position.
 
 ### The intro fills the space below the nav
 
@@ -615,13 +664,14 @@ Changed:
   was a previously fixed bug and must not regress through the refactor.
 - `components/home/ParticleText.tsx` — rewritten around two instanced
   meshes, the level ramp, shimmer, derived scale, and the shared wordmark
-  fade.
+  fade; materials use `toneMapped={false}`.
 - `components/home/HomeIntro.tsx` — imports its ranges from
   `scrollTimeline.ts` instead of defining them; sentences move to the
   shared centred slot at 48px bold with side padding; the CTA moves below
-  the slot; branch condition becomes reduced-motion **or** narrow
-  viewport, and the post-mount resize nudge keys on that same combined
-  condition; `StaticIntro` and the `sr-only` block gain the name, and
+  the slot and is inert (`visibility: hidden`) whenever its opacity is 0;
+  `ScrollControls` moves to `pages={5}`; branch condition becomes
+  reduced-motion **or** narrow viewport, and the post-mount resize nudge
+  keys on that same combined condition; `StaticIntro` and the `sr-only` block gain the name, and
   `StaticIntro`'s sentences go bold.
 - `app/page.tsx` and/or the `HomeIntro` root — so the animated path fills
   the space below the nav without the document scrolling (see "The intro
@@ -732,6 +782,11 @@ Otherwise a capture meant for 0.29 shows a lagging frame nearer 0.25.
 - **0.44** and **0.66** — sentences 1 and 2 alone, legible at 48px bold,
   nothing else on screen.
 - **1** — sentence 3 with the CTA below it, not overlapping.
+- **0**, again — pressing Tab never lands focus on the CTA, and clicking
+  where the CTA will later appear does not navigate. Both are regression
+  checks for the inert-while-invisible rule, which cannot be unit-tested:
+  `ScrollOverlay` only renders on the Canvas path, which never renders
+  under jsdom.
 
 At widths:
 
@@ -755,7 +810,8 @@ Colour, instance count, errors:
 - **Colour.** At offset 0 (wordmark opacity 1), a pixel at a dot's centre
   matches one of the four ramp colours within ±3 per channel. Sampling a
   dot centre avoids antialiased edges, and matching *any* of the four
-  accounts for shimmer changing the level. R3F's WebGL context does not
+  accounts for shimmer changing the level. This check is what catches tone
+  mapping left on: under ACES every level misses by 6–57 on some channel. R3F's WebGL context does not
   preserve its drawing buffer, so `toDataURL` / `readPixels` from outside
   the render loop return blank; the check temporarily sets
   `gl={{ preserveDrawingBuffer: true }}` on the Canvas, reads the pixel,
