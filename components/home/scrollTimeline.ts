@@ -31,6 +31,14 @@ export const UNREACHABLE_RANGE: [number, number] = [1, 1]
 // range ending at 1 would fade the CTA back out exactly at max scroll.
 export const CTA_RANGE: [number, number] = [0.84, 2]
 
-// drei's ScrollControls makes offset 0->1 span (pages - 1) heights of the
-// intro area. 5 pages = 4 heights of scrolling across the full track.
-export const SCROLL_PAGES = 5
+// drei's ScrollControls scroll track holds two stacked elements: a sticky
+// "fixed" pane (one container-height, in normal flow before it starts
+// sticking) plus a "fill" spacer sized to `pages * 100%`. Scroll threshold
+// = (containerHeight + pages*containerHeight) - containerHeight =
+// pages*containerHeight, so offset 0->1 spans exactly `pages`
+// container-heights — not `pages - 1`, as an earlier revision of this
+// constant assumed. Verified directly in a real browser: at pages=5 the
+// scroll element measured clientHeight=346, scrollHeight=2076, giving a
+// threshold of 1730 = 5 * 346 exactly. 4 pages -> 4 heights of scrolling,
+// matching every pacing figure documented against this constant.
+export const SCROLL_PAGES = 4

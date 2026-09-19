@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="flex min-h-dvh flex-col">
       <Nav />
-      <div className="min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1">
         <HomeIntroLoader />
       </div>
     </div>

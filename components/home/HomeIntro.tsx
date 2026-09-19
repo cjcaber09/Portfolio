@@ -15,8 +15,19 @@ const CTA_HREF = '/about'
 const NARROW_VIEWPORT_QUERY = '(max-width: 639px)'
 
 function StaticIntro() {
+  // absolute inset-0 (not min-h-full): this renders inside app/page.tsx's
+  // `relative min-h-0 flex-1` wrapper, whose own `height` CSS property is
+  // `auto` even though flex-grow gives it a definite *rendered* size.
+  // Percentage heights (min-h-full = min-height:100%) only resolve against
+  // a parent whose `height` property is itself non-auto — verified by
+  // forcing `height:100%` inline on this element in a real browser and
+  // finding it did nothing, while a literal pixel height worked instantly.
+  // Absolute positioning sizes against the parent's actual rendered box
+  // instead, sidestepping that rule. overflow-y-auto (rather than growing
+  // the page) lets content taller than the available space scroll within
+  // this box on short phones, without either bug returning.
   return (
-    <section className="flex min-h-full w-full flex-col items-center justify-center gap-6 px-6 text-center">
+    <section className="absolute inset-0 flex flex-col items-center justify-center gap-6 overflow-y-auto px-6 text-center">
       <h1 className="text-5xl font-bold text-emerald-400">CeeDev</h1>
       <p className="text-2xl font-bold text-emerald-200">{homeWordmarkName}</p>
       <div className="flex flex-col gap-2">
@@ -62,6 +73,36 @@ function ScrollOffsetBridge({ offsetRef }: { offsetRef: { current: number } }) {
     el.tabIndex = 0
     el.setAttribute('aria-label', 'Scroll to reveal introduction')
     el.classList.add('focus:outline-2', 'focus:outline-emerald-400', 'focus:outline-offset-[-2px]')
+
+    // Unlike a <textarea> or the document itself, a generic
+    // tabindex="0" overflow:auto <div> does not reliably get free
+    // arrow-key/Page-Down/Space scrolling from the browser just by being
+    // focused — verified directly (including via a genuinely dispatched
+    // KeyboardEvent, not just this project's own automated test tool) that
+    // it does not fire here. Wired explicitly rather than assumed.
+    function handleKeyDown(event: KeyboardEvent) {
+      const arrowStep = el.clientHeight * 0.2
+      const pageStep = el.clientHeight
+      if (event.key === 'ArrowDown') {
+        el.scrollTop += arrowStep
+      } else if (event.key === 'ArrowUp') {
+        el.scrollTop -= arrowStep
+      } else if (event.key === 'PageDown' || (event.key === ' ' && !event.shiftKey)) {
+        el.scrollTop += pageStep
+      } else if (event.key === 'PageUp' || (event.key === ' ' && event.shiftKey)) {
+        el.scrollTop -= pageStep
+      } else if (event.key === 'Home') {
+        el.scrollTop = 0
+      } else if (event.key === 'End') {
+        el.scrollTop = el.scrollHeight
+      } else {
+        return
+      }
+      event.preventDefault()
+    }
+
+    el.addEventListener('keydown', handleKeyDown)
+    return () => el.removeEventListener('keydown', handleKeyDown)
   }, [scroll.el])
 
   useFrame(() => {
@@ -117,23 +158,40 @@ function FadingLine({
 }
 
 function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
+  // Two separate absolutely-positioned regions, not one flex column with a
+  // gap between the sentences and the CTA. Every FadingLine is itself
+  // `position: absolute`, and per the flexbox spec an absolutely-positioned
+  // flex child computes its static position "as if it were the sole flex
+  // item" in its containing flex box — meaning a shared `flex-col ...
+  // gap-8` parent does NOT stack them with a gap; each one centers itself
+  // independently in the parent's full box, regardless of siblings. Found
+  // by screenshot: the CTA rendered dead-centre on top of the third
+  // sentence rather than below it. Giving the sentences and the CTA their
+  // own separate, non-overlapping absolutely-positioned regions (each
+  // still using the same flex items-center justify-center + abspos-child
+  // trick, just scoped to its own box) makes the overlap structurally
+  // impossible instead of relying on a gap that abspos children ignore.
   return (
-    <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-8 px-6">
-      <div className="relative flex w-full max-w-5xl items-center justify-center">
-        {homeOneLiners.map((line, index) => (
-          <FadingLine key={line} offsetRef={offsetRef} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
-            <p className="text-balance text-center text-5xl leading-tight font-bold text-slate-100">{line}</p>
-          </FadingLine>
-        ))}
+    <div className="pointer-events-none absolute inset-0">
+      <div className="absolute inset-x-0 top-0 bottom-28 flex items-center justify-center px-6">
+        <div className="relative flex w-full max-w-5xl items-center justify-center">
+          {homeOneLiners.map((line, index) => (
+            <FadingLine key={line} offsetRef={offsetRef} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
+              <p className="text-balance text-center text-5xl leading-tight font-bold text-slate-100">{line}</p>
+            </FadingLine>
+          ))}
+        </div>
       </div>
-      <FadingLine offsetRef={offsetRef} range={CTA_RANGE} hideWhenInvisible>
-        <a
-          href={CTA_HREF}
-          className="pointer-events-auto rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
-        >
-          {CTA_LABEL}
-        </a>
-      </FadingLine>
+      <div className="absolute inset-x-0 bottom-12 flex items-center justify-center px-6">
+        <FadingLine offsetRef={offsetRef} range={CTA_RANGE} hideWhenInvisible>
+          <a
+            href={CTA_HREF}
+            className="pointer-events-auto rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
+          >
+            {CTA_LABEL}
+          </a>
+        </FadingLine>
+      </div>
     </div>
   )
 }
@@ -165,7 +223,10 @@ export function HomeIntro() {
   }
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    // absolute inset-0, not h-full: see the comment on StaticIntro's root
+    // above for why a percentage-height class silently fails to fill this
+    // same flex-1 parent.
+    <div className="absolute inset-0 overflow-hidden">
       {/* Neither "CeeDev" nor the name exist as real text on the canvas
           path — they're pixels sampled onto instanced WebGL circles. This
           is their screen-reader-accessible equivalent, matching
