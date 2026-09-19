@@ -35,6 +35,7 @@ contract from the 2026-09-18 design all stand.
 | Scroll ranges | Split across two components | One `scrollTimeline` module, invariant under test |
 | Composition scale | Fixed `WORLD_SCALE = 0.02` | Derived from content bounds + viewport, capped at 960px |
 | Narrow viewports | Particle canvas at any width | Real text below 640px |
+| Intro height | `h-dvh` below an in-flow nav; page overflows | Fills the visible area below the nav |
 
 ## Visual Specification
 
@@ -69,11 +70,14 @@ the origin and render on top of each other. The vertical offset between
 the two lines exists only because they share a centre.
 
 That shared centre is the **centre of the two lines' combined bounding
-box**, not the canvas centre. Content spans roughly y = 42 (top of
-"CeeDev") to y = 166 (bottom of the name's descender), so it sits 58px
-above the canvas centre and 66px below it. Centring on (330, 100) would
-hang the composition slightly low on screen and break `fitScale` (see
-Responsive Sizing).
+box**, not the canvas centre. The content need not be symmetric about the
+canvas centre: by font-metric estimate it runs from roughly y = 42 (top of
+"CeeDev") to y ≈ 160 (the name's baseline — none of its letters descend),
+but the real extent depends on metrics this document can only estimate and
+on which face the platform resolves `system-ui` to. Using the content's own
+centre makes the layout independent of those figures. Centring on the
+canvas centre (330, 100) would let any asymmetry hang the composition off
+centre and would break `fitScale` (see Responsive Sizing).
 
 The required order of operations is therefore:
 
@@ -90,13 +94,33 @@ The required order of operations is therefore:
 - `ALPHA_THRESHOLD = 128` (unchanged)
 - Circle geometry: 10 segments — ample at this on-screen size
 
-Step 4 is the outcome of a real constraint, not a preference. A bold
+Step 4 is the outcome of a real constraint, not a preference. (Stroke
+widths below are estimates for a bold sans face; see Typeface.) A bold
 glyph's stroke is roughly one seventh of its font size, so the 42px name
 has ~6px strokes. At the step 8 that reads as a chunky contribution graph,
 most strokes catch one dot or none and the letterforms never resolve. Step
 4 is the coarsest lattice at which the smaller line stays legible. Chunky
 dots and a small readable second line are mutually exclusive at this text
 size; legibility wins.
+
+### Typeface
+
+The wordmark is rasterized in `system-ui, sans-serif` — unchanged from the
+current code, and the face every mockup in this design was reviewed in
+(Segoe UI on the owner's Windows machine; SF on macOS).
+
+`StaticIntro`, which now also serves every visitor under 640px, renders in
+the site font, Geist. So the wordmark's typeface differs between phones and
+desktop, and between desktop operating systems. **This mismatch is accepted
+for this change.** Rasterizing in Geist instead would mean waiting on
+`document.fonts.load()` before drawing to the raster canvas, and reading
+`next/font`'s generated family name from `--font-geist-sans`, since the
+literal name "Geist" does not resolve — a real addition, deferred rather
+than folded in.
+
+Because the composition is measured at runtime (`boundsOfPoints`), a
+different platform face changes its proportions but never its fit. What
+does not transfer is legibility: step 4 has only been judged in Segoe UI.
 
 ### Colour
 
@@ -175,9 +199,14 @@ proportion of dots deviating at any instant:
 | 0.99 | 9.0% |
 | 0.995 | 6.4% |
 
-0.99 gives ~9% — a handful changing at a time, which is what makes the
-effect ambient rather than a visible pulse. 0.85 would put over a third of
-the wordmark in motion simultaneously and read as a wave.
+The table counts dots whose sine is outside ±t. Not all of them visibly
+change: a level-0 dot cannot step down and a level-3 dot cannot step up.
+Those two levels are 40% of dots and change only half as often, so the
+visible fraction at 0.99 is `0.6 × 9.0% + 0.4 × 4.5%` ≈ **7.2%**.
+
+That is a handful changing at a time, which is what makes the effect
+ambient rather than a visible pulse. 0.85 would visibly change over a
+quarter of the wordmark at once and read as a wave.
 
 `PERIOD` is on the order of 4 seconds and remains a taste-level tuning
 knob. The threshold is not: if it is retuned, recompute the deviating
@@ -192,10 +221,18 @@ The one-liners replace the wordmark on screen rather than sharing it, so
 they can be set as headlines:
 
 - **Animated path:** `text-5xl font-bold` (48px, weight 700), `leading-tight`,
-  `text-balance`, `max-w-4xl`, `text-slate-100`, centred. The longest
-  sentences run roughly 900px at this size, so they sit on one line on a
-  typical desktop and wrap to two below ~900px; `text-balance` splits a
-  wrapped sentence into even halves rather than leaving a one-word orphan.
+  `text-balance`, `max-w-5xl`, `text-slate-100`, centred, inside a slot
+  with `px-6` side padding. The longest sentences are estimated at ~900px
+  at this size. Against the 1024px `max-w-5xl` cap they sit on one line on
+  viewports wider than roughly 950px and wrap to two below; `text-balance`
+  splits a wrapped sentence into even halves rather than leaving a one-word
+  orphan. Real widths are measured during verification.
+
+  `max-w-4xl` (896px) was rejected: it is roughly the sentence's own width,
+  so whether a sentence fit on one line would come down to a few pixels of
+  font metrics. The side padding matters too — today's `FadingLine` has
+  none (`absolute inset-x-0`), and at 640px a two-line 48px sentence would
+  run edge to edge.
 - **`StaticIntro`:** every element shares one screen there, so the
   sentences get the "bolder" half of the change but not the full size:
   `text-xl font-bold` (20px, up from 18px regular). At 48px, three stacked
@@ -267,6 +304,13 @@ the line never moves and is fully legible at scroll offset 0. Its
 `instanceColor` buffer is still rewritten every frame by shimmer, so
 "fixed" describes its position, not its per-frame cost.
 
+"Written once" holds across window resizes only because the matrices are
+in **raster units**, centred on the shared origin. The viewport-derived
+`fitScale` result is applied as the uniform scale of the wordmark's parent
+`<group>`, never baked into the matrices. A resize therefore changes one
+group transform, not thousands of matrices — and the dot radius, also in
+raster units, scales with it for free.
+
 ### "Carl John Caber" — assembles on scroll
 
 Reuses `createScatteredParticles` and `interpolateParticle` from
@@ -314,8 +358,17 @@ Two pure helpers compute the fit:
 
 ```
 boundsOfPoints(points) -> { minX, maxX, minY, maxY, width, height, centerX, centerY } | null
-fitScale(bounds, viewport, options) -> number
+fitScale(bounds, viewport, { margin, maxWidthPx, canvasWidthPx }) -> number
 ```
+
+- `viewport` — R3F's viewport in world units at z = 0
+  (`useThree(s => s.viewport)`).
+- `canvasWidthPx` — the canvas's CSS width (`useThree(s => s.size.width)`),
+  needed to express the pixel cap and the 1:1 fallback in world units.
+- `margin` — `0.2`. `maxWidthPx` — `960`.
+
+The result is applied as the uniform scale of the wordmark's parent group
+(see "CeeDev — fixed position"), not baked into instance matrices.
 
 `boundsOfPoints` returns the derived `width` / `height` / `centerX` /
 `centerY` alongside the raw extremes, so the same value feeds both
@@ -368,13 +421,14 @@ Three properties this relies on:
   at roughly half its intended size inside large margins.
 - **`bounds.height` is valid only because the centre is the content
   centre.** `height` is `maxY - minY`, the extent needed around the
-  composition's own centre. Centred on the canvas centre instead, the
-  content would reach 66 units from the origin while the formula reserved
-  62 — overflowing by ~6.5%, masked by the margin rather than prevented.
+  composition's own centre. Centred anywhere else, any asymmetry in the
+  content would push one side past the extent the formula reserved — an
+  overflow masked by the margin rather than prevented. The size of that
+  asymmetry depends on font metrics; the rule removes the dependence.
 - **Degenerate bounds have a defined result.** `boundsOfPoints([])` returns
   `null`, and `ParticleText` renders nothing for a line set that produced
-  no points: a blank raster — a font that failed to load, say — should mean
-  a missing wordmark, not a crash. In `fitScale`, an axis with zero extent
+  no points: a blank raster, for whatever reason, should mean a missing
+  wordmark, not a crash. In `fitScale`, an axis with zero extent
   imposes no constraint, and that includes the cap, which is itself a
   width constraint. A single row (zero height) is therefore fitted by the
   width terms alone. A single point constrains nothing at all, so
@@ -413,6 +467,17 @@ branch in `HomeIntro` becomes "reduced motion **or** narrow viewport"
 rather than reduced motion alone. `StaticIntro` shows everything at once;
 the fade-and-replace sequence exists only on the animated path.
 
+**The post-mount resize nudge must key on that same combined condition.**
+`HomeIntro` dispatches a synthetic `resize` 50ms after the Canvas mounts,
+because `react-use-measure` can otherwise leave the canvas stuck at the
+browser's default 300 × 150. Today that effect re-runs only when
+`prefersReducedMotion` changes. With the breakpoint, the Canvas can now
+also mount when the viewport widens past 640px — most plausibly a phone
+rotated from portrait (375px) to landscape (812px). Rotation is one
+discrete resize that fires *before* the Canvas exists, so without a nudge
+keyed on the combined condition, that path reproduces the 300 × 150 bug
+this effect was written to fix.
+
 ## Overlay Positioning
 
 Today `ScrollOverlay` stacks every `FadingLine` at the same centred
@@ -431,18 +496,45 @@ The new layout resolves both:
   past it.
 - **The CTA sits below that slot, never inside it.** Sentence 3 and the CTA
   are meant to coexist in the end state, so they are separated in space.
+  The CTA is positioned relative to the slot — absolutely, beneath it — so
+  its presence never shifts the slot. Built as a centred column holding
+  both, the sentences would sit above the point where the wordmark was
+  centred, and the handoff would visibly jump.
 
-`Nav` is `sticky top-0` and sits in normal flow above the `h-dvh` intro, so
-the canvas already begins below it. Clearance comes from the 20% margin in
-`fitScale`. Verification confirms the gap at 1280px, 768px and 640px
-rather than assuming the sticky header is accounted for.
+### The intro fills the space below the nav
+
+Today `app/page.tsx` renders `<Nav />` in normal flow followed by an
+`h-dvh` intro, so the page is taller than the viewport by the nav's
+height. That has four consequences, all of which this design's claims
+about centring and clearance would otherwise silently depend on:
+
+- There are two scroll containers: the document, which can scroll by the
+  nav's height, and `ScrollControls`' own scroll element.
+- The canvas's centre sits half a nav-height below the viewport's centre.
+- `fitScale` fits a box whose bottom nav-height is off-screen at load.
+- At the end of the track, scroll chains to the document and shifts the
+  end state up under the sticky nav.
+
+**On the animated path, the intro fills exactly the visible area below the
+nav, and the document does not scroll.** `StaticIntro` keeps normal
+document flow, because on short phones its stacked content can exceed the
+viewport and must stay scrollable. The exact CSS is left to the plan — the
+viewport-height and flex behaviour here is the kind of thing to settle by
+screenshot, not by reasoning — but the requirement is fixed.
+
+This is pre-existing, from the 2026-09-18 design. It is fixed here because
+the centring, clearance and fit in this design are only true once it is.
+
+Clearance from the nav then comes from the 20% margin in `fitScale`, and is
+confirmed at 1280px, 768px and 640px.
 
 ## Rendering Approach
 
 **`<instancedMesh>` with `CircleGeometry` and per-instance colour.**
 
 Two instanced meshes, one per line, so the fixed line can skip matrix
-updates entirely while the assembling line updates per frame. Both share
+updates entirely while the assembling line updates per frame. Both sit
+under one parent `<group>` carrying the `fitScale` result, and both share
 the wordmark's fade opacity.
 
 Alternatives considered:
@@ -526,10 +618,15 @@ Changed:
   fade.
 - `components/home/HomeIntro.tsx` — imports its ranges from
   `scrollTimeline.ts` instead of defining them; sentences move to the
-  shared centred slot at 48px bold; the CTA moves below the slot; branch
-  condition becomes reduced-motion **or** narrow viewport; `StaticIntro`
-  and the `sr-only` block gain the name, and `StaticIntro`'s sentences go
-  bold.
+  shared centred slot at 48px bold with side padding; the CTA moves below
+  the slot; branch condition becomes reduced-motion **or** narrow
+  viewport, and the post-mount resize nudge keys on that same combined
+  condition; `StaticIntro` and the `sr-only` block gain the name, and
+  `StaticIntro`'s sentences go bold.
+- `app/page.tsx` and/or the `HomeIntro` root — so the animated path fills
+  the space below the nav without the document scrolling (see "The intro
+  fills the space below the nav"). Which of the two carries the change is
+  left to the plan.
 - `data/content.ts` — adds `homeWordmarkName`; updates the length-coupling
   comment on `homeOneLiners`.
 
@@ -622,7 +719,11 @@ This is a deliberate limit, not an oversight.
 
 **Manual verification by screenshot, in a fresh browser tab**
 
-At scroll offsets set directly, not by eye:
+At scroll offsets set directly, not by eye. `ScrollControls` damps its
+offset toward the scroll position (`easing.damp`, damping 0.2), so after
+setting the scroll element's `scrollTop` each capture waits until the
+rendered state stops changing — roughly a second — before it is taken.
+Otherwise a capture meant for 0.29 shows a lagging frame nearer 0.25.
 
 - **0** — "CeeDev" fully formed and legible with no scroll; the name
   scattered.
@@ -638,8 +739,16 @@ At widths:
   clearance below the sticky nav. 640px is the worst case for the canvas
   path — immediately above the breakpoint, where dots are smallest
   (~4.0px) — so it is the width most likely to fail.
-- No sentence wraps beyond two lines at 640px.
-- Below 640px, the static text layout renders and no canvas is mounted.
+- No sentence wraps beyond two lines at 640px, and none touches the
+  viewport edge. Measured sentence widths confirm the ~900px estimate, or
+  the one-line threshold in Sentence typography is corrected.
+- On the animated path, the document does not scroll: its scroll height
+  equals the viewport height, and only `ScrollControls`' element scrolls.
+- Below 640px, the static text layout renders and no canvas is mounted;
+  it scrolls normally if its content exceeds the viewport.
+- Crossing the breakpoint upward in one step (resize from 500px to 1024px
+  in a single change, standing in for a phone rotation) mounts a canvas at
+  full size, not 300 × 150.
 
 Colour, instance count, errors:
 
