@@ -28,8 +28,9 @@ wordmark is built and animated.
 | Dot shape | Square points, `sizeAttenuation` | True circles, uniform world size |
 | Dot colour | One flat `#34d399` | Four-level emerald ramp, per dot |
 | Dot motion | Position only | Position + intensity shimmer |
-| Overlay | Centred over the particles | Below the particle block |
-| Composition scale | Fixed `WORLD_SCALE = 0.02` | Derived from content bounds + viewport |
+| Overlay | Centred over the particles | Lower 45% of the viewport |
+| Composition scale | Fixed `WORLD_SCALE = 0.02` | Derived from content bounds + allotted band |
+| Viewport split | None — both centred, overlapping | Wordmark upper 55%, overlay lower 45% |
 | Narrow viewports | Particle canvas at any width | Real text below 640px |
 
 ## Visual Specification
@@ -57,12 +58,27 @@ the sizes are retuned.
 
 `createScatteredParticles` converts raster coordinates to world space via
 `point.x - centerX` and `centerY - point.y`. **Both lines must be passed
-the same `centerX` / `centerY` — the shared canvas centre, (330, 100).**
+the same `centerX` / `centerY`.**
 
 This is not an optimisation. If each line is centred on its own bounding
 box — a natural reading of "sampled separately" — both lines resolve to
 the origin and render on top of each other. The vertical offset between
 the two lines exists only because they share a centre.
+
+That shared centre is the **centre of the two lines' combined bounding
+box**, not the canvas centre. The canvas centre would be wrong: content
+spans roughly y = 42 (top of "CeeDev") to y = 166 (bottom of the name's
+descender), so it sits 58px above the canvas centre and 66px below it.
+Centring on (330, 100) would hang the composition slightly low on screen
+and, worse, would break `fitScale` — see Responsive Sizing.
+
+The required order of operations is therefore:
+
+1. Rasterize each line into its own identically-sized canvas.
+2. Sample each canvas with `sampleTextPoints` at the shared step.
+3. Concatenate both point sets and take `boundsOfPoints` of the union.
+4. Pass that bounding box's centre to `createScatteredParticles` for
+   **both** lines, and its size to `fitScale`.
 
 ### Lattice
 
@@ -105,6 +121,24 @@ Level distribution is weighted 20 / 30 / 30 / 20 across levels 0–3, assigned
 once at load from a position-seeded hash so the pattern is stable across
 re-renders and not re-randomised on every mount.
 
+#### Colour space
+
+The ratios above are sRGB values, and they only hold if the ramp survives
+three.js's colour pipeline intact. three.js applies output colour-space
+conversion by default, so feeding raw hex into `instanceColor` without
+going through colour management renders a visibly different green than the
+one specified here.
+
+The ramp is authored as sRGB hex and constructed with `new THREE.Color(hex)`
+so that `THREE.ColorManagement` (enabled by default in current three.js)
+performs the sRGB → working-space conversion. The renderer's output colour
+space is left at its default rather than overridden.
+
+Verification samples a lit pixel off the canvas and compares it against the
+authored hex. This is a cheap check that catches a whole class of
+washed-out or oversaturated results, and without it the measured contrast
+figures are an assumption rather than a fact.
+
 ### No background lattice
 
 Dots exist **only where the letters rasterize**. There is no field of dim
@@ -130,10 +164,25 @@ high threshold the dot steps one level up, when it falls below the negative
 threshold it steps one level down, otherwise it holds at `baseLevel`. The
 result is always clamped to 0..3.
 
-The threshold is high (~0.85) on purpose — only a small fraction of dots
-deviate at any instant, which is what makes the effect ambient rather than
-a pulsing wave. `PERIOD` is on the order of 4 seconds. Exact tuning is an
-implementation detail; the bounds and determinism are what the tests pin.
+**Threshold: 0.99.** A sine spends `(π − 2·asin(t)) / π` of its cycle
+outside ±t, so with uniformly distributed phases that fraction is also the
+proportion of dots deviating at any instant:
+
+| Threshold | Dots deviating |
+| --- | --- |
+| 0.85 | 35.3% |
+| 0.95 | 20.2% |
+| 0.99 | 9.0% |
+| 0.995 | 6.4% |
+
+0.99 gives ~9% — a handful changing at a time, which is what makes the
+effect ambient rather than a visible pulse. 0.85 would put over a third of
+the wordmark in motion simultaneously and read as a wave.
+
+`PERIOD` is on the order of 4 seconds and remains a taste-level tuning
+knob. The threshold is not: if it is retuned, recompute the deviating
+fraction from the formula above rather than guessing. The tests pin bounds
+and determinism, not the specific values.
 
 Shimmer updates `instanceColor` only. No geometry or matrix churn.
 
@@ -180,21 +229,26 @@ raster — `sampleTextPoints` only emits points where alpha clears the
 threshold — so the canvas width is not the composition width. "CeeDev" at
 96px spans roughly 317px of the current 480px canvas.
 
-A pure helper computes the fit:
+Two pure helpers compute the fit:
 
 ```
-boundsOfPoints(points) -> { minX, maxX, minY, maxY }
-fitScale(content, viewport, marginFraction) -> number
+boundsOfPoints(points) -> { minX, maxX, minY, maxY, width, height, centerX, centerY }
+fitScale(bounds, band, marginFraction) -> number
 ```
 
-where `content` is the bounding box of **both lines' sampled points
-combined**, `viewport` is the R3F viewport in world units at z = 0, and the
-result is:
+`boundsOfPoints` returns the derived `width` / `height` / `centerX` /
+`centerY` alongside the raw extremes, so the same value feeds both
+`createScatteredParticles` (which needs the centre) and `fitScale` (which
+needs the size) without the caller re-deriving either.
+
+`bounds` is over **both lines' sampled points combined**. `band` is the
+region in world units at z = 0 that the wordmark is allotted — see below;
+it is not the whole viewport. The result is:
 
 ```
 min(
-  viewport.width  * (1 - margin) / content.width,
-  viewport.height * (1 - margin) / content.height
+  band.width  * (1 - margin) / bounds.width,
+  band.height * (1 - margin) / bounds.height
 )
 ```
 
@@ -202,9 +256,35 @@ Both axes are constrained. The composition is roughly 3.3:1, so width
 normally binds — but on short, wide viewports height binds instead, and
 fitting by width alone would overflow vertically.
 
-Passing `rasterWidth` here instead of the measured bounds would fit 660
-units of mostly-empty canvas and render the wordmark at roughly half its
-intended size inside large margins.
+Two things this gets right that the obvious version does not:
+
+- **Not `rasterWidth`.** Fitting the 660px canvas instead of the measured
+  bounds would size the wordmark against mostly-empty canvas and render it
+  at roughly half its intended size inside large margins.
+- **`bounds.height` is only valid because the centre is the content
+  centre.** `height` is `maxY - minY`, which describes the extent needed
+  around the composition's own centre. If the lines were centred on the
+  canvas centre instead (58px above the content, 66px below), the content
+  would reach 66 units from the origin while the formula reserved 62 —
+  overflowing by ~6.5%, masked by the margin rather than prevented.
+
+### The wordmark and the overlay split the viewport
+
+`fitScale` fits into a **band**, not the full viewport, because the
+one-liners and CTA have to live somewhere.
+
+The viewport is divided by construction: the wordmark gets the upper
+**55%**, the overlay the lower **45%**. `fitScale` receives the band, so
+the wordmark can never grow into the overlay at any viewport ratio.
+
+Deriving the overlay's position from a static CSS offset while the
+wordmark's on-screen size varies with the viewport would let the two
+collide at some ratios. Splitting the space up front makes the collision
+structurally impossible rather than something to check for.
+
+The 55% band is also what provides clearance below the sticky nav: the
+margin inside the band keeps the wordmark off both the nav above and the
+overlay below.
 
 ### What the overflow bug actually was
 
@@ -214,9 +294,11 @@ exceeding the visible width at desktop aspect ratios. At the current camera
 `2 * 5 * tan(25°)` ≈ 4.66 world units, giving ≈ 8.3 units of width at 16:9.
 The old composition spans ≈ 317 × 0.02 ≈ 6.34 units, which fits.
 
-It overflows on **narrow** viewports: at ~620px wide the aspect drops below
-1, visible width falls to ≈ 3.6 units, and 6.34 no longer fits. Deriving
-the scale from viewport dimensions fixes this at every aspect ratio.
+It overflows on **narrow** viewports: at ~620 × 800 the aspect is ≈ 0.78,
+so visible width falls to ≈ 3.6 units and 6.34 no longer fits. (The exact
+figure depends on window height — at 620 × 740 it is ≈ 3.9 units. The
+composition overflows either way.) Deriving the scale from viewport
+dimensions fixes this at every aspect ratio.
 
 ### Below 640px: real text, no canvas
 
@@ -241,16 +323,21 @@ rather than reduced motion alone.
 Today the one-liners already fade in on top of the particles; adding a
 second line of wordmark makes the collision worse.
 
-The overlay moves to sit **below** the particle block: the wordmark
-occupies the upper portion of the viewport, the one-liners and CTA the
-lower portion. This is a layout change to `ScrollOverlay`'s container, not
-a change to the fade logic, which stays as-is.
+The overlay moves to sit **below** the particle block, occupying the lower
+45% of the viewport that the wordmark's band leaves free (see Responsive
+Sizing). This is a layout change to `ScrollOverlay`'s container, not a
+change to the fade logic, which stays as-is.
+
+The 45% figure is not an independent constant — it is the complement of the
+wordmark's band. Both must come from one shared value, so that changing the
+split moves the boundary in both places at once. Defining them separately
+is how they drift apart.
 
 `Nav` is `sticky top-0` and sits in normal flow above the `h-dvh` intro, so
-the canvas already begins below it. The wordmark still needs deliberate
-clearance rather than tucking against the nav bar: the `marginFraction` in
-`fitScale` provides it, and verification must confirm the gap at both
-1280px and 768px rather than assuming the sticky header is accounted for.
+the canvas already begins below it. Clearance from the nav comes from the
+margin inside the wordmark's band. Verification must confirm the gap at
+1280px, 768px and 640px rather than assuming the sticky header is
+accounted for.
 
 ## Rendering Approach
 
@@ -310,9 +397,12 @@ Changed:
   vertical centre is hardcoded to `height / 2`; both lines need explicit
   placement within a shared canvas. Omitting `y` preserves current
   behaviour.
-- `components/home/particlePositions.ts` — gains `boundsOfPoints`, the
-  bounding box of sampled points, feeding `fitScale`. `sampleTextPoints`,
-  `createScatteredParticles` and `interpolateParticle` are unchanged.
+- `components/home/particlePositions.ts` — gains `boundsOfPoints`, which
+  returns `{ minX, maxX, minY, maxY, width, height, centerX, centerY }`
+  over the two lines' combined points. Its centre feeds
+  `createScatteredParticles`, its size feeds `fitScale`.
+  `sampleTextPoints`, `createScatteredParticles` and `interpolateParticle`
+  are unchanged.
 - `components/home/usePrefersReducedMotion.ts` — the narrow-viewport branch
   needs a second media query, and hand-rolling a parallel hook would
   duplicate this one's logic. Extract a generic `useMediaQuery(query)` and
@@ -361,20 +451,39 @@ instead:
   viewports; height binds on short wide viewports; sane at extreme aspect
   ratios.
 - `particlePositions.ts` — `boundsOfPoints` over known point sets,
-  including a single point and an empty array.
+  including a single point and an empty array; `centerX` / `centerY` land
+  at the true centre of an asymmetric set, which is the property E1
+  depends on.
 - `useMediaQuery.ts` — returns the initial match synchronously on first
-  render (the regression guard for the lazy-initializer bug), and responds
-  to change events.
+  render (the regression guard for the lazy-initializer bug); responds to
+  change events; **returns independent results for two different queries**,
+  which is what makes the reduced-motion and breakpoint conditions
+  separable.
 
 **Updated**
 
 - `app/page.test.tsx:29` and `components/home/HomeIntro.test.tsx:24` both
-  assert `heading, level 1, name: 'CeeDev'` as an exact match. They must
-  keep passing unchanged — which is the check that the name was added as a
-  sibling rather than nested — and each gains an assertion that the name
-  itself renders.
+  assert `heading, level 1, name: 'CeeDev'` as an exact match. **That
+  assertion must survive the change verbatim** — it is the check that the
+  name was added as a sibling rather than nested inside the `h1`. Each file
+  then gains a separate new assertion that the name itself renders.
+- Both files mock `matchMedia` with `matches: true` for *every* query
+  ([page.test.tsx:9](../../../app/page.test.tsx), [HomeIntro.test.tsx:10](../../../components/home/HomeIntro.test.tsx)).
+  Once `useMediaQuery` serves both `prefers-reduced-motion` and
+  `max-width: 639px`, that blanket mock makes the two conditions
+  indistinguishable. The mocks become **query-aware** — matching on the
+  query string — so each condition can be set independently.
 - `usePrefersReducedMotion.test.ts` must keep passing untouched across the
   `useMediaQuery` extraction.
+
+**Explicitly not unit-tested**
+
+The `HomeIntro` branch itself — "reduced motion or narrow viewport →
+`StaticIntro`, otherwise `<Canvas>`" — cannot be tested at the component
+level, because the Canvas branch throws under jsdom by design. Testing
+`useMediaQuery` with two independent queries covers the part that is
+testable; the branch is verified by screenshot at the widths listed below.
+This is a deliberate limit, not an oversight.
 
 **Unchanged**
 
@@ -385,10 +494,14 @@ instead:
 
 - First frame shows "CeeDev" fully formed and legible with no scroll.
 - "Carl John Caber" is legible once assembled.
-- Neither line overflows at 1280px or at 768px, with visible clearance
-  below the sticky nav.
+- Neither line overflows at 1280px, 768px or **640px**, with visible
+  clearance below the sticky nav. 640px is the worst case for the particle
+  path — immediately above the breakpoint, where dots are smallest
+  (~4.5px) — so it is the width most likely to fail, not an afterthought.
 - Below 640px, the static text layout renders and no canvas is mounted.
-- One-liners and CTA do not overlap the wordmark.
+- One-liners and CTA do not overlap the wordmark at any tested width.
+- A lit pixel sampled off the canvas matches the authored ramp hex
+  (see Colour space).
 - Logged instance count is in the expected low thousands.
 - No console errors.
 
