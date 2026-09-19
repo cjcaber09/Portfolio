@@ -1,13 +1,13 @@
 import { expect, test } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import Page from '../app/page'
+import AboutPage from './page'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { profile } from '@/data/content'
 
-test('Home page renders all sections', () => {
+test('About page renders all sections', () => {
   render(
     <ThemeProvider>
-      <Page />
+      <AboutPage />
     </ThemeProvider>
   )
   expect(screen.getByRole('heading', { level: 1, name: profile.name })).toBeInTheDocument()
