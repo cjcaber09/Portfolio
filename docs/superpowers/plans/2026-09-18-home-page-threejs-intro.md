@@ -261,12 +261,20 @@ Expected: FAIL — `homeOneLiners` is not exported
 Add to `data/content.ts`, after the `education` export:
 
 ```ts
+// Each entry corresponds by index to a scroll-fade range in
+// components/home/HomeIntro.tsx's ONE_LINER_RANGES — keep both arrays the
+// same length when editing either one.
 export const homeOneLiners: string[] = [
   'Full-Stack Web Developer.',
   'Building scalable web experiences.',
   'From legacy IBM i to modern React.',
 ]
 ```
+
+**Post-approval fix (final whole-branch review):** added the cross-reference
+comment above after the reviewer flagged the `homeOneLiners`/`ONE_LINER_RANGES`
+positional coupling as undocumented and crash-prone on a length mismatch. See
+the matching `HomeIntro.tsx` fix below for the runtime safety net.
 
 - [ ] **Step 4: Run test to verify it passes**
 
@@ -867,11 +875,20 @@ import { homeOneLiners } from '@/data/content'
 const CTA_LABEL = 'View My Work'
 const CTA_HREF = '/about'
 const FADE_EDGE = 0.06
+// Must stay the same length as data/content.ts's homeOneLiners (matched by
+// index in ScrollOverlay below). If they ever fall out of sync, the missing
+// index falls back to UNREACHABLE_RANGE below rather than crashing the R3F
+// render loop.
 const ONE_LINER_RANGES: Array<[number, number]> = [
   [0.4, 0.58],
   [0.55, 0.73],
   [0.7, 0.88],
 ]
+// fadeOpacity(offset, 1, 1, edge) always returns 0 for any offset in the
+// reachable [0,1] scroll range (offset <= from is true for every such
+// offset), so this range renders as permanently invisible — a safe fallback
+// rather than a crash if ONE_LINER_RANGES[index] is ever undefined.
+const UNREACHABLE_RANGE: [number, number] = [1, 1]
 // Upper bound set safely beyond the reachable [0,1] scroll range. fadeOpacity
 // treats `to` as exclusive (offset >= to returns 0), so a CTA_RANGE of
 // [0.85, 1] would make the button fade back to invisible exactly at max
@@ -925,7 +942,7 @@ function ScrollOverlay() {
       <div className="relative h-[400vh] w-full">
         <div className="sticky top-0 flex h-dvh w-full items-center justify-center">
           {homeOneLiners.map((line, index) => (
-            <FadingLine key={line} range={ONE_LINER_RANGES[index]}>
+            <FadingLine key={line} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
               <p className="text-lg text-slate-200">{line}</p>
             </FadingLine>
           ))}
@@ -968,6 +985,10 @@ export function HomeIntro() {
 
   return (
     <div className="h-dvh w-full">
+      {/* The word "CeeDev" exists only as pixels sampled onto the WebGL
+          canvas below — this heading is the screen-reader-accessible
+          equivalent, matching StaticIntro's visible <h1>. */}
+      <h1 className="sr-only">CeeDev</h1>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ScrollControls pages={4} damping={0.2}>
           <Suspense fallback={null}>
@@ -980,6 +1001,19 @@ export function HomeIntro() {
   )
 }
 ```
+
+**Post-approval fixes (final whole-branch review):** the final reviewer
+flagged three issues, all addressed above/below:
+1. `ONE_LINER_RANGES`/`homeOneLiners` length coupling was undocumented and
+   would crash the render loop on a mismatch — added the cross-reference
+   comments and the `UNREACHABLE_RANGE` fallback above.
+2. The animated branch had no DOM/accessibility equivalent of "CeeDev" for
+   screen readers (only `StaticIntro` had a real `<h1>`) — added the
+   `sr-only` heading above.
+3. `app/page.test.tsx`'s `findByRole` calls used the default 1000ms timeout,
+   which reliably timed out when run as part of the full suite (reproduced
+   3/3 times) due to CPU contention from other test files loading Three.js
+   in parallel worker threads — see the Task 6 test file update below.
 
 If `@react-three/drei`'s `Scroll`/`ScrollControls`/`useScroll` API differs from what's used above for the installed `10.7.8` version, consult `node_modules/@react-three/drei/dist/index.d.ts` (or the package README) and adjust — the intent to preserve is: a scrollable region roughly `pages * 100vh` tall drives `scroll.offset` from 0 to 1, and each `FadingLine` fades in/out based on `fadeOpacity(scroll.offset, ...)` over its own range.
 
@@ -1084,12 +1118,16 @@ test('Home page renders Nav and the (reduced-motion) intro content', async () =>
     </ThemeProvider>
   )
   expect(screen.getByRole('link', { name: 'CeeDev' })).toBeInTheDocument()
-  expect(await screen.findByRole('heading', { level: 1, name: 'CeeDev' })).toBeInTheDocument()
-  expect(await screen.findByRole('link', { name: 'View My Work' })).toBeInTheDocument()
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'CeeDev' }, { timeout: 5000 })
+  ).toBeInTheDocument()
+  expect(
+    await screen.findByRole('link', { name: 'View My Work' }, { timeout: 5000 })
+  ).toBeInTheDocument()
 })
 ```
 
-This forces the reduced-motion branch (via the `matchMedia` mock) so the lazily-loaded `HomeIntro` never touches WebGL/Canvas in the test, consistent with every other WebGL-adjacent test in this plan. `findByRole` is used (not `getByRole`) because `next/dynamic`'s lazy import resolves asynchronously.
+This forces the reduced-motion branch (via the `matchMedia` mock) so the lazily-loaded `HomeIntro` never touches WebGL/Canvas in the test, consistent with every other WebGL-adjacent test in this plan. `findByRole` is used (not `getByRole`) because `next/dynamic`'s lazy import resolves asynchronously. The explicit `{ timeout: 5000 }` (well above `findByRole`'s default 1000ms) is required, not just generous padding: the final whole-branch review reproduced a real failure 3/3 times running the full suite (`npx vitest run`), where CPU contention from other test files loading Three.js in parallel worker threads pushed this dynamic import's resolution past the default timeout, while the same test passed 4/4 times in isolation.
 
 - [ ] **Step 4: Run the full test suite**
 
