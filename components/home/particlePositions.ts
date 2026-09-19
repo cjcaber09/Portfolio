@@ -64,3 +64,41 @@ export function interpolateParticle(particle: ScatteredParticle, progress: numbe
     z: particle.start.z + (particle.target.z - particle.start.z) * t,
   }
 }
+
+export interface Bounds {
+  minX: number
+  maxX: number
+  minY: number
+  maxY: number
+  width: number
+  height: number
+  centerX: number
+  centerY: number
+}
+
+export function boundsOfPoints(points: Point2D[]): Bounds | null {
+  if (points.length === 0) return null
+
+  let minX = points[0].x
+  let maxX = points[0].x
+  let minY = points[0].y
+  let maxY = points[0].y
+
+  for (const point of points) {
+    if (point.x < minX) minX = point.x
+    if (point.x > maxX) maxX = point.x
+    if (point.y < minY) minY = point.y
+    if (point.y > maxY) maxY = point.y
+  }
+
+  return {
+    minX,
+    maxX,
+    minY,
+    maxY,
+    width: maxX - minX,
+    height: maxY - minY,
+    centerX: (minX + maxX) / 2,
+    centerY: (minY + maxY) / 2,
+  }
+}
