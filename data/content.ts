@@ -261,10 +261,17 @@ export const education: EducationEntry[] = [
 ]
 
 // Each entry corresponds by index to a scroll-fade range in
-// components/home/HomeIntro.tsx's ONE_LINER_RANGES — keep both arrays the
-// same length when editing either one.
+// components/home/scrollTimeline.ts's ONE_LINER_RANGES — keep both arrays
+// the same length when editing either one (enforced by
+// components/home/scrollTimeline.test.ts).
 export const homeOneLiners: string[] = [
   'Full-Stack Web Developer.',
   'Building scalable web experiences.',
   'From legacy IBM i to modern React.',
 ]
+
+// The Home page wordmark's second line. Deliberately without the middle
+// initial `profile.name` carries — three characters narrower on an
+// already width-constrained line, and a wordmark, unlike the resume-
+// accurate Hero/Contact sections, is not the place for a legal name.
+export const homeWordmarkName = 'Carl John Caber'
