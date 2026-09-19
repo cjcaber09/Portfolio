@@ -202,42 +202,59 @@ Lit dots drift between adjacent intensity levels on a staggered cycle, so
 the first frame is not completely static even though "CeeDev" does not
 move.
 
-Each dot carries a `phase` in [0, 1) from the same position seed. A pure
-function drives the whole effect:
+Each dot carries two values from its lattice position: a `baseLevel`
+(0–3) and a `phase` in [0, 1). **They must come from independent hash
+outputs** — e.g. `hash(x, y, 0)` for the level and `hash(x, y, 1)` for the
+phase. Deriving the phase from the same hash value that picked the level
+would correlate them: every level-0 dot would get a phase in [0, 0.2),
+every level-3 dot one in [0.8, 1), and each level would peak in unison —
+four synchronised groups pulsing, the very effect the settings below exist
+to prevent.
+
+A pure function drives the whole effect, returning a **fractional** level:
 
 ```
-levelAt(baseLevel, phase, timeSeconds) -> 0..3
+levelAt(baseLevel, phase, timeSeconds) -> number in [0, 3]
+
+  s     = sin(2π · (time / PERIOD + phase))
+  f     = clamp((|s| − T0) / (1 − T0), 0, 1)
+  level = clamp(baseLevel + sign(s) · f, 0, 3)
 ```
 
-Implementation: `s = sin(2π * (time / PERIOD + phase))`; when `s` exceeds a
-high threshold the dot steps one level up, when it falls below the negative
-threshold it steps one level down, otherwise it holds at `baseLevel`. The
-result is always clamped to 0..3.
+and `rampAt(level)` turns that into a colour by interpolating between the
+two neighbouring ramp entries, `floor(level)` and the one above it.
 
-**Threshold: 0.99.** A sine spends `(π − 2·asin(t)) / π` of its cycle
-outside ±t, so with uniformly distributed phases that fraction is also the
-proportion of dots deviating at any instant:
+While `|s| ≤ T0` a dot sits exactly on its base colour. As `|s|` rises past
+`T0`, `f` climbs smoothly from 0 to 1 and back, so the dot **glides** to the
+adjacent level and returns — it never snaps. Near the sine's peak `f`
+follows a parabola in time, so each glide eases in and out on its own.
 
-| Threshold | Dots deviating |
-| --- | --- |
-| 0.85 | 35.3% |
-| 0.95 | 20.2% |
-| 0.99 | 9.0% |
-| 0.995 | 6.4% |
+**`T0 = 0.988`, `PERIOD = 30s`.** A sine spends `(π − 2·asin(T0)) / π` of
+its cycle outside ±T0; with independent, uniform phases that is also the
+fraction of dots off their base level at any instant. Each excursion lasts
+`PERIOD × fraction / 2`:
 
-The table counts dots whose sine is outside ±t. Not all of them visibly
-change: a level-0 dot cannot step down and a level-3 dot cannot step up.
-Those two levels are 40% of dots and change only half as often, so the
-visible fraction at 0.99 is `0.6 × 9.0% + 0.4 × 4.5%` ≈ **7.2%**.
+| Setting | Off-base at any instant | Visibly off-base\* | One glide, up and back |
+| --- | --- | --- | --- |
+| Discrete step, t = 0.99, 4s (previous revision) | 9.0% | 7.2% | 0.18s — a blink |
+| Glide, T0 = 0.988, 12s | 9.9% | 7.9% | 0.59s |
+| Glide, T0 = 0.988, 20s | 9.9% | 7.9% | 0.99s |
+| **Glide, T0 = 0.988, 30s** | **9.9%** | **7.9%** | **1.48s** |
 
-That is a handful changing at a time, which is what makes the effect
-ambient rather than a visible pulse. 0.85 would visibly change over a
-quarter of the wordmark at once and read as a wave.
+\* A level-0 dot cannot glide down and a level-3 dot cannot glide up. Those
+two levels are 40% of dots and move half as often, so the visible fraction
+is `0.6 × p + 0.4 × p / 2` for an off-base fraction `p`.
 
-`PERIOD` is on the order of 4 seconds and remains a taste-level tuning
-knob. The threshold is not: if it is retuned, recompute the deviating
-fraction from the formula above rather than guessing. The tests pin bounds
-and determinism, not the specific values.
+The previous revision specified a discrete one-level step on a 4-second
+cycle. Computed, that is a 0.18-second pop — a sparkle, not the slow drift
+that was chosen. The glide on a 30-second cycle is that drift: roughly one
+dot in twelve mid-glide at any moment, each taking about a second and a
+half.
+
+`PERIOD` and `T0` are taste-level knobs. If either is retuned, recompute the
+fractions and glide length from the formulas above rather than guessing.
+The tests pin bounds, continuity, determinism and independence, not the
+specific values.
 
 Shimmer updates `instanceColor` only. No geometry or matrix churn.
 
@@ -355,16 +372,16 @@ Reuses `createScatteredParticles` and `interpolateParticle` from
 Each in-flight dot's colour is composed in a fixed order:
 
 ```
-colour = mix(ramp[0], ramp[levelAt(base, phase, t)], progress)
+colour = mix(ramp[0], rampAt(levelAt(base, phase, t)), progress)
 ```
 
-Shimmer picks the *target* level first; that target is then mixed from the
+Shimmer picks the *target* colour first; that target is then mixed from the
 level-0 floor by `progress`. So at launch (`progress = 0`) every dot is the
 floor colour and shimmer has no visible effect, and at landing
 (`progress = 1`) it is fully present. Shimmer's visible strength therefore
 scales with progress, and assembly and lighting-up read as one gesture.
-Reversing the order — mixing first, then applying shimmer's level step —
-would let shimmer flicker dots mid-flight.
+Reversing the order — mixing toward the base colour first, then applying
+shimmer on top — would let shimmer move dots mid-flight.
 
 "CeeDev" uses the same expression with `progress` pinned at 1.
 
@@ -550,6 +567,11 @@ The new layout resolves both:
   accessibility tree so assistive technology reads all three regardless
   of scroll position.
 
+  The wrapper's **initial** inline style carries `visibility: hidden`
+  alongside `opacity: 0`. The per-frame loop only takes over on its first
+  animation frame, so an initial style of `opacity: 0` alone would leave
+  the CTA live for the gap between mount and that frame.
+
 ### The intro fills the space below the nav
 
 Today `app/page.tsx` renders `<Nav />` in normal flow followed by an
@@ -565,11 +587,19 @@ about centring and clearance would otherwise silently depend on:
   end state up under the sticky nav.
 
 **On the animated path, the intro fills exactly the visible area below the
-nav, and the document does not scroll.** `StaticIntro` keeps normal
-document flow, because on short phones its stacked content can exceed the
-viewport and must stay scrollable. The exact CSS is left to the plan — the
-viewport-height and flex behaviour here is the kind of thing to settle by
-screenshot, not by reasoning — but the requirement is fixed.
+nav, and the document does not scroll.**
+
+**`StaticIntro` gets the same fix in its own terms.** It is `min-h-dvh`
+today, so it too centres its content half a nav-height low and makes the
+page scroll by the nav's height even when everything fits. It keeps normal
+document flow — on short phones its stacked content can exceed the
+viewport and must stay scrollable — but its *minimum* height becomes the
+space below the nav rather than the full viewport. Scrollability only
+needs content to be able to grow; it never needed the extra nav-height.
+
+The exact CSS for both is left to the plan — viewport-height and flex
+behaviour is the kind of thing to settle by screenshot, not by reasoning —
+but both requirements are fixed.
 
 This is pre-existing, from the 2026-09-18 design. It is fixed here because
 the centring, clearance and fit in this design are only true once it is.
@@ -634,8 +664,10 @@ New:
   `UNREACHABLE_RANGE`, `CTA_RANGE`. The only place scroll ranges are
   defined.
 - `components/home/contributionLevels.ts` — pure. Position-seeded level
-  assignment, phase assignment, and `levelAt(baseLevel, phase, time)`.
-  Holds the four-colour ramp as the single source of truth.
+  and phase assignment from independent hash outputs;
+  `levelAt(baseLevel, phase, time)` returning a fractional level; and
+  `rampAt(level)` interpolating the ramp. Holds the four-colour ramp as
+  the single source of truth.
 - `components/home/fitScale.ts` — pure. Viewport-fitting world scale with
   margin, both-axis constraint, width cap, and degenerate-axis handling.
 - `components/home/useMediaQuery.ts` — see below.
@@ -699,6 +731,20 @@ Unchanged:
   half the heading's `text-5xl`, mirroring the 50% ratio on the canvas —
   fully formed, no canvas. It serves both the reduced-motion and the
   sub-640px paths.
+- **Keyboard users can operate the animation.** On the animated path the
+  document no longer scrolls, and the CTA is inert until it appears — so
+  Space, Page Down and the arrow keys have no document to move, and Tab
+  can no longer reach the CTA early (which previously, by accident, was a
+  keyboard escape route). The only thing left that scrolls is drei's own
+  scroll element, and it has no `tabIndex`, so whether Tab can reach it
+  depends on the browser engine's handling of scrollable containers.
+
+  The scroll element (reachable through `useScroll().el`) therefore gets
+  `tabIndex = 0`, an `aria-label` describing it as the scrollable intro,
+  and a visible focus indicator. Keyboard users Tab into it once, then use
+  the arrow keys, Page Down and Space as they would anywhere else. Nobody
+  was ever stranded — the nav links reach every section — but the intro
+  itself must be operable, not only skippable.
 
 ## Testing
 
@@ -717,11 +763,22 @@ instead.
   - Sentence 3 and the CTA both have opacity 1 at offset 1.
   - `ONE_LINER_RANGES.length === homeOneLiners.length` — replacing the
     comment-only coupling with an enforced one.
-- `contributionLevels.ts` — level assignment is deterministic for a given
-  position; distribution roughly matches the 20/30/30/20 weighting;
-  `levelAt` never returns outside 0..3 for any base, phase or time,
-  including at the clamping edges (base 0 stepping down, base 3 stepping
-  up).
+- `contributionLevels.ts`:
+  - Level and phase assignment are deterministic for a given position.
+  - The level distribution roughly matches the 20/30/30/20 weighting.
+  - **Independence:** across a full lattice, the mean phase within each
+    level is ≈ 0.5. This is the test that fails if the phase is ever
+    derived from the level's hash value.
+  - `levelAt` never returns outside [0, 3] for any base, phase or time,
+    including at the clamping edges (base 0 gliding down, base 3 gliding
+    up).
+  - `levelAt` returns exactly `baseLevel` whenever `|s| ≤ T0`.
+  - **Continuity:** stepping time by 1ms never moves the level by more
+    than 0.01. The steepest rate the formula allows at `T0 = 0.988`,
+    `PERIOD = 30s` is ~2.7 levels per second, so 1ms moves it at most
+    ~0.003; a snap between levels would fail this at once.
+  - `rampAt` returns the exact ramp colour at integer levels and
+    interpolates between neighbours at fractional ones.
 - `fitScale.ts` — fits within the margin; width binds on a typical
   landscape viewport; height binds on a short, wide one; the 960px cap
   binds on a large screen; a zero-height box (single row) is constrained by
@@ -787,6 +844,13 @@ Otherwise a capture meant for 0.29 shows a lagging frame nearer 0.25.
   checks for the inert-while-invisible rule, which cannot be unit-tested:
   `ScrollOverlay` only renders on the Canvas path, which never renders
   under jsdom.
+- **Keyboard** — from a fresh load, Tab reaches the intro's scroll element
+  with a visible focus indicator, and Arrow Down / Page Down / Space
+  advance the animation through the handoffs to the end state, where Tab
+  then reaches the CTA.
+- **Shimmer** — watched for ~30 seconds at offset 0, dots glide between
+  neighbouring greens over about a second and a half; none blinks or
+  snaps, and no visible group of dots brightens in unison.
 
 At widths:
 
@@ -807,11 +871,15 @@ At widths:
 
 Colour, instance count, errors:
 
-- **Colour.** At offset 0 (wordmark opacity 1), a pixel at a dot's centre
-  matches one of the four ramp colours within ±3 per channel. Sampling a
-  dot centre avoids antialiased edges, and matching *any* of the four
-  accounts for shimmer changing the level. This check is what catches tone
-  mapping left on: under ACES every level misses by 6–57 on some channel. R3F's WebGL context does not
+- **Colour.** At offset 0 (wordmark opacity 1), sample the centres of ten
+  dots; at least seven match one of the four ramp colours within ±3 per
+  channel. Sampling dot centres avoids antialiased edges. Matching *any*
+  of the four accounts for base levels differing, and "seven of ten"
+  accounts for the ~8% of dots legitimately mid-glide between two levels
+  at any instant — with 92% of dots on a base colour, seven or more of ten
+  match more than 99% of the time. This check is what catches tone
+  mapping left on: under ACES every level misses by 6–57 on some channel,
+  so no dot matches at all. R3F's WebGL context does not
   preserve its drawing buffer, so `toDataURL` / `readPixels` from outside
   the render loop return blank; the check temporarily sets
   `gl={{ preserveDrawingBuffer: true }}` on the Canvas, reads the pixel,
