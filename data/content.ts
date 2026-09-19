@@ -260,6 +260,9 @@ export const education: EducationEntry[] = [
   },
 ]
 
+// Each entry corresponds by index to a scroll-fade range in
+// components/home/HomeIntro.tsx's ONE_LINER_RANGES — keep both arrays the
+// same length when editing either one.
 export const homeOneLiners: string[] = [
   'Full-Stack Web Developer.',
   'Building scalable web experiences.',

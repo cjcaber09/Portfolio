@@ -11,11 +11,20 @@ import { homeOneLiners } from '@/data/content'
 const CTA_LABEL = 'View My Work'
 const CTA_HREF = '/about'
 const FADE_EDGE = 0.06
+// Must stay the same length as data/content.ts's homeOneLiners (matched by
+// index in ScrollOverlay below). If they ever fall out of sync, the missing
+// index falls back to UNREACHABLE_RANGE below rather than crashing the R3F
+// render loop.
 const ONE_LINER_RANGES: Array<[number, number]> = [
   [0.4, 0.58],
   [0.55, 0.73],
   [0.7, 0.88],
 ]
+// fadeOpacity(offset, 1, 1, edge) always returns 0 for any offset in the
+// reachable [0,1] scroll range (offset <= from is true for every such
+// offset), so this range renders as permanently invisible — a safe fallback
+// rather than a crash if ONE_LINER_RANGES[index] is ever undefined.
+const UNREACHABLE_RANGE: [number, number] = [1, 1]
 // Upper bound set safely beyond the reachable [0,1] scroll range. fadeOpacity
 // treats `to` as exclusive (offset >= to returns 0), so a CTA_RANGE of
 // [0.85, 1] would make the button fade back to invisible exactly at max
@@ -69,7 +78,7 @@ function ScrollOverlay() {
       <div className="relative h-[400vh] w-full">
         <div className="sticky top-0 flex h-dvh w-full items-center justify-center">
           {homeOneLiners.map((line, index) => (
-            <FadingLine key={line} range={ONE_LINER_RANGES[index]}>
+            <FadingLine key={line} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
               <p className="text-lg text-slate-200">{line}</p>
             </FadingLine>
           ))}
@@ -112,6 +121,10 @@ export function HomeIntro() {
 
   return (
     <div className="h-dvh w-full">
+      {/* The word "CeeDev" exists only as pixels sampled onto the WebGL
+          canvas below — this heading is the screen-reader-accessible
+          equivalent, matching StaticIntro's visible <h1>. */}
+      <h1 className="sr-only">CeeDev</h1>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ScrollControls pages={4} damping={0.2}>
           <Suspense fallback={null}>

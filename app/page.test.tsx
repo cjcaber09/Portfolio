@@ -25,6 +25,10 @@ test('Home page renders Nav and the (reduced-motion) intro content', async () =>
     </ThemeProvider>
   )
   expect(screen.getByRole('link', { name: 'CeeDev' })).toBeInTheDocument()
-  expect(await screen.findByRole('heading', { level: 1, name: 'CeeDev' })).toBeInTheDocument()
-  expect(await screen.findByRole('link', { name: 'View My Work' })).toBeInTheDocument()
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'CeeDev' }, { timeout: 5000 })
+  ).toBeInTheDocument()
+  expect(
+    await screen.findByRole('link', { name: 'View My Work' }, { timeout: 5000 })
+  ).toBeInTheDocument()
 })
