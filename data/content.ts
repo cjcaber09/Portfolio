@@ -281,7 +281,7 @@ export const homeOneLiners: HomeHighlight[] = [
     description: 'Building resilient systems that keep applications running.',
   },
   {
-    title: 'Turning Code Into Ideas',
+    title: 'Bringing Ideas to Life Through Code',
     description: 'Turning concepts into real, usable software.',
   },
 ]
