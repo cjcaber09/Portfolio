@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, type ReactNode } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ScrollControls, useScroll } from '@react-three/drei'
 import { ParticleText } from './ParticleText'
-import { fadeOpacity } from './fadeOpacity'
+import { fadeOpacity, slideProgress } from './fadeOpacity'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
 import { useMediaQuery } from './useMediaQuery'
 import { homeOneLiners, homeWordmarkName } from '@/data/content'
@@ -13,6 +13,10 @@ import { FADE_EDGE, ONE_LINER_RANGES, UNREACHABLE_RANGE, CTA_RANGE, SCROLL_PAGES
 const CTA_LABEL = 'View My Work'
 const CTA_HREF = '/about'
 const NARROW_VIEWPORT_QUERY = '(max-width: 639px)'
+// How far a scroll sentence travels while it enters and leaves. Sized for the
+// 48px headline text; a presentation value, so it lives here rather than in
+// scrollTimeline.ts (which holds only scroll-offset ranges).
+const SLIDE_DISTANCE_PX = 40
 
 function StaticIntro() {
   // absolute inset-0 (not min-h-full): this renders inside app/page.tsx's
@@ -115,11 +119,15 @@ function FadingLine({
   offsetRef,
   range,
   hideWhenInvisible,
+  slidePx,
   children,
 }: {
   offsetRef: { current: number }
   range: [number, number]
   hideWhenInvisible?: boolean
+  // When set, the line also slides vertically by up to this many pixels:
+  // rising into place as it fades in, drifting upward as it fades out.
+  slidePx?: number
   children: ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -130,6 +138,10 @@ function FadingLine({
       if (ref.current) {
         const opacity = fadeOpacity(offsetRef.current, range[0], range[1], FADE_EDGE)
         ref.current.style.opacity = String(opacity)
+        if (slidePx) {
+          const slide = slideProgress(offsetRef.current, range[0], range[1], FADE_EDGE)
+          ref.current.style.transform = `translateY(${slide * slidePx}px)`
+        }
         // The CTA link is interactive: while invisible it must not be
         // clickable, focusable, or able to swallow wheel/scroll input.
         // opacity:0 alone hides it visually but leaves all of that intact.
@@ -144,7 +156,7 @@ function FadingLine({
     }
     frameId = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frameId)
-  }, [offsetRef, range, hideWhenInvisible])
+  }, [offsetRef, range, hideWhenInvisible, slidePx])
 
   return (
     <div
@@ -176,7 +188,12 @@ function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
       <div className="absolute inset-x-0 top-0 bottom-28 flex items-center justify-center px-6">
         <div className="relative flex w-full max-w-5xl items-center justify-center">
           {homeOneLiners.map((line, index) => (
-            <FadingLine key={line} offsetRef={offsetRef} range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}>
+            <FadingLine
+              key={line}
+              offsetRef={offsetRef}
+              range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}
+              slidePx={SLIDE_DISTANCE_PX}
+            >
               <p className="text-balance text-center text-5xl leading-tight font-bold text-slate-100">{line}</p>
             </FadingLine>
           ))}

@@ -265,9 +265,9 @@ export const education: EducationEntry[] = [
 // the same length when editing either one (enforced by
 // components/home/scrollTimeline.test.ts).
 export const homeOneLiners: string[] = [
-  'Full-Stack Web Developer.',
-  'Building scalable web experiences.',
-  'From legacy IBM i to modern React.',
+  'Turning Ideas Into Code',
+  'Scalable Applications',
+  'Reliable Infrastructure',
 ]
 
 // The Home page wordmark's second line. Deliberately without the middle

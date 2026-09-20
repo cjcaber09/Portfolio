@@ -46,9 +46,9 @@ describe('content data', () => {
 
   it('defines three home page one-liners', () => {
     expect(homeOneLiners).toEqual([
-      'Full-Stack Web Developer.',
-      'Building scalable web experiences.',
-      'From legacy IBM i to modern React.',
+      'Turning Ideas Into Code',
+      'Scalable Applications',
+      'Reliable Infrastructure',
     ])
   })
 })
