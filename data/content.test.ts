@@ -44,11 +44,20 @@ describe('content data', () => {
     expect(education[education.length - 1].school).toBe('Southland College')
   })
 
-  it('defines three home page one-liners', () => {
+  it('defines three home page highlights, each a headline with a supporting line', () => {
     expect(homeOneLiners).toEqual([
-      'Turning Ideas Into Code',
-      'Scalable Applications',
-      'Reliable Infrastructure',
+      {
+        title: 'Scalable Applications',
+        description: 'Architected for growth without sacrificing performance.',
+      },
+      {
+        title: 'Reliable Infrastructure',
+        description: 'Building resilient systems that keep applications running.',
+      },
+      {
+        title: 'Turning Code Into Ideas',
+        description: 'Turning concepts into real, usable software.',
+      },
     ])
   })
 })

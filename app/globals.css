@@ -45,3 +45,57 @@ body {
     linear-gradient(#0f172a, #0f172a),
     linear-gradient(90deg, rgba(15, 118, 110, 0.55), rgba(21, 128, 61, 0.55));
 }
+
+/* The Home intro's scroll area (the element drei's ScrollControls creates;
+   HomeIntro adds this class to it). A transparent track with only a faint,
+   rounded thumb, instead of the browser's opaque white bar against the dark
+   gradient. scrollbar-width/-color cover Firefox and current Chromium; the
+   ::-webkit-scrollbar rules cover Safari. */
+.intro-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.28) transparent;
+}
+
+.intro-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.intro-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.intro-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
+}
+
+.intro-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* The wheel dot inside the scroll-hint mouse icon: it drifts down and fades,
+   like a scroll wheel turning. */
+@keyframes scroll-hint-wheel {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+}
+
+.scroll-hint-wheel {
+  animation: scroll-hint-wheel 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-wheel {
+    animation: none;
+    opacity: 1;
+  }
+}

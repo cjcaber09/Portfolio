@@ -31,6 +31,13 @@ export const UNREACHABLE_RANGE: [number, number] = [1, 1]
 // range ending at 1 would fade the CTA back out exactly at max scroll.
 export const CTA_RANGE: [number, number] = [0.84, 2]
 
+// The "scroll" icon at the bottom of the first screen. Visible on the very
+// first frame (`from = -1`, unreachable, for the same reason as
+// WORDMARK_RANGE), then gone after only a little scrolling: a hint has done
+// its job once the visitor has started. It is hidden long before the first
+// one-liner begins at ONE_LINER_RANGES[0][0], and never returns.
+export const SCROLL_HINT_RANGE: [number, number] = [-1, 0.1]
+
 // drei's ScrollControls scroll track holds two stacked elements: a sticky
 // "fixed" pane (one container-height, in normal flow before it starts
 // sticking) plus a "fill" spacer sized to `pages * 100%`. Scroll threshold

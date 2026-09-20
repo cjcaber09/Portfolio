@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { fadeOpacity } from './fadeOpacity'
-import { FADE_EDGE, WORDMARK_RANGE, ONE_LINER_RANGES, CTA_RANGE } from './scrollTimeline'
+import { FADE_EDGE, WORDMARK_RANGE, ONE_LINER_RANGES, CTA_RANGE, SCROLL_HINT_RANGE } from './scrollTimeline'
 import { homeOneLiners } from '@/data/content'
 
 function opacityAt(offset: number, range: [number, number]): number {
@@ -28,5 +28,22 @@ describe('scrollTimeline', () => {
 
   it('has exactly one range per one-liner', () => {
     expect(ONE_LINER_RANGES).toHaveLength(homeOneLiners.length)
+  })
+
+  it('shows the scroll hint on the very first frame', () => {
+    expect(opacityAt(0, SCROLL_HINT_RANGE)).toBe(1)
+  })
+
+  it('has fully hidden the scroll hint before the first one-liner begins', () => {
+    expect(opacityAt(ONE_LINER_RANGES[0][0], SCROLL_HINT_RANGE)).toBe(0)
+  })
+
+  it('never brings the scroll hint back once it has faded', () => {
+    let previous = opacityAt(0, SCROLL_HINT_RANGE)
+    for (let i = 1; i <= 1000; i++) {
+      const value = opacityAt(i / 1000, SCROLL_HINT_RANGE)
+      expect(value, `offset ${i / 1000}`).toBeLessThanOrEqual(previous)
+      previous = value
+    }
   })
 })
