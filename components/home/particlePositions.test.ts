@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sampleTextPoints, createScatteredParticles, interpolateParticle } from './particlePositions'
+import { sampleTextPoints, createScatteredParticles, interpolateParticle, boundsOfPoints } from './particlePositions'
 
 function makeImageData(width: number, height: number, litPixels: Array<[number, number]>) {
   const data = new Uint8ClampedArray(width * height * 4)
@@ -93,5 +93,43 @@ describe('interpolateParticle', () => {
   it('clamps progress outside [0, 1]', () => {
     expect(interpolateParticle(particle, -1)).toEqual({ x: 0, y: 0, z: 0 })
     expect(interpolateParticle(particle, 2)).toEqual({ x: 10, y: -20, z: 4 })
+  })
+})
+
+describe('boundsOfPoints', () => {
+  it('returns null for an empty array', () => {
+    expect(boundsOfPoints([])).toBeNull()
+  })
+
+  it('returns a zero-size box centered on a single point', () => {
+    const bounds = boundsOfPoints([{ x: 10, y: 20 }])
+    expect(bounds).toEqual({
+      minX: 10,
+      maxX: 10,
+      minY: 20,
+      maxY: 20,
+      width: 0,
+      height: 0,
+      centerX: 10,
+      centerY: 20,
+    })
+  })
+
+  it('finds the true extremes and centre of an asymmetric set', () => {
+    const bounds = boundsOfPoints([
+      { x: 0, y: 100 },
+      { x: 50, y: 40 },
+      { x: 30, y: 0 },
+    ])
+    expect(bounds).toEqual({
+      minX: 0,
+      maxX: 50,
+      minY: 0,
+      maxY: 100,
+      width: 50,
+      height: 100,
+      centerX: 25,
+      centerY: 50,
+    })
   })
 })

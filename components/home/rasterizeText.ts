@@ -6,7 +6,7 @@ export interface RasterizedText {
 
 export function rasterizeText(
   text: string,
-  options: { width: number; height: number; fontSize: number; fontFamily: string }
+  options: { width: number; height: number; fontSize: number; fontFamily: string; y?: number }
 ): RasterizedText {
   const canvas = document.createElement('canvas')
   canvas.width = options.width
@@ -19,7 +19,7 @@ export function rasterizeText(
   ctx.font = `700 ${options.fontSize}px ${options.fontFamily}`
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(text, options.width / 2, options.height / 2)
+  ctx.fillText(text, options.width / 2, options.y ?? options.height / 2)
   const imageData = ctx.getImageData(0, 0, options.width, options.height)
   return { data: imageData.data, width: imageData.width, height: imageData.height }
 }
