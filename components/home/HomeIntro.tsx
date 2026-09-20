@@ -8,7 +8,14 @@ import { fadeOpacity, slideProgress } from './fadeOpacity'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
 import { useMediaQuery } from './useMediaQuery'
 import { homeOneLiners, homeWordmarkName } from '@/data/content'
-import { FADE_EDGE, ONE_LINER_RANGES, UNREACHABLE_RANGE, CTA_RANGE, SCROLL_PAGES } from './scrollTimeline'
+import {
+  FADE_EDGE,
+  ONE_LINER_RANGES,
+  UNREACHABLE_RANGE,
+  CTA_RANGE,
+  SCROLL_HINT_RANGE,
+  SCROLL_PAGES,
+} from './scrollTimeline'
 
 const CTA_LABEL = 'View My Work'
 const CTA_HREF = '/about'
@@ -17,6 +24,19 @@ const NARROW_VIEWPORT_QUERY = '(max-width: 639px)'
 // 48px headline text; a presentation value, so it lives here rather than in
 // scrollTimeline.ts (which holds only scroll-offset ranges).
 const SLIDE_DISTANCE_PX = 40
+
+// Colours for the highlight text. Both follow the site theme (the `dark` class
+// on <html>) — a fixed light colour like the earlier text-slate-100 is
+// invisible on the light theme's white background.
+//
+// The headline is an emerald gradient clipped to the glyphs: the site's
+// Emerald Deep accent (#0f172a -> #0f766e -> #15803d) on the light theme, and
+// a lighter, brighter run (#f8fafc -> #a7f3d0 -> #34d399) on the dark one.
+// `w-fit` sizes the element to its text, so the gradient spans the words
+// rather than the whole line box.
+const HEADLINE_GRADIENT =
+  'w-fit bg-clip-text text-transparent bg-[linear-gradient(90deg,#0f172a,#0f766e,#15803d)] dark:bg-[linear-gradient(90deg,#f8fafc,#a7f3d0,#34d399)]'
+const SUPPORT_TEXT = 'text-slate-600 dark:text-slate-300'
 
 function StaticIntro() {
   // absolute inset-0 (not min-h-full): this renders inside app/page.tsx's
@@ -32,13 +52,14 @@ function StaticIntro() {
   // this box on short phones, without either bug returning.
   return (
     <section className="absolute inset-0 flex flex-col items-center justify-center gap-6 overflow-y-auto px-6 text-center">
-      <h1 className="text-5xl font-bold text-emerald-400">CeeDev</h1>
-      <p className="text-2xl font-bold text-emerald-200">{homeWordmarkName}</p>
-      <div className="flex flex-col gap-2">
-        {homeOneLiners.map((line) => (
-          <p key={line} className="text-xl font-bold text-slate-200">
-            {line}
-          </p>
+      <h1 className="text-5xl font-bold text-emerald-700 dark:text-emerald-400">CeeDev</h1>
+      <p className="text-2xl font-bold text-emerald-800 dark:text-emerald-200">{homeWordmarkName}</p>
+      <div className="flex flex-col gap-4">
+        {homeOneLiners.map(({ title, description }) => (
+          <div key={title} className="flex flex-col items-center gap-1">
+            <p className={`text-xl font-bold ${HEADLINE_GRADIENT}`}>{title}</p>
+            <p className={`text-sm ${SUPPORT_TEXT}`}>{description}</p>
+          </div>
         ))}
       </div>
       <a
@@ -76,7 +97,19 @@ function ScrollOffsetBridge({ offsetRef }: { offsetRef: { current: number } }) {
     // eslint-disable-next-line react-hooks/immutability -- see comment above
     el.tabIndex = 0
     el.setAttribute('aria-label', 'Scroll to reveal introduction')
-    el.classList.add('focus:outline-2', 'focus:outline-emerald-400', 'focus:outline-offset-[-2px]')
+    // intro-scroll (app/globals.css): transparent scrollbar track, faint thumb.
+    //
+    // The focus ring uses focus-visible:, not focus:. This element is focusable
+    // (tabindex=0) so keyboard users can drive the animation, which means a
+    // plain mouse click on the intro also focuses it — and `focus:` drew a 2px
+    // emerald border around the whole screen on every click. focus-visible
+    // shows the ring only for keyboard focus, which is who needs it.
+    el.classList.add(
+      'intro-scroll',
+      'focus-visible:outline-2',
+      'focus-visible:outline-emerald-400',
+      'focus-visible:outline-offset-[-2px]'
+    )
 
     // Unlike a <textarea> or the document itself, a generic
     // tabindex="0" overflow:auto <div> does not reliably get free
@@ -169,6 +202,25 @@ function FadingLine({
   )
 }
 
+// A small mouse with a wheel that drifts down: "scroll to begin". Decorative
+// only (aria-hidden): the scroll area itself is labelled and keyboard-operable
+// (see ScrollOffsetBridge), so this adds nothing for assistive technology.
+function ScrollHintIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="24"
+      height="38"
+      viewBox="0 0 24 38"
+      fill="none"
+      className="text-slate-500 dark:text-slate-300"
+    >
+      <rect x="1.5" y="1.5" width="21" height="35" rx="10.5" stroke="currentColor" strokeWidth="2" />
+      <circle className="scroll-hint-wheel" cx="12" cy="11" r="2.5" fill="currentColor" />
+    </svg>
+  )
+}
+
 function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
   // Two separate absolutely-positioned regions, not one flex column with a
   // gap between the sentences and the CTA. Every FadingLine is itself
@@ -187,17 +239,35 @@ function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
     <div className="pointer-events-none absolute inset-0">
       <div className="absolute inset-x-0 top-0 bottom-28 flex items-center justify-center px-6">
         <div className="relative flex w-full max-w-5xl items-center justify-center">
-          {homeOneLiners.map((line, index) => (
+          {homeOneLiners.map(({ title, description }, index) => (
             <FadingLine
-              key={line}
+              key={title}
               offsetRef={offsetRef}
               range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}
               slidePx={SLIDE_DISTANCE_PX}
             >
-              <p className="text-balance text-center text-5xl leading-tight font-bold text-slate-100">{line}</p>
+              {/* Headline: 48px, 64px from the `lg` (1024px) breakpoint. Below
+                  that the 64px headline would wrap to two lines in the 768px
+                  canvas layouts, which is why `lg` and not `md`. */}
+              <div className="flex flex-col items-center gap-4 text-center">
+                <p className={`text-balance text-5xl leading-tight font-bold lg:text-[64px] ${HEADLINE_GRADIENT}`}>
+                  {title}
+                </p>
+                <p className={`max-w-2xl text-lg text-balance md:text-xl ${SUPPORT_TEXT}`}>{description}</p>
+              </div>
             </FadingLine>
           ))}
         </div>
+      </div>
+      {/* Same centre line as the CTA below, but they are never on screen
+          together: the hint is gone by offset 0.1, the CTA arrives at 0.84.
+          The wrapper is a zero-height line (its only child is absolutely
+          positioned), so the icon centres ON bottom-12, leaving roughly a
+          30px gap under the 38px icon — bottom-6 left only 5px. */}
+      <div className="absolute inset-x-0 bottom-12 flex items-center justify-center px-6">
+        <FadingLine offsetRef={offsetRef} range={SCROLL_HINT_RANGE}>
+          <ScrollHintIcon />
+        </FadingLine>
       </div>
       <div className="absolute inset-x-0 bottom-12 flex items-center justify-center px-6">
         <FadingLine offsetRef={offsetRef} range={CTA_RANGE} hideWhenInvisible>

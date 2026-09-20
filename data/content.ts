@@ -260,14 +260,30 @@ export const education: EducationEntry[] = [
   },
 ]
 
-// Each entry corresponds by index to a scroll-fade range in
+export interface HomeHighlight {
+  title: string
+  description: string
+}
+
+// The Home page's scroll-revealed highlights: a headline plus a supporting
+// line each. (The name predates the supporting lines, when each was a single
+// sentence.) Each entry corresponds by index to a scroll-fade range in
 // components/home/scrollTimeline.ts's ONE_LINER_RANGES — keep both arrays
 // the same length when editing either one (enforced by
 // components/home/scrollTimeline.test.ts).
-export const homeOneLiners: string[] = [
-  'Turning Ideas Into Code',
-  'Scalable Applications',
-  'Reliable Infrastructure',
+export const homeOneLiners: HomeHighlight[] = [
+  {
+    title: 'Scalable Applications',
+    description: 'Architected for growth without sacrificing performance.',
+  },
+  {
+    title: 'Reliable Infrastructure',
+    description: 'Building resilient systems that keep applications running.',
+  },
+  {
+    title: 'Turning Code Into Ideas',
+    description: 'Turning concepts into real, usable software.',
+  },
 ]
 
 // The Home page wordmark's second line. Deliberately without the middle
