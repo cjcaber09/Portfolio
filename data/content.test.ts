@@ -14,8 +14,8 @@ describe('content data', () => {
     expect(summary.length).toBeGreaterThan(0)
   })
 
-  it('defines three experience entries with bullets', () => {
-    expect(experience).toHaveLength(3)
+  it('defines five experience entries with bullets', () => {
+    expect(experience).toHaveLength(5)
     experience.forEach((entry) => {
       expect(entry.title.length).toBeGreaterThan(0)
       expect(entry.company.length).toBeGreaterThan(0)
