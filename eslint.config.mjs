@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent tooling, not project source: the Impeccable design skill vendors
+    // its own bundled scripts under .claude/, and keeps its working files
+    // (surface briefs, review captures) under .impeccable/.
+    ".claude/**",
+    ".impeccable/**",
   ]),
 ]);
 

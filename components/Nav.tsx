@@ -1,13 +1,5 @@
 import { ThemeToggle } from './ThemeToggle'
-
-const links = [
-  { href: '/about#about', label: 'About' },
-  { href: '/about#experience', label: 'Experience' },
-  { href: '/about#skills', label: 'Skills' },
-  { href: '/about#projects', label: 'Projects' },
-  { href: '/about#education', label: 'Education' },
-  { href: '/about#contact', label: 'Contact' },
-]
+import { sectionLinks as links } from './navLinks'
 
 export function Nav() {
   return (

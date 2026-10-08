@@ -1,0 +1,512 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-08T00:00:00Z",
+  "title": "Design System: CeeDev Portfolio Datasheet",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Sheet Paper",
+        "canonical": "oklch(99.2% 0.003 250)",
+        "tonalRamp": [
+          "oklch(15% 0.003 250)",
+          "oklch(27% 0.003 250)",
+          "oklch(39% 0.003 250)",
+          "oklch(51% 0.003 250)",
+          "oklch(63% 0.003 250)",
+          "oklch(75% 0.003 250)",
+          "oklch(87% 0.003 250)",
+          "oklch(95% 0.003 250)"
+        ]
+      },
+      "fill": {
+        "role": "neutral",
+        "displayName": "Header Fill",
+        "canonical": "oklch(95.5% 0.006 255)",
+        "tonalRamp": [
+          "oklch(15% 0.006 255)",
+          "oklch(27% 0.006 255)",
+          "oklch(39% 0.006 255)",
+          "oklch(51% 0.006 255)",
+          "oklch(63% 0.006 255)",
+          "oklch(75% 0.006 255)",
+          "oklch(87% 0.006 255)",
+          "oklch(95% 0.006 255)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(21% 0.02 255)",
+        "tonalRamp": [
+          "oklch(15% 0.02 255)",
+          "oklch(27% 0.02 255)",
+          "oklch(39% 0.02 255)",
+          "oklch(51% 0.02 255)",
+          "oklch(63% 0.02 255)",
+          "oklch(75% 0.02 255)",
+          "oklch(87% 0.02 255)",
+          "oklch(95% 0.02 255)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "oklch(43% 0.02 255)",
+        "tonalRamp": [
+          "oklch(15% 0.02 255)",
+          "oklch(27% 0.02 255)",
+          "oklch(39% 0.02 255)",
+          "oklch(51% 0.02 255)",
+          "oklch(63% 0.02 255)",
+          "oklch(75% 0.02 255)",
+          "oklch(87% 0.02 255)",
+          "oklch(95% 0.02 255)"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "oklch(50% 0.018 255)",
+        "tonalRamp": [
+          "oklch(15% 0.018 255)",
+          "oklch(27% 0.018 255)",
+          "oklch(39% 0.018 255)",
+          "oklch(51% 0.018 255)",
+          "oklch(63% 0.018 255)",
+          "oklch(75% 0.018 255)",
+          "oklch(87% 0.018 255)",
+          "oklch(95% 0.018 255)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline Rule",
+        "canonical": "oklch(87% 0.01 255)",
+        "tonalRamp": [
+          "oklch(15% 0.01 255)",
+          "oklch(27% 0.01 255)",
+          "oklch(39% 0.01 255)",
+          "oklch(51% 0.01 255)",
+          "oklch(63% 0.01 255)",
+          "oklch(75% 0.01 255)",
+          "oklch(87% 0.01 255)",
+          "oklch(95% 0.01 255)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Manufacturer Green",
+        "canonical": "oklch(47% 0.1 165)",
+        "tonalRamp": [
+          "oklch(15% 0.1 165)",
+          "oklch(27% 0.1 165)",
+          "oklch(39% 0.1 165)",
+          "oklch(51% 0.1 165)",
+          "oklch(63% 0.1 165)",
+          "oklch(75% 0.1 165)",
+          "oklch(87% 0.1 165)",
+          "oklch(95% 0.1 165)"
+        ]
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Green Ink",
+        "canonical": "oklch(99% 0.01 165)",
+        "tonalRamp": [
+          "oklch(15% 0.01 165)",
+          "oklch(27% 0.01 165)",
+          "oklch(39% 0.01 165)",
+          "oklch(51% 0.01 165)",
+          "oklch(63% 0.01 165)",
+          "oklch(75% 0.01 165)",
+          "oklch(87% 0.01 165)",
+          "oklch(95% 0.01 165)"
+        ]
+      },
+      "cell-off": {
+        "role": "neutral",
+        "displayName": "Open Cell",
+        "canonical": "oklch(88% 0.008 255)",
+        "tonalRamp": [
+          "oklch(15% 0.008 255)",
+          "oklch(27% 0.008 255)",
+          "oklch(39% 0.008 255)",
+          "oklch(51% 0.008 255)",
+          "oklch(63% 0.008 255)",
+          "oklch(75% 0.008 255)",
+          "oklch(87% 0.008 255)",
+          "oklch(95% 0.008 255)"
+        ]
+      },
+      "paper-dark": {
+        "role": "neutral",
+        "displayName": "Sheet Paper (dark)",
+        "canonical": "oklch(17.5% 0.005 255)",
+        "tonalRamp": [
+          "oklch(15% 0.005 255)",
+          "oklch(27% 0.005 255)",
+          "oklch(39% 0.005 255)",
+          "oklch(51% 0.005 255)",
+          "oklch(63% 0.005 255)",
+          "oklch(75% 0.005 255)",
+          "oklch(87% 0.005 255)",
+          "oklch(95% 0.005 255)"
+        ]
+      },
+      "fill-dark": {
+        "role": "neutral",
+        "displayName": "Header Fill (dark)",
+        "canonical": "oklch(21.5% 0.005 255)",
+        "tonalRamp": [
+          "oklch(15% 0.005 255)",
+          "oklch(27% 0.005 255)",
+          "oklch(39% 0.005 255)",
+          "oklch(51% 0.005 255)",
+          "oklch(63% 0.005 255)",
+          "oklch(75% 0.005 255)",
+          "oklch(87% 0.005 255)",
+          "oklch(95% 0.005 255)"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Ink (dark)",
+        "canonical": "oklch(94% 0.004 255)",
+        "tonalRamp": [
+          "oklch(15% 0.004 255)",
+          "oklch(27% 0.004 255)",
+          "oklch(39% 0.004 255)",
+          "oklch(51% 0.004 255)",
+          "oklch(63% 0.004 255)",
+          "oklch(75% 0.004 255)",
+          "oklch(87% 0.004 255)",
+          "oklch(95% 0.004 255)"
+        ]
+      },
+      "ink-2-dark": {
+        "role": "neutral",
+        "displayName": "Ink 2 (dark)",
+        "canonical": "oklch(77% 0.006 255)",
+        "tonalRamp": [
+          "oklch(15% 0.006 255)",
+          "oklch(27% 0.006 255)",
+          "oklch(39% 0.006 255)",
+          "oklch(51% 0.006 255)",
+          "oklch(63% 0.006 255)",
+          "oklch(75% 0.006 255)",
+          "oklch(87% 0.006 255)",
+          "oklch(95% 0.006 255)"
+        ]
+      },
+      "ink-3-dark": {
+        "role": "neutral",
+        "displayName": "Ink 3 (dark)",
+        "canonical": "oklch(70% 0.006 255)",
+        "tonalRamp": [
+          "oklch(15% 0.006 255)",
+          "oklch(27% 0.006 255)",
+          "oklch(39% 0.006 255)",
+          "oklch(51% 0.006 255)",
+          "oklch(63% 0.006 255)",
+          "oklch(75% 0.006 255)",
+          "oklch(87% 0.006 255)",
+          "oklch(95% 0.006 255)"
+        ]
+      },
+      "rule-dark": {
+        "role": "neutral",
+        "displayName": "Hairline Rule (dark)",
+        "canonical": "oklch(31% 0.006 255)",
+        "tonalRamp": [
+          "oklch(15% 0.006 255)",
+          "oklch(27% 0.006 255)",
+          "oklch(39% 0.006 255)",
+          "oklch(51% 0.006 255)",
+          "oklch(63% 0.006 255)",
+          "oklch(75% 0.006 255)",
+          "oklch(87% 0.006 255)",
+          "oklch(95% 0.006 255)"
+        ]
+      },
+      "accent-dark": {
+        "role": "primary",
+        "displayName": "Manufacturer Green (dark)",
+        "canonical": "oklch(68% 0.1 165)",
+        "tonalRamp": [
+          "oklch(15% 0.1 165)",
+          "oklch(27% 0.1 165)",
+          "oklch(39% 0.1 165)",
+          "oklch(51% 0.1 165)",
+          "oklch(63% 0.1 165)",
+          "oklch(75% 0.1 165)",
+          "oklch(87% 0.1 165)",
+          "oklch(95% 0.1 165)"
+        ]
+      },
+      "accent-ink-dark": {
+        "role": "primary",
+        "displayName": "Green Ink (dark)",
+        "canonical": "oklch(17.5% 0.005 255)",
+        "tonalRamp": [
+          "oklch(15% 0.005 255)",
+          "oklch(27% 0.005 255)",
+          "oklch(39% 0.005 255)",
+          "oklch(51% 0.005 255)",
+          "oklch(63% 0.005 255)",
+          "oklch(75% 0.005 255)",
+          "oklch(87% 0.005 255)",
+          "oklch(95% 0.005 255)"
+        ]
+      },
+      "cell-off-dark": {
+        "role": "neutral",
+        "displayName": "Open Cell (dark)",
+        "canonical": "oklch(30% 0.006 255)",
+        "tonalRamp": [
+          "oklch(15% 0.006 255)",
+          "oklch(27% 0.006 255)",
+          "oklch(39% 0.006 255)",
+          "oklch(51% 0.006 255)",
+          "oklch(63% 0.006 255)",
+          "oklch(75% 0.006 255)",
+          "oklch(87% 0.006 255)",
+          "oklch(95% 0.006 255)"
+        ]
+      },
+      "desk-dark": {
+        "role": "neutral",
+        "displayName": "Night Desk",
+        "canonical": "oklch(13% 0.004 255)",
+        "tonalRamp": [
+          "oklch(15% 0.004 255)",
+          "oklch(27% 0.004 255)",
+          "oklch(39% 0.004 255)",
+          "oklch(51% 0.004 255)",
+          "oklch(63% 0.004 255)",
+          "oklch(75% 0.004 255)",
+          "oklch(87% 0.004 255)",
+          "oklch(95% 0.004 255)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The name on the /about front page only (wdth 72%)."
+      },
+      "headline": {
+        "displayName": "Section Head",
+        "purpose": "Numbered section heads, green number first (wdth 82%)."
+      },
+      "title": {
+        "displayName": "Entry Title",
+        "purpose": "Role and project titles at 1.125rem; the professional title is 1.25rem at wdth 90%."
+      },
+      "body-lead": {
+        "displayName": "Body Lead",
+        "purpose": "Tagline, About summary, Contact lead; 60 to 65ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Bullets, descriptions, table values; 65 to 70ch."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Nav links, controls, row heads, captions, notes, stack lists."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase condensed column heads, block names, readout labels; never a kicker."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "colour-step",
+        "value": "120ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "The only transition: colour, background, border, and decoration on state change."
+      },
+      {
+        "name": "anchor-scroll",
+        "value": "scroll-behavior: smooth",
+        "purpose": "Anchor jumps; becomes auto under reduced motion."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition-duration: 0s",
+        "purpose": "Under prefers-reduced-motion every state change on the sheet is instant."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Sheet gains border and desk margin; gutters 40px; Features two columns."
+      },
+      {
+        "name": "md",
+        "value": "768px",
+        "purpose": "Column heads appear; rows become grids; Projects two columns."
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "One-row nav; front page 7/5 split; Stack column; two Skills tables; scroll margin 5rem (7.5rem below)."
+      },
+      {
+        "name": "xl",
+        "value": "1280px",
+        "purpose": "Experience role column fixed at 38rem."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Action Strip: Primary",
+      "kind": "button",
+      "refersTo": "action-primary",
+      "description": "The one solid-green action in a strip (Download resume); steps to solid ink on hover.",
+      "html": "<a class=\"ds-action-primary\" href=\"#\"><svg viewBox=\"0 0 16 16\" width=\"1em\" height=\"1em\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"square\" aria-hidden=\"true\"><path d=\"M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10\"/></svg> Download resume <span class=\"ds-action-suffix\">PDF</span></a>",
+      "css": ".ds-action-primary { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid var(--ds-accent, oklch(47% 0.1 165)); border-radius: 2px; background: var(--ds-accent, oklch(47% 0.1 165)); color: var(--ds-accent-ink, oklch(99% 0.01 165)); font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-action-primary svg { font-size: 1rem; } .ds-action-suffix { font-size: 0.75rem; font-weight: 700; opacity: 0.8; } .ds-action-primary:hover { background: var(--ds-ink, oklch(21% 0.02 255)); border-color: var(--ds-ink, oklch(21% 0.02 255)); color: var(--ds-paper, oklch(99.2% 0.003 250)); } .ds-action-primary:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Action Strip: Secondary",
+      "kind": "button",
+      "refersTo": "action-secondary",
+      "description": "Hairline-bordered ink control for the other actions (Email, LinkedIn, GitHub, Projects); border darkens on hover.",
+      "html": "<a class=\"ds-action-secondary\" href=\"#\">GitHub <span class=\"ds-action-icon\"><svg viewBox=\"0 0 16 16\" width=\"1em\" height=\"1em\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"square\" aria-hidden=\"true\"><path d=\"M6 3.5h6.5V10M12.5 3.5 4 12\"/></svg></span></a>",
+      "css": ".ds-action-secondary { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid var(--ds-rule, oklch(87% 0.01 255)); border-radius: 2px; background: var(--ds-paper, oklch(99.2% 0.003 250)); color: var(--ds-ink, oklch(21% 0.02 255)); font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-action-icon { display: inline-flex; font-size: 0.875rem; color: var(--ds-ink-3, oklch(50% 0.018 255)); } .ds-action-secondary:hover { border-color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-action-secondary:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Dark Mode Switch",
+      "kind": "button",
+      "refersTo": "dark-mode-switch",
+      "description": "Labelled toggle with an 8px state marker: green when on, open when off.",
+      "html": "<button type=\"button\" class=\"ds-switch\" aria-pressed=\"false\"><span class=\"ds-switch-marker\"></span>Dark mode</button>",
+      "css": ".ds-switch { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 10px; border: 1px solid var(--ds-rule, oklch(87% 0.01 255)); border-radius: 2px; background: var(--ds-paper, oklch(99.2% 0.003 250)); color: var(--ds-ink, oklch(21% 0.02 255)); font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-switch:hover { border-color: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-switch-marker { width: 8px; height: 8px; background: var(--ds-cell-off, oklch(88% 0.008 255)); } .ds-switch[aria-pressed=\"true\"] .ds-switch-marker { background: var(--ds-accent, oklch(47% 0.1 165)); } .ds-switch:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Table of Contents Nav",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Sticky paper bar: brand with green square, section links with a 2px green underline on the current one.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-brand-mark\"></span>CeeDev</a><ul class=\"ds-nav-links\"><li><a href=\"#\">Home</a></li><li><a href=\"#\" aria-current=\"location\">About</a></li><li><a href=\"#\">Experience</a></li><li><a href=\"#\">Skills</a></li></ul></header>",
+      "css": ".ds-nav { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: flex; align-items: center; gap: 32px; padding: 0 40px; background: var(--ds-paper, oklch(99.2% 0.003 250)); border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-brand { display: flex; align-items: center; gap: 8px; height: 56px; color: var(--ds-ink, oklch(21% 0.02 255)); font-size: 1.125rem; font-weight: 800; font-stretch: 80%; letter-spacing: -0.01em; text-decoration: none; } .ds-brand-mark { width: 12px; height: 12px; background: var(--ds-accent, oklch(47% 0.1 165)); } .ds-nav-links { display: flex; gap: 24px; height: 56px; margin: 0; padding: 0; list-style: none; font-size: 0.8125rem; font-weight: 600; } .ds-nav-links li { display: flex; } .ds-nav-links a { display: flex; align-items: center; border-bottom: 2px solid transparent; color: var(--ds-ink-2, oklch(43% 0.02 255)); text-decoration: none; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-nav-links a:hover { color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-nav-links a[aria-current] { border-bottom-color: var(--ds-accent, oklch(47% 0.1 165)); color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-nav-links a:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Numbered Section with Column Heads",
+      "kind": "custom",
+      "refersTo": "column-head",
+      "description": "2px ink rule, green-numbered headline, then the filled label-type header strip over table-like rows.",
+      "html": "<section class=\"ds-section\"><h2 class=\"ds-section-head\"><span>2</span>Experience</h2><div class=\"ds-colheads\"><span>No. · Dates</span><span>Role · Company</span></div><div class=\"ds-row\"><p><b>2.1</b><br><span class=\"ds-dates\">2023 — 2025</span></p><div><h3>Full-Stack Developer<span>Company</span></h3></div></div></section>",
+      "css": ".ds-section { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; border-top: 2px solid var(--ds-ink, oklch(21% 0.02 255)); padding: 56px 40px 64px; background: var(--ds-paper, oklch(99.2% 0.003 250)); color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-section-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 32px; font-size: 1.75rem; line-height: 1.25; font-weight: 800; font-stretch: 82%; letter-spacing: -0.015em; } .ds-section-head span { color: var(--ds-accent, oklch(47% 0.1 165)); font-variant-numeric: tabular-nums; } .ds-colheads { display: grid; grid-template-columns: 11rem 1fr; border-block: 1px solid var(--ds-rule, oklch(87% 0.01 255)); background: var(--ds-fill, oklch(95.5% 0.006 255)); color: var(--ds-ink-2, oklch(43% 0.02 255)); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-stretch: 85%; } .ds-colheads span { padding: 8px 12px; } .ds-row { display: grid; grid-template-columns: 11rem 1fr; border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); padding: 24px 0; } .ds-row > * { padding: 0 12px; margin: 0; } .ds-row b { color: var(--ds-accent, oklch(47% 0.1 165)); font-variant-numeric: tabular-nums; } .ds-dates { font-size: 0.875rem; color: var(--ds-ink-2, oklch(43% 0.02 255)); font-variant-numeric: tabular-nums; } .ds-row h3 { margin: 0; font-size: 1.125rem; font-weight: 700; line-height: 1.375; } .ds-row h3 span { display: block; font-weight: 600; color: var(--ds-ink-2, oklch(43% 0.02 255)); }"
+    },
+    {
+      "name": "Characteristics Table with Ten-Cell Meter",
+      "kind": "custom",
+      "refersTo": "meter-cell-on",
+      "description": "Hairline-ruled skills table: filled header row, tabular rating, ten 8px cells filled green to the rating.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Skill</th><th class=\"ds-r\">Rating</th><th>0–10</th></tr></thead><tbody><tr><th>React</th><td class=\"ds-r\"><b>8</b><span>/10</span></td><td><span class=\"ds-meter\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i><i></i></span></td></tr><tr><th>Laravel</th><td class=\"ds-r\"><b>7</b><span>/10</span></td><td><span class=\"ds-meter\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i><i></i><i></i></span></td></tr></tbody></table>",
+      "css": ".ds-table { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; width: 100%; border-collapse: collapse; font-size: 0.875rem; color: var(--ds-ink, oklch(21% 0.02 255)); background: var(--ds-paper, oklch(99.2% 0.003 250)); } .ds-table thead tr { border-block: 1px solid var(--ds-rule, oklch(87% 0.01 255)); background: var(--ds-fill, oklch(95.5% 0.006 255)); color: var(--ds-ink-2, oklch(43% 0.02 255)); font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; font-stretch: 85%; } .ds-table th, .ds-table td { padding: 6px 12px; text-align: left; } .ds-table thead th { padding: 8px 12px; font-weight: 700; } .ds-table tbody th { font-weight: 500; } .ds-table tbody tr { border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-table .ds-r { text-align: right; font-variant-numeric: tabular-nums; } .ds-table td b { font-weight: 600; } .ds-table td span:not(.ds-meter) { color: var(--ds-ink-3, oklch(50% 0.018 255)); } .ds-meter { display: flex; gap: 2px; } .ds-meter i { width: 8px; height: 8px; background: var(--ds-cell-off, oklch(88% 0.008 255)); } .ds-meter i.on { background: var(--ds-accent, oklch(47% 0.1 165)); }"
+    },
+    {
+      "name": "Block Diagram Pins and Signal",
+      "kind": "custom",
+      "refersTo": "diagram-pin",
+      "description": "Ink-bordered block with a label-type name, toggle pins with 8px markers (selected pin solid green), and a labelled 1px signal line.",
+      "html": "<div class=\"ds-block\"><p class=\"ds-block-name\">Frontend</p><ul class=\"ds-pins\"><li><button type=\"button\" class=\"ds-pin\" aria-pressed=\"true\"><span></span>React</button></li><li><button type=\"button\" class=\"ds-pin\" aria-pressed=\"false\"><span></span>Vue.js</button></li><li><button type=\"button\" class=\"ds-pin\" aria-pressed=\"false\"><span></span>TypeScript</button></li></ul></div><div class=\"ds-signal\"><i></i><span>REST · JSON</span></div>",
+      "css": ".ds-block { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; border: 1px solid var(--ds-ink, oklch(21% 0.02 255)); background: var(--ds-paper, oklch(99.2% 0.003 250)); padding: 10px; color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-block-name { margin: 0 0 6px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-stretch: 85%; color: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-pins { display: flex; flex-wrap: wrap; gap: 2px 4px; margin: 0 -6px; padding: 0; list-style: none; } .ds-pin { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 6px; border: 0; background: transparent; color: var(--ds-ink, oklch(21% 0.02 255)); font-size: 0.8125rem; font-weight: 600; line-height: 1.25; cursor: pointer; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-pin span { width: 8px; height: 8px; background: var(--ds-cell-off, oklch(88% 0.008 255)); } .ds-pin:hover { background: var(--ds-fill, oklch(95.5% 0.006 255)); } .ds-pin:hover span { background: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-pin[aria-pressed=\"true\"] { background: var(--ds-accent, oklch(47% 0.1 165)); color: var(--ds-accent-ink, oklch(99% 0.01 165)); } .ds-pin[aria-pressed=\"true\"] span { background: var(--ds-accent-ink, oklch(99% 0.01 165)); } .ds-pin:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; } .ds-signal { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: flex; gap: 8px; height: 36px; padding-left: 24px; } .ds-signal i { width: 1px; background: var(--ds-ink, oklch(21% 0.02 255)); } .ds-signal span { align-self: center; font-size: 0.6875rem; font-weight: 600; font-stretch: 85%; color: var(--ds-ink-3, oklch(50% 0.018 255)); }"
+    },
+    {
+      "name": "Trace Readout",
+      "kind": "custom",
+      "refersTo": "trace-readout-head",
+      "description": "Hairline-framed status box: filled head with the selected technology and its count, then numbered role and project hits.",
+      "html": "<div class=\"ds-trace\" role=\"status\"><p class=\"ds-trace-head\"><b>React</b><span>Named in 2 roles and 1 project</span></p><div class=\"ds-trace-body\"><p class=\"ds-trace-label\">Roles</p><ul><li><a href=\"#\"><span>2.1</span><u>Full-Stack Developer, Company</u></a></li><li><a href=\"#\"><span>2.2</span><u>Web Developer, Company</u></a></li></ul></div></div>",
+      "css": ".ds-trace { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; border: 1px solid var(--ds-rule, oklch(87% 0.01 255)); background: var(--ds-paper, oklch(99.2% 0.003 250)); color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-trace-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 12px; margin: 0; padding: 8px 12px; border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); background: var(--ds-fill, oklch(95.5% 0.006 255)); } .ds-trace-head b { font-size: 0.9375rem; } .ds-trace-head span { font-size: 0.75rem; color: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-trace-body { padding: 12px; } .ds-trace-label { margin: 0 0 4px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-stretch: 85%; color: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-trace ul { margin: 0; padding: 0; list-style: none; } .ds-trace li + li { margin-top: 4px; } .ds-trace a { display: flex; gap: 8px; font-size: 0.875rem; line-height: 1.375; color: var(--ds-ink, oklch(21% 0.02 255)); text-decoration: none; } .ds-trace a span { width: 28px; flex-shrink: 0; font-weight: 600; color: var(--ds-accent, oklch(47% 0.1 165)); font-variant-numeric: tabular-nums; } .ds-trace a u { text-decoration: underline 1px var(--ds-rule, oklch(87% 0.01 255)); text-underline-offset: 0.22em; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-trace a:hover u { text-decoration-color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-trace a:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Features List",
+      "kind": "custom",
+      "refersTo": "features-list",
+      "description": "Ruled competency rows, each led by an 8px solid green square, two columns from 640px.",
+      "html": "<div class=\"ds-features\"><p class=\"ds-features-cap\">Features</p><ul><li><span></span>Full-stack web development</li><li><span></span>REST API design</li><li><span></span>Legacy modernization</li><li><span></span>Payments integration</li></ul></div>",
+      "css": ".ds-features { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-features-cap { margin: 0; font-size: 0.8125rem; font-weight: 700; } .ds-features ul { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9375rem; } .ds-features li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-features li:nth-child(-n+2) { border-top: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-features li span { width: 8px; height: 8px; flex-shrink: 0; background: var(--ds-accent, oklch(47% 0.1 165)); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Component Datasheet",
+    "overview": "The `/about` route is printed, not staged. It is one sheet of paper laid on the site's dot-grid desk, typeset the way a manufacturer sets the front page of a part's datasheet: a green document bar, numbered sections opened by heavy ink rules, hairline-ruled tables with filled header strips, a functional block diagram, and square ten-cell rating meters. Every claim on the sheet points at a numbered entry elsewhere on it, and the typography and numbering exist to make those cross-references legible.\n\nDensity is welcome. Ink is cool and near-neutral, and one manufacturer green does the work an accent does on a printed spec: section numbers, entry numbers, links' primary actions, filled cells and pins, the document bar, and the current-section marker. Archivo is the only face, its width axis doing the job a second family would: condensed and heavy for the name and section heads, narrower still for table heads, regular width for reading. Dark mode is the same sheet inverted for night reading, not a second theme: same chroma, same green lifted only as far as contrast needs, and a neutral desk in place of the site's navy.\n\nThe sheet is still. Nothing enters, fades, or floats. The only movement is a 120ms colour step when a control changes state and the smooth jump to an anchor; under reduced motion both are instant.\n\nThis system governs `/about` only. The `/` route (the animated Three.js intro, its `Nav`, and the round emoji theme button) is a separate, pre-existing surface outside this system and does not follow it. The datasheet tokens resolve only inside the `.datasheet` wrapper, so `/` never inherits them.",
+    "keyCharacteristics": [
+      "One paper sheet (max 75rem) on the dot-grid desk, hairline-bordered from 640px.",
+      "Cool ink in three steps plus one green; every text pairing at or above 4.5:1 in both themes.",
+      "Archivo only, with width (72% to 90%) and weight (400 to 800) carrying hierarchy.",
+      "Numbered sections and numbered entries that the block-diagram trace cross-references.",
+      "Hairline rules, filled header strips, square 8px markers; no shadows, gradients, pills, or cards.",
+      "Print stillness: 120ms colour steps only, none under reduced motion."
+    ],
+    "rules": [
+      {
+        "name": "The One Green Rule",
+        "body": "Green is the only hue on the sheet. It marks numbers, state, and the one primary action; it is never a background for reading text beyond the document bar and a selected pin.",
+        "section": "colors"
+      },
+      {
+        "name": "The Same Sheet Rule",
+        "body": "Dark mode inverts lightness and nothing else: the chroma stays near-neutral (0.004 to 0.006), the green keeps hue 165 and chroma 0.1, and the desk goes neutral. Never introduce a slate or navy ground under the dark sheet.",
+        "section": "colors"
+      },
+      {
+        "name": "The 4.5 Floor Rule",
+        "body": "Every text pairing on the sheet clears 4.5:1 in both themes. A new token earns its place by passing that check, not by matching a mood.",
+        "section": "colors"
+      },
+      {
+        "name": "The Width Before Weight Rule",
+        "body": "Hierarchy steps through Archivo's width axis before it reaches for size: 72% display, 80% brand, 82% section heads, 85% labels, 90% title, 100% reading.",
+        "section": "typography"
+      },
+      {
+        "name": "The Uppercase Is For Tables Rule",
+        "body": "Uppercase tracking belongs only to labels that head a table column, a diagram block, or a readout list, plus the document bar. It never sits above a heading as a kicker.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Every numeral that can be compared (dates, entry numbers, ratings, years, phone) is set tabular.",
+        "section": "typography"
+      },
+      {
+        "name": "The Printed Sheet Rule",
+        "body": "If it would not survive being printed, it does not belong: no shadows, gradients, blurs, glows, or translucency on the sheet.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Marker Rule",
+        "body": "State and quantity are shown with the same 8px square everywhere: filled green means on, selected, or counted; open (`cell-off`) means off. The meter, the pins, the Stack links, and the Dark mode switch all speak this one mark.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** keep every new surface inside the `.datasheet` wrapper and colour it only with the `ds` tokens, so it inverts with the sheet.",
+      "**Do** open each section with the 2px ink rule and a green tabular number, and number entries from the shared section table so the trace can cite them.",
+      "**Do** present structured facts as hairline-ruled tables with filled header strips or filled row heads.",
+      "**Do** show state and quantity with the 8px square marker: green filled for on, `cell-off` for off.",
+      "**Do** step hierarchy through Archivo's width axis (72% to 90%) and weights 400 to 800, with tabular numerals for anything comparable.",
+      "**Do** limit motion to 120ms colour steps and anchor scrolls, and make both instant under reduced motion.",
+      "**Do** keep a single primary action per strip, solid green, with secondaries as hairline-bordered ink controls."
+    ],
+    "donts": [
+      "**Don't** use gradients, shadows, blurs, or translucency on the sheet.",
+      "**Don't** round anything beyond the 2px control corner; no pills, chips, or tag capsules.",
+      "**Don't** box content entries (roles, projects, skills) into cards; borders belong to tables, the diagram's blocks, the readout, and controls.",
+      "**Don't** render skills as continuous progress bars or percentages; ratings are the ten-cell meter beside the numeral.",
+      "**Don't** set experience as a vertical timeline with dots and a spine; it is a numbered revision table.",
+      "**Don't** fade, slide, or reveal content on scroll, or animate anything but colour.",
+      "**Don't** add a second hue, or a navy or slate ground under the dark sheet.",
+      "**Don't** set uppercase tracked labels above headings as kickers; uppercase is for table, block, and readout labels and the document bar.",
+      "**Don't** use emoji or text glyphs as icons; use the 16px stroked icon set."
+    ]
+  }
+}

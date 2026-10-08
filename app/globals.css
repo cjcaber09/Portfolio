@@ -17,6 +17,110 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* /about datasheet palette. Each resolves to a variable set on the
+     .datasheet wrapper below, so these utilities only mean something inside
+     /about and the `/` page never picks them up. */
+  --color-ds-paper: var(--ds-paper);
+  --color-ds-fill: var(--ds-fill);
+  --color-ds-ink: var(--ds-ink);
+  --color-ds-ink-2: var(--ds-ink-2);
+  --color-ds-ink-3: var(--ds-ink-3);
+  --color-ds-rule: var(--ds-rule);
+  --color-ds-accent: var(--ds-accent);
+  --color-ds-accent-ink: var(--ds-accent-ink);
+  --color-ds-cell-off: var(--ds-cell-off);
+}
+
+/* /about is set as a component datasheet: one sheet of paper on the site's
+   dot-grid ground, cool-tinted ink, and a single manufacturer green. Dark is
+   the same sheet inverted for night reading: the same near-neutral chroma and
+   the same green, lifted only as far as contrast needs. Every text pairing is
+   at least 4.5:1 (ink on paper 17.3 light / 15.9 dark; green text on paper
+   6.3 / 6.9; the lowest, green on the dark fill, is 6.4). */
+.datasheet {
+  --ds-paper: oklch(99.2% 0.003 250);
+  --ds-fill: oklch(95.5% 0.006 255);
+  --ds-ink: oklch(21% 0.02 255);
+  --ds-ink-2: oklch(43% 0.02 255);
+  --ds-ink-3: oklch(50% 0.018 255);
+  --ds-rule: oklch(87% 0.01 255);
+  --ds-accent: oklch(47% 0.1 165);
+  --ds-accent-ink: oklch(99% 0.01 165);
+  --ds-cell-off: oklch(88% 0.008 255);
+
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  color: var(--ds-ink);
+  caret-color: var(--ds-accent);
+}
+
+.dark .datasheet {
+  --ds-paper: oklch(17.5% 0.005 255);
+  --ds-fill: oklch(21.5% 0.005 255);
+  --ds-ink: oklch(94% 0.004 255);
+  --ds-ink-2: oklch(77% 0.006 255);
+  --ds-ink-3: oklch(70% 0.006 255);
+  --ds-rule: oklch(31% 0.006 255);
+  --ds-accent: oklch(68% 0.1 165);
+  --ds-accent-ink: oklch(17.5% 0.005 255);
+  --ds-cell-off: oklch(30% 0.006 255);
+}
+
+/* The desk under the dark sheet. The site's dark ground is a navy gradient;
+   on /about it goes neutral so the sheet reads as inverted print, not as a
+   slate theme. `/` keeps its own ground. */
+html.dark:has(.datasheet) {
+  --background: linear-gradient(oklch(13% 0.004 255), oklch(13% 0.004 255));
+}
+
+.datasheet ::selection {
+  background: var(--ds-accent);
+  color: var(--ds-accent-ink);
+}
+
+.datasheet a {
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+.datasheet :focus-visible {
+  outline: 2px solid var(--ds-accent);
+  outline-offset: 2px;
+}
+
+/* Anchor jumps land below the sticky table-of-contents bar: two rows (101px)
+   below lg, one row (57px) from lg. */
+.datasheet [id] {
+  scroll-margin-top: 7.5rem;
+}
+
+@media (width >= 64rem) {
+  .datasheet [id] {
+    scroll-margin-top: 5rem;
+  }
+}
+
+/* The page scrollbar belongs to <html>, outside .datasheet, so it is themed
+   from here with literal values that match the sheet's rule and ink. */
+html:has(.datasheet) {
+  scrollbar-color: oklch(70% 0.012 255) oklch(96% 0.004 250);
+}
+
+html.dark:has(.datasheet) {
+  scrollbar-color: oklch(42% 0.006 255) oklch(13% 0.004 255);
+}
+
+/* The sheet's only motion is its 120ms colour steps and the smooth jump to an
+   anchor. Under reduced motion both happen at once. Unlayered, so it outranks
+   the duration utilities. */
+@media (prefers-reduced-motion: reduce) {
+  html:has(.datasheet) {
+    scroll-behavior: auto;
+  }
+
+  .datasheet * {
+    transition-duration: 0s;
+  }
 }
 
 html {
@@ -29,21 +133,6 @@ body {
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-}
-
-.skill-card {
-  border: 1px solid transparent;
-  background-image:
-    linear-gradient(#f8fafc, #f8fafc),
-    linear-gradient(90deg, rgba(15, 118, 110, 0.55), rgba(21, 128, 61, 0.55));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-}
-
-.dark .skill-card {
-  background-image:
-    linear-gradient(#0f172a, #0f172a),
-    linear-gradient(90deg, rgba(15, 118, 110, 0.55), rgba(21, 128, 61, 0.55));
 }
 
 /* The Home intro's scroll area (the element drei's ScrollControls creates;

@@ -38,6 +38,20 @@ export interface Project {
   links?: ProjectLink[]
 }
 
+export interface StackTechnology {
+  name: string
+  // Every spelling this technology goes by in project tech lists, project
+  // descriptions, and experience bullets (e.g. "React.js" for React),
+  // matched as whole words, case-insensitively.
+  aliases: string[]
+}
+
+export interface StackLayer {
+  id: string
+  label: string
+  technologies: StackTechnology[]
+}
+
 export interface EducationEntry {
   level: string
   school: string
@@ -291,3 +305,47 @@ export const homeOneLiners: HomeHighlight[] = [
 // already width-constrained line, and a wordmark, unlike the resume-
 // accurate Hero/Contact sections, is not the place for a legal name.
 export const homeWordmarkName = 'Carl John Caber'
+
+// The /about page's functional block diagram: Carl's stack grouped by where
+// each piece sits in a web application. The diagram traces every technology
+// to the roles and projects whose text names it (components/about/
+// traceStack.ts), and leaves out any technology nothing on the page names, so
+// adding a role or project that mentions one (Stripe, say) makes it appear.
+export const stackLayers: StackLayer[] = [
+  {
+    id: 'frontend',
+    label: 'Front end',
+    technologies: [
+      { name: 'React', aliases: ['React', 'React.js'] },
+      { name: 'Vue.js', aliases: ['Vue', 'Vue.js'] },
+      { name: 'TypeScript', aliases: ['TypeScript'] },
+    ],
+  },
+  {
+    id: 'server',
+    label: 'Server',
+    technologies: [
+      { name: 'Node.js / Express', aliases: ['Node.js', 'Express', 'Express.js'] },
+      { name: 'Laravel', aliases: ['Laravel'] },
+      { name: 'PHP', aliases: ['PHP'] },
+    ],
+  },
+  {
+    id: 'data',
+    label: 'Data',
+    technologies: [
+      { name: 'PostgreSQL', aliases: ['PostgreSQL', 'Postgres', 'Supabase'] },
+      { name: 'MySQL', aliases: ['MySQL'] },
+    ],
+  },
+  {
+    id: 'integrations',
+    label: 'Integrations',
+    technologies: [
+      { name: 'IBM i', aliases: ['IBM i'] },
+      { name: 'Marketplace APIs', aliases: ['Amazon MWS', 'eBay', 'Newegg', 'Walmart'] },
+      { name: 'Stripe', aliases: ['Stripe'] },
+      { name: 'WordPress', aliases: ['WordPress'] },
+    ],
+  },
+]

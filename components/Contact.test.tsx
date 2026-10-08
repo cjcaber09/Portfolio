@@ -14,10 +14,20 @@ describe('Contact', () => {
       'href',
       'tel:+639777926148'
     )
-    expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
+    // LinkedIn and GitHub links show the handle itself, so a recruiter can
+    // read and copy it; the channel name labels the row instead.
+    expect(screen.getByRole('link', { name: 'linkedin.com/in/carljohn09' })).toHaveAttribute(
       'href',
       profile.linkedin
     )
-    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', profile.github)
+    expect(screen.getByRole('link', { name: 'github.com/cjcaber09' })).toHaveAttribute(
+      'href',
+      profile.github
+    )
+  })
+
+  it('offers the resume download alongside the contact channels', () => {
+    render(<Contact />)
+    expect(screen.getByRole('link', { name: /download resume/i })).toHaveAttribute('href', '/resume.pdf')
   })
 })

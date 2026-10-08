@@ -43,3 +43,11 @@ next-env.d.ts
 # local agent/session state
 .claude/
 .superpowers/
+
+# Impeccable working files (review captures, question logs, decision inputs,
+# the design hook's cache). Its design records, surfaces/ and design.json, are
+# committed.
+.impeccable/review/
+.impeccable/questions/
+.impeccable/decision/
+.impeccable/hook.cache.json

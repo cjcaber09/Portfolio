@@ -1,24 +1,27 @@
 import { education } from '@/data/content'
+import { ColumnHeads, DatasheetSection } from './about/DatasheetSection'
+import { SECTION_NUMBER } from './about/sections'
 
 export function Education() {
   return (
-    <section id="education" className="mx-auto max-w-5xl px-6 py-16">
-      <h2 className="mb-10 text-3xl font-bold">Education</h2>
-      <ol className="space-y-8 border-l border-slate-200 pl-6 dark:border-slate-800">
+    <DatasheetSection id="education" number={SECTION_NUMBER.education} title="Education">
+      <ColumnHeads columns={['Period', 'Level', 'Institution']} className="grid-cols-[11rem_9rem_1fr]" />
+      <ol>
         {education.map((entry) => (
-          <li key={`${entry.school}-${entry.level}`}>
-            <p className="text-sm text-emerald-700 dark:text-emerald-400">{entry.dates}</p>
-            <h3 className="text-lg font-semibold">{entry.school}</h3>
-            {entry.degree && (
-              <p className="text-slate-600 dark:text-slate-300">{entry.degree}</p>
-            )}
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              {entry.level}
-              {entry.location ? ` · ${entry.location}` : ''}
-            </p>
+          <li
+            key={`${entry.school}-${entry.level}`}
+            className="grid gap-1 border-b border-ds-rule py-4 md:grid-cols-[11rem_9rem_1fr] md:gap-0"
+          >
+            <span className="text-[0.875rem] text-ds-ink-2 tabular-nums md:px-3">{entry.dates}</span>
+            <span className="text-[0.875rem] font-semibold md:px-3">{entry.level}</span>
+            <div className="md:px-3">
+              <h3 className="text-[1rem] font-bold">{entry.school}</h3>
+              {entry.degree && <p className="mt-0.5 text-[0.9375rem]">{entry.degree}</p>}
+              {entry.location && <p className="mt-0.5 text-[0.875rem] text-ds-ink-2">{entry.location}</p>}
+            </div>
           </li>
         ))}
       </ol>
-    </section>
+    </DatasheetSection>
   )
 }
