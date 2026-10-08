@@ -1,5 +1,13 @@
 import '@testing-library/jest-dom/vitest'
-import { afterEach } from 'vitest'
+import { afterEach, vi } from 'vitest'
+
+// next/font/google only works under the Next.js compiler, which rewrites each
+// font call at build time; under Vitest the import has no real functions.
+// Each font a page loads gets a stand-in returning the shape next/font does.
+vi.mock('next/font/google', () => {
+  const font = () => ({ className: '', variable: '', style: { fontFamily: '' } })
+  return { Archivo: font, Geist: font, Geist_Mono: font }
+})
 import { cleanup } from '@testing-library/react'
 
 afterEach(() => {
@@ -12,8 +20,8 @@ class IntersectionObserverMock {
   disconnect() {}
 }
 
-// jsdom does not implement IntersectionObserver; Framer Motion's
-// `whileInView` (used by the Reveal component) needs this to exist.
+// jsdom does not implement IntersectionObserver; the /about nav uses it to
+// track the current section.
 Object.defineProperty(window, 'IntersectionObserver', {
   writable: true,
   value: IntersectionObserverMock,

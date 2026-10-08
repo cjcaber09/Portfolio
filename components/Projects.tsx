@@ -1,49 +1,61 @@
 import { projects } from '@/data/content'
+import { DatasheetSection } from './about/DatasheetSection'
+import { SECTION_NUMBER, entryNumber, projectAnchorId } from './about/sections'
+import { ExternalIcon } from './icons'
 
+const linkBase =
+  'inline-flex h-9 items-center gap-1.5 rounded-[2px] border px-3 text-[0.8125rem] font-semibold no-underline transition-colors duration-[120ms]'
+
+// Projects as typical-application notes: ruled entries, numbered so the block
+// diagram's trace can point at them, never boxed into a card grid. The title
+// sits directly inside each entry's <div>, with the links, so an entry and
+// its links always travel together.
 export function Projects() {
   return (
-    <section id="projects" className="mx-auto max-w-5xl px-6 py-16">
-      <h2 className="mb-10 text-3xl font-bold">Projects</h2>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <div
-            key={project.title}
-            className="rounded-lg border border-slate-200 p-6 dark:border-slate-800"
-          >
-            <h3 className="mb-2 font-semibold">{project.title}</h3>
-            <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">{project.description}</p>
-            <div className="mb-4 flex flex-wrap gap-2">
+    <DatasheetSection id="projects" number={SECTION_NUMBER.projects} title="Projects">
+      <div className="grid gap-x-12 md:grid-cols-2">
+        {projects.map((project, index) => (
+          <div key={project.title} id={projectAnchorId(project)} className="border-t border-ds-ink py-6">
+            <h3 className="flex items-baseline gap-3 text-[1.125rem] leading-snug font-bold">
+              <span className="text-[0.9375rem] text-ds-accent tabular-nums">{entryNumber('projects', index)}</span>
+              <span>{project.title}</span>
+            </h3>
+            <p className="mt-3 max-w-[65ch] text-[0.9375rem] leading-[1.65] text-ds-ink-2">{project.description}</p>
+            <p className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[0.8125rem]">
+              <span className="font-bold text-ds-ink-2">Built with</span>
               {project.tech.map((tech) => (
                 <span
                   key={tech}
-                  className="rounded-full bg-emerald-50 px-2 py-1 text-xs text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                  className="font-semibold after:ml-3 after:text-ds-ink-3 after:content-['·'] last:after:content-none"
                 >
                   {tech}
                 </span>
               ))}
-            </div>
+            </p>
             {project.links && project.links.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {project.links.map((link, index) => (
-                  <a
-                    key={link.url}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={
-                      index === 0
-                        ? 'inline-block rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-3 py-1.5 text-sm font-medium text-white transition hover:brightness-110'
-                        : 'inline-block rounded-md border border-emerald-700/50 px-3 py-1.5 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50 dark:border-emerald-400/50 dark:text-emerald-400 dark:hover:bg-emerald-950/40'
-                    }
-                  >
-                    {link.label}
-                  </a>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {project.links.map((link, linkIndex) => (
+                  <li key={link.url}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={
+                        linkIndex === 0
+                          ? `${linkBase} border-ds-accent bg-ds-accent text-ds-accent-ink hover:border-ds-ink hover:bg-ds-ink hover:text-ds-paper`
+                          : `${linkBase} border-ds-rule text-ds-ink hover:border-ds-ink`
+                      }
+                    >
+                      {link.label}
+                      <ExternalIcon className="text-[0.8125rem]" />
+                    </a>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
         ))}
       </div>
-    </section>
+    </DatasheetSection>
   )
 }
