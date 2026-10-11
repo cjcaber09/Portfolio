@@ -87,6 +87,26 @@ export const coreCompetencies: string[] = [
 
 export const experience: ExperienceEntry[] = [
   {
+    title: 'Web Developer',
+    company: 'Andy Experiences',
+    dates: 'July 2026 — Present',
+    bullets: [
+      'Designed and built the company website, including SEO integration and web performance optimization.',
+      'Developed a custom WordPress plugin tailored to internal needs.',
+      'Built internal tools to support day-to-day company workflows.',
+      'Edited video content to support marketing initiatives.',
+    ],
+  },
+  {
+    title: 'Web Developer',
+    company: 'Advanced Technology Integrations (ATI LLC)',
+    dates: 'April — June 2026',
+    bullets: [
+      'Contributed to an internal Vue.js tool, integrating Stripe for payment processing.',
+      'Improved the markdown parser to convert AI-generated replies into structured JSON and render them as formatted HTML.',
+    ],
+  },
+  {
     title: 'Web Developer / IT Specialist',
     company: 'Profound Logic',
     dates: '2022 — 2026',
