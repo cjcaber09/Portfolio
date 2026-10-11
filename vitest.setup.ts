@@ -20,15 +20,15 @@ class IntersectionObserverMock {
   disconnect() {}
 }
 
-// jsdom does not implement IntersectionObserver; the /about nav uses it to
+// jsdom does not implement IntersectionObserver; the site nav uses it to
 // track the current section.
 Object.defineProperty(window, 'IntersectionObserver', {
   writable: true,
   value: IntersectionObserverMock,
 })
 
-// jsdom does not implement matchMedia; Framer Motion checks
-// prefers-reduced-motion internally.
+// jsdom does not implement matchMedia; the / cover reads it for
+// prefers-reduced-motion and the narrow-viewport check.
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({

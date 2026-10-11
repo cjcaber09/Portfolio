@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { coreCompetencies, experience, profile } from '@/data/content'
 import { StackDiagram } from './about/StackDiagram'
+import { actionPrimary, actionSecondary } from './actions'
 import { ArrowDownIcon, DownloadIcon, ExternalIcon, MailIcon } from './icons'
 
 // The span of Carl's experience, read off the role dates so the front page
@@ -9,11 +10,6 @@ function experienceYears() {
   const years = experience.flatMap((role) => role.dates.match(/\d{4}/g) ?? []).map(Number)
   return { first: Math.min(...years), last: Math.max(...years) }
 }
-
-const actionBase =
-  'inline-flex h-10 items-center gap-2 rounded-[2px] border px-3 text-[0.875rem] font-semibold no-underline transition-colors duration-[120ms]'
-const actionPrimary = `${actionBase} border-ds-accent bg-ds-accent text-ds-accent-ink hover:bg-ds-ink hover:border-ds-ink hover:text-ds-paper`
-const actionSecondary = `${actionBase} border-ds-rule text-ds-ink hover:border-ds-ink`
 
 function Action({
   href,

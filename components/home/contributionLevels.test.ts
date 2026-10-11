@@ -1,24 +1,57 @@
 import { describe, it, expect } from 'vitest'
-import { assignLevel, assignPhase, levelAt, rampAt, mixRgb, RAMP_HEX } from './contributionLevels'
+import {
+  assignLevel,
+  assignPhase,
+  levelAt,
+  rampAt,
+  mixRgb,
+  hexToRgb,
+  LIGHT_RAMP,
+  LIGHT_RAMP_HEX,
+  DARK_RAMP,
+  DARK_RAMP_HEX,
+} from './contributionLevels'
 
 describe('rampAt', () => {
   it('returns the exact ramp colour at integer levels', () => {
-    expect(rampAt(0)).toEqual({ r: 0x15 / 255, g: 0x50 / 255, b: 0x3a / 255 })
-    expect(rampAt(3)).toEqual({ r: 0x2c / 255, g: 0xc9 / 255, b: 0x8c / 255 })
+    expect(rampAt(0, LIGHT_RAMP)).toEqual({ r: 0xa0 / 255, g: 0xd1 / 255, b: 0xba / 255 })
+    expect(rampAt(3, DARK_RAMP)).toEqual({ r: 0x55 / 255, g: 0xac / 255, b: 0x89 / 255 })
   })
 
   it('interpolates between neighbouring levels at fractional values', () => {
-    const level1 = rampAt(1)
-    const level2 = rampAt(2)
-    const midpoint = rampAt(1.5)
+    const level1 = rampAt(1, LIGHT_RAMP)
+    const level2 = rampAt(2, LIGHT_RAMP)
+    const midpoint = rampAt(1.5, LIGHT_RAMP)
     expect(midpoint.r).toBeCloseTo((level1.r + level2.r) / 2, 10)
     expect(midpoint.g).toBeCloseTo((level1.g + level2.g) / 2, 10)
     expect(midpoint.b).toBeCloseTo((level1.b + level2.b) / 2, 10)
   })
 
   it('clamps below 0 and above the top level', () => {
-    expect(rampAt(-5)).toEqual(rampAt(0))
-    expect(rampAt(99)).toEqual(rampAt(RAMP_HEX.length - 1))
+    expect(rampAt(-5, DARK_RAMP)).toEqual(rampAt(0, DARK_RAMP))
+    expect(rampAt(99, DARK_RAMP)).toEqual(rampAt(DARK_RAMP.length - 1, DARK_RAMP))
+  })
+})
+
+describe('the contribution ramps', () => {
+  const luminance = ({ r, g, b }: { r: number; g: number; b: number }) => {
+    const linear = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+    return 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b)
+  }
+
+  it('end on the site green: the top level of each ramp is that theme’s accent', () => {
+    // oklch(47% 0.1 165) and oklch(68% 0.1 165), the --ds-accent values.
+    expect(LIGHT_RAMP_HEX[3]).toBe('#006c4d')
+    expect(DARK_RAMP_HEX[3]).toBe('#55ac89')
+  })
+
+  it('climb in activity: darker with each level on the light desk, brighter on the night desk', () => {
+    const light = LIGHT_RAMP_HEX.map((hex) => luminance(hexToRgb(hex)))
+    const dark = DARK_RAMP_HEX.map((hex) => luminance(hexToRgb(hex)))
+    for (let level = 1; level < 4; level++) {
+      expect(light[level]).toBeLessThan(light[level - 1])
+      expect(dark[level]).toBeGreaterThan(dark[level - 1])
+    }
   })
 })
 

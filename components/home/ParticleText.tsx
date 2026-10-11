@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useLayoutEffect, useRef } from 'react'
+import { use, useMemo, useLayoutEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useScroll } from '@react-three/drei'
 import * as THREE from 'three'
@@ -13,7 +13,7 @@ import {
   type Point2D,
   type ScatteredParticle,
 } from './particlePositions'
-import { assignLevel, assignPhase, levelAt, rampAt, mixRgb } from './contributionLevels'
+import { assignLevel, assignPhase, levelAt, rampAt, mixRgb, LIGHT_RAMP, DARK_RAMP } from './contributionLevels'
 import { fitScale } from './fitScale'
 import { WORDMARK_RANGE, NAME_ASSEMBLY_END, FADE_EDGE } from './scrollTimeline'
 import { fadeOpacity } from './fadeOpacity'
@@ -34,7 +34,34 @@ const DEPTH_JITTER = 1.2
 const SCATTER_RADIUS = 400
 const FIT_MARGIN = 0.2
 const FIT_MAX_WIDTH_PX = 960
-const FONT_FAMILY = 'system-ui, sans-serif'
+const FALLBACK_FONT_FAMILY = 'system-ui, sans-serif'
+
+// The wordmark is lettered in Archivo, the site's one face (DESIGN.md), at the
+// same 700 weight and normal width the platform face used to give it, so the
+// lattice keeps its proportions but renders the same on every OS. next/font
+// gives the face a generated family name, read here from the --font-archivo
+// variable the page sets on its .datasheet wrapper; the canvas can only draw
+// it once it has loaded, so rasterizing waits on document.fonts (one shared
+// promise, suspended on under the Canvas's <Suspense>).
+let wordmarkFont: Promise<string> | null = null
+
+function loadWordmarkFont(): Promise<string> {
+  wordmarkFont ??= (async () => {
+    const holder = document.querySelector('.datasheet') ?? document.documentElement
+    const family = getComputedStyle(holder).getPropertyValue('--font-archivo').trim()
+    if (!family) return FALLBACK_FONT_FAMILY
+    try {
+      await Promise.all([
+        document.fonts.load(`700 ${CEEDEV_FONT_SIZE}px ${family}`, CEEDEV_TEXT),
+        document.fonts.load(`700 ${NAME_FONT_SIZE}px ${family}`, homeWordmarkName),
+      ])
+      return family
+    } catch {
+      return FALLBACK_FONT_FAMILY
+    }
+  })()
+  return wordmarkFont
+}
 
 interface Lattice {
   particles: ScatteredParticle[]
@@ -56,16 +83,20 @@ function buildLattice(points: Point2D[], centerX: number, centerY: number): Latt
   }
 }
 
-export function ParticleText() {
+// `dark` picks the contribution ramp for the site theme: the canvas sits on
+// the desk, so the dots must be drawn for whichever desk is showing.
+export function ParticleText({ dark }: { dark: boolean }) {
   const scroll = useScroll()
   const viewport = useThree((state) => state.viewport)
   const canvasWidthPx = useThree((state) => state.size.width)
+  const fontFamily = use(loadWordmarkFont())
+  const ramp = dark ? DARK_RAMP : LIGHT_RAMP
 
   const ceeDevMeshRef = useRef<THREE.InstancedMesh>(null)
   const nameMeshRef = useRef<THREE.InstancedMesh>(null)
 
   // Rasterizing and sampling both lines is expensive and the text never
-  // changes, so this only runs once. Both lines are rasterized at
+  // changes, so this only runs once per font. Both lines are rasterized at
   // identical canvas dimensions and sampled at the identical step so they
   // land on one continuous lattice, and their combined bounds (not the
   // canvas's own centre) become the single shared world-space origin both
@@ -76,14 +107,14 @@ export function ParticleText() {
       width: RASTER_WIDTH,
       height: RASTER_HEIGHT,
       fontSize: CEEDEV_FONT_SIZE,
-      fontFamily: FONT_FAMILY,
+      fontFamily,
       y: CEEDEV_Y,
     })
     const nameImage = rasterizeText(homeWordmarkName, {
       width: RASTER_WIDTH,
       height: RASTER_HEIGHT,
       fontSize: NAME_FONT_SIZE,
-      fontFamily: FONT_FAMILY,
+      fontFamily,
       y: NAME_Y,
     })
 
@@ -98,7 +129,7 @@ export function ParticleText() {
       name: buildLattice(namePoints, centerX, centerY),
       bounds: combinedBounds,
     }
-  }, [])
+  }, [fontFamily])
 
   const scale = useMemo(
     () =>
@@ -150,10 +181,10 @@ export function ParticleText() {
 
     const time = state.clock.elapsedTime
     const progress = THREE.MathUtils.clamp(scroll.offset / NAME_ASSEMBLY_END, 0, 1)
-    const floor = rampAt(0)
+    const floor = rampAt(0, ramp)
 
     for (let i = 0; i < ceeDev.particles.length; i++) {
-      const target = rampAt(levelAt(ceeDev.levels[i], ceeDev.phases[i], time))
+      const target = rampAt(levelAt(ceeDev.levels[i], ceeDev.phases[i], time), ramp)
       tempColor.setRGB(target.r, target.g, target.b, THREE.SRGBColorSpace)
       ceeDevMesh.setColorAt(i, tempColor)
     }
@@ -167,7 +198,7 @@ export function ParticleText() {
       // Shimmer picks the target colour first; that target is then mixed
       // from the floor by `progress`. Mixing toward the base colour first
       // and applying shimmer after would let shimmer move dots mid-flight.
-      const target = rampAt(levelAt(name.levels[i], name.phases[i], time))
+      const target = rampAt(levelAt(name.levels[i], name.phases[i], time), ramp)
       const mixed = mixRgb(floor, target, progress)
       tempColor.setRGB(mixed.r, mixed.g, mixed.b, THREE.SRGBColorSpace)
       nameMesh.setColorAt(i, tempColor)

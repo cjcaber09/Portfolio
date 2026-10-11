@@ -1,5 +1,5 @@
-import { Archivo } from 'next/font/google'
-import { AboutNav } from '@/components/about/AboutNav'
+import { archivo } from '@/app/fonts'
+import { SiteNav } from '@/components/SiteNav'
 import { Hero } from '@/components/Hero'
 import { About } from '@/components/About'
 import { Experience } from '@/components/Experience'
@@ -9,14 +9,10 @@ import { Education } from '@/components/Education'
 import { Contact } from '@/components/Contact'
 import { profile } from '@/data/content'
 
-// Archivo with its width axis: the condensed widths set the name and the table
-// heads, the regular width sets the reading text. Only /about loads it.
-const archivo = Archivo({ subsets: ['latin'], axes: ['wdth'], variable: '--font-archivo' })
-
 export default function AboutPage() {
   return (
     <div className={`datasheet ${archivo.variable}`}>
-      <AboutNav />
+      <SiteNav />
       <main className="sm:px-6 sm:py-8">
         <div className="mx-auto max-w-[75rem] bg-ds-paper sm:border sm:border-ds-rule">
           <Hero />

@@ -4,9 +4,17 @@ export interface Rgb {
   b: number
 }
 
-export const RAMP_HEX = ['#15503a', '#05734f', '#0f9e6b', '#2cc98c'] as const
+// The four contribution levels, low to high, as four steps of the site's one
+// manufacturer green (DESIGN.md: hue 165, chroma at most 0.1). Like GitHub's
+// grid, each theme has its own ramp: on the light desk activity deepens from
+// pale to the light-theme green, oklch(82% 0.06) -> (69% 0.085) -> (57% 0.1)
+// -> (47% 0.1); on the night desk it brightens from deep to the dark-theme
+// green, oklch(34% 0.06) -> (45% 0.08) -> (56% 0.095) -> (68% 0.1). Against
+// their own desk the two climb alike, about 1.7:1 to 6.5-7.3:1.
+export const LIGHT_RAMP_HEX = ['#a0d1ba', '#66ac8e', '#308a69', '#006c4d'] as const
+export const DARK_RAMP_HEX = ['#124230', '#1f634a', '#328666', '#55ac89'] as const
 
-function hexToRgb(hex: string): Rgb {
+export function hexToRgb(hex: string): Rgb {
   const value = parseInt(hex.slice(1), 16)
   return {
     r: ((value >> 16) & 255) / 255,
@@ -15,7 +23,8 @@ function hexToRgb(hex: string): Rgb {
   }
 }
 
-const RAMP: Rgb[] = RAMP_HEX.map(hexToRgb)
+export const LIGHT_RAMP: Rgb[] = LIGHT_RAMP_HEX.map(hexToRgb)
+export const DARK_RAMP: Rgb[] = DARK_RAMP_HEX.map(hexToRgb)
 
 const LEVEL_WEIGHTS = [0.2, 0.3, 0.3, 0.2]
 const T0 = 0.988
@@ -66,15 +75,15 @@ export function levelAt(baseLevel: number, phase: number, timeSeconds: number): 
   return Math.min(Math.max(baseLevel + direction * f, 0), 3)
 }
 
-export function rampAt(level: number): Rgb {
-  const clamped = Math.min(Math.max(level, 0), RAMP.length - 1)
+export function rampAt(level: number, ramp: Rgb[]): Rgb {
+  const clamped = Math.min(Math.max(level, 0), ramp.length - 1)
   const lower = Math.floor(clamped)
-  const upper = Math.min(lower + 1, RAMP.length - 1)
+  const upper = Math.min(lower + 1, ramp.length - 1)
   const t = clamped - lower
   return {
-    r: RAMP[lower].r + (RAMP[upper].r - RAMP[lower].r) * t,
-    g: RAMP[lower].g + (RAMP[upper].g - RAMP[lower].g) * t,
-    b: RAMP[lower].b + (RAMP[upper].b - RAMP[lower].b) * t,
+    r: ramp[lower].r + (ramp[upper].r - ramp[lower].r) * t,
+    g: ramp[lower].g + (ramp[upper].g - ramp[lower].g) * t,
+    b: ramp[lower].b + (ramp[upper].b - ramp[lower].b) * t,
   }
 }
 

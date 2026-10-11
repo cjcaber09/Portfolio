@@ -48,6 +48,14 @@ export function MailIcon(props: SVGProps<SVGSVGElement>) {
   )
 }
 
+export function ArrowRightIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Icon {...props}>
+      <path d="M2.5 8h11M9.5 4l4 4-4 4" />
+    </Icon>
+  )
+}
+
 export function ArrowDownIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <Icon {...props}>
