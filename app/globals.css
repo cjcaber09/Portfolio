@@ -7,8 +7,11 @@
   --foreground: #0f172a;
 }
 
+/* The desk the sheet lies on. Dark is the neutral night desk (DESIGN.md's
+   desk-dark), so the inverted sheet reads as print, not as a slate or navy
+   theme, on every route. */
 .dark {
-  --background: linear-gradient(160deg, #050816 0%, #081126 50%, #0c1228 100%);
+  --background: linear-gradient(oklch(13% 0.004 255), oklch(13% 0.004 255));
   --foreground: #f1f5f9;
 }
 
@@ -18,9 +21,9 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* /about datasheet palette. Each resolves to a variable set on the
-     .datasheet wrapper below, so these utilities only mean something inside
-     /about and the `/` page never picks them up. */
+  /* The datasheet palette. Each resolves to a variable set on the .datasheet
+     wrapper below, which both pages (the / cover and the /about sheet) put
+     round their content, so these utilities only mean something inside it. */
   --color-ds-paper: var(--ds-paper);
   --color-ds-fill: var(--ds-fill);
   --color-ds-ink: var(--ds-ink);
@@ -32,12 +35,13 @@
   --color-ds-cell-off: var(--ds-cell-off);
 }
 
-/* /about is set as a component datasheet: one sheet of paper on the site's
-   dot-grid ground, cool-tinted ink, and a single manufacturer green. Dark is
-   the same sheet inverted for night reading: the same near-neutral chroma and
-   the same green, lifted only as far as contrast needs. Every text pairing is
-   at least 4.5:1 (ink on paper 17.3 light / 15.9 dark; green text on paper
-   6.3 / 6.9; the lowest, green on the dark fill, is 6.4). */
+/* The site is set as a component datasheet: one sheet of paper on the site's
+   dot-grid ground (with / as its cover), cool-tinted ink, and a single
+   manufacturer green. Dark is the same sheet inverted for night reading: the
+   same near-neutral chroma and the same green, lifted only as far as contrast
+   needs. Every text pairing is at least 4.5:1 (ink on paper 17.3 light / 15.9
+   dark; green text on paper 6.3 / 6.9; the lowest, ink-3 on the light fill,
+   is 5.3). */
 .datasheet {
   --ds-paper: oklch(99.2% 0.003 250);
   --ds-fill: oklch(95.5% 0.006 255);
@@ -64,13 +68,6 @@
   --ds-accent: oklch(68% 0.1 165);
   --ds-accent-ink: oklch(17.5% 0.005 255);
   --ds-cell-off: oklch(30% 0.006 255);
-}
-
-/* The desk under the dark sheet. The site's dark ground is a navy gradient;
-   on /about it goes neutral so the sheet reads as inverted print, not as a
-   slate theme. `/` keeps its own ground. */
-html.dark:has(.datasheet) {
-  --background: linear-gradient(oklch(13% 0.004 255), oklch(13% 0.004 255));
 }
 
 .datasheet ::selection {
@@ -135,14 +132,14 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* The Home intro's scroll area (the element drei's ScrollControls creates;
-   HomeIntro adds this class to it). A transparent track with only a faint,
-   rounded thumb, instead of the browser's opaque white bar against the dark
-   gradient. scrollbar-width/-color cover Firefox and current Chromium; the
-   ::-webkit-scrollbar rules cover Safari. */
+/* The / cover's scroll area (the element drei's ScrollControls creates;
+   HomeIntro adds this class to it). A transparent track with only a faint
+   square thumb in the sheet's quietest ink, instead of the browser's opaque
+   bar across the desk. scrollbar-width/-color cover Firefox and current
+   Chromium; the ::-webkit-scrollbar rules cover Safari. */
 .intro-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.28) transparent;
+  scrollbar-color: color-mix(in oklch, var(--ds-ink-3) 35%, transparent) transparent;
 }
 
 .intro-scroll::-webkit-scrollbar {
@@ -154,12 +151,17 @@ body {
 }
 
 .intro-scroll::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.28);
-  border-radius: 9999px;
+  background: color-mix(in oklch, var(--ds-ink-3) 35%, transparent);
 }
 
 .intro-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+  background: color-mix(in oklch, var(--ds-ink-3) 60%, transparent);
+}
+
+/* The scroll area fills the screen under the header, so the sheet's focus
+   ring is drawn inside its edge, where the overflow cannot clip it. */
+.datasheet .intro-scroll:focus-visible {
+  outline-offset: -2px;
 }
 
 /* The wheel dot inside the scroll-hint mouse icon: it drifts down and fades,

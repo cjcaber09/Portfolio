@@ -14,7 +14,7 @@ Recruiters and hiring managers deciding whether to interview or hire Carl John E
 
 The personal portfolio of Carl John E. Caber, a full-stack web developer. It has two surfaces:
 
-- `/` (Home): an animated Three.js intro (the "CeeDev" contribution-grid wordmark and scroll-revealed highlights) that hands off to the portfolio. It is a separate surface and out of scope for work on `/about`.
+- `/` (Home): an animated Three.js intro (the "CeeDev" contribution-grid wordmark and scroll-revealed highlights) that hands off to the portfolio. Since 2026-10-11 it is the cover of the same datasheet design system as `/about` (DESIGN.md), sharing its header, type, colour, and desk.
 - `/about`: the portfolio itself. Hero, about/summary and core competencies, experience, skills, projects, education, and contact.
 
 Success is a recruiter reaching out, or moving Carl to interview, because the page made his capability credible.
@@ -35,7 +35,7 @@ Practical full-stack breadth proven on real production work, not tutorial projec
 - All copy and facts live in `data/content.ts`; components render it. Content changes there, not in components.
 - Skill levels are Carl's own 0–10 self-ratings. They are his to set and must not be adjusted for visual effect.
 - Experience dates and titles come from Carl and must stay exact.
-- The `/` animated intro is out of scope for `/about` work. Nav links into `/about` sections (`/about#about`, `#experience`, and so on) must keep working from both surfaces.
+- The `/` intro's animation is Carl's and stays as built: the scene, the CeeDev wordmark on the first frame, the name assembling on scroll, the one-liner fades and slide-ups, the scroll ranges, and the static path for reduced motion and phones. Its colour, type, and chrome follow DESIGN.md. Nav links into `/about` sections (`/about#about`, `#experience`, and so on) must keep working from both surfaces.
 - Open: three projects are placeholders (marked `TODO` in `data/content.ts`) with no links or screenshots: Legacy IBM i Modernization, Multi-Marketplace Inventory Integration, and Freelance Client Web Applications.
 
 ## Brand Commitments

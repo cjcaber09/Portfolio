@@ -3,19 +3,29 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { sectionLinks } from '@/components/navLinks'
 
-// The /about table of contents. Home leads and points at the hero (the
-// datasheet's front page); the rest are the shared section links.
-const links = [{ href: '/about#hero', label: 'Home' }, ...sectionLinks]
+// The site's table of contents, on both the / cover and the /about sheet.
+// Home leads and points at the hero (the datasheet's front page), then every
+// /about section in page order.
+const links = [
+  { href: '/about#hero', label: 'Home' },
+  { href: '/about#about', label: 'About' },
+  { href: '/about#experience', label: 'Experience' },
+  { href: '/about#skills', label: 'Skills' },
+  { href: '/about#projects', label: 'Projects' },
+  { href: '/about#education', label: 'Education' },
+  { href: '/about#contact', label: 'Contact' },
+]
 const sectionIds = links.map((link) => link.href.split('#')[1])
 
 // Which section is "current": the one crossing a thin reading band a third of
 // the way down the viewport, where the eye is when a section is being read.
 const READING_BAND = '-33% 0px -62% 0px'
 
-export function AboutNav() {
-  const [current, setCurrent] = useState(sectionIds[0])
+// `onCover`: the / cover holds none of these sections, so nothing is marked
+// current there; on /about the sheet opens on Home.
+export function SiteNav({ onCover = false }: { onCover?: boolean }) {
+  const [current, setCurrent] = useState<string | null>(onCover ? null : sectionIds[0])
   const navRef = useRef<HTMLElement>(null)
 
   // On a phone the link row scrolls sideways; keep the current link in view
@@ -35,6 +45,7 @@ export function AboutNav() {
     const sections = sectionIds
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null)
+    if (sections.length === 0) return
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -61,7 +72,7 @@ export function AboutNav() {
             with room to spare; below it the links get their own row, which
             scrolls sideways on a phone. */}
         <div className="ml-auto flex h-14 items-center lg:order-last">
-          <ThemeToggle variant="datasheet" />
+          <ThemeToggle />
         </div>
         <nav
           ref={navRef}

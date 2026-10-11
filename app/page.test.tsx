@@ -24,12 +24,16 @@ afterEach(() => {
   window.matchMedia = originalMatchMedia
 })
 
-test('Home page renders Nav and the (reduced-motion) intro content', async () => {
-  render(
+test('Home page renders the shared site nav and the (reduced-motion) intro content', async () => {
+  const { container } = render(
     <ThemeProvider>
       <Page />
     </ThemeProvider>
   )
+  // The cover lives in the same datasheet world as /about.
+  expect(container.querySelector('.datasheet')).not.toBeNull()
+  expect(screen.getByRole('navigation', { name: 'Sections' })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Dark mode' })).toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'CeeDev' })).toBeInTheDocument()
   expect(
     await screen.findByRole('heading', { level: 1, name: 'CeeDev' }, { timeout: 5000 })
@@ -38,4 +42,7 @@ test('Home page renders Nav and the (reduced-motion) intro content', async () =>
   expect(
     await screen.findByRole('link', { name: 'View My Work' }, { timeout: 5000 })
   ).toBeInTheDocument()
-})
+  // The intro arrives through a dynamic import, and each find above may wait
+  // up to 5s for it; the test's own limit has to outlast those waits, or a
+  // slow, fully parallel run times the test out before the import lands.
+}, 15000)

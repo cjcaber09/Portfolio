@@ -8,6 +8,9 @@ import { fadeOpacity, slideProgress } from './fadeOpacity'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
 import { useMediaQuery } from './useMediaQuery'
 import { homeOneLiners, homeWordmarkName } from '@/data/content'
+import { useTheme } from '@/components/ThemeProvider'
+import { actionPrimary } from '@/components/actions'
+import { ArrowRightIcon } from '@/components/icons'
 import {
   FADE_EDGE,
   ONE_LINER_RANGES,
@@ -21,23 +24,34 @@ const CTA_LABEL = 'View My Work'
 const CTA_HREF = '/about'
 const NARROW_VIEWPORT_QUERY = '(max-width: 639px)'
 // How far a scroll sentence travels while it enters and leaves. Sized for the
-// 48px headline text; a presentation value, so it lives here rather than in
+// headline text; a presentation value, so it lives here rather than in
 // scrollTimeline.ts (which holds only scroll-offset ranges).
 const SLIDE_DISTANCE_PX = 40
 
-// Colours for the highlight text. Both follow the site theme (the `dark` class
-// on <html>) — a fixed light colour like the earlier text-slate-100 is
-// invisible on the light theme's white background.
-//
-// The headline is an emerald gradient clipped to the glyphs: the site's
-// Emerald Deep accent (#0f172a -> #0f766e -> #15803d) on the light theme, and
-// a lighter, brighter run (#f8fafc -> #a7f3d0 -> #34d399) on the dark one.
-// `w-fit` sizes the element to its text, so the gradient spans the words
-// rather than the whole line box.
-const HEADLINE_GRADIENT =
-  'w-fit bg-clip-text text-transparent bg-[linear-gradient(90deg,#0f172a,#0f766e,#15803d)] dark:bg-[linear-gradient(90deg,#f8fafc,#a7f3d0,#34d399)]'
-const SUPPORT_TEXT = 'text-slate-600 dark:text-slate-300'
+// The one-liners are set like the datasheet's display line (DESIGN.md): Archivo
+// at 800, condensed to 72%, solid ink, with the supporting line in ink-2. Both
+// colours are `ds` tokens, so they follow the theme with the rest of the sheet.
+// 52px, 72px from `lg`: the condensed cut runs narrow enough that the longest
+// line balances onto two lines at the 768px canvas widths rather than three.
+const HEADLINE =
+  'text-balance text-[3.25rem] leading-[0.95] font-extrabold tracking-[-0.02em] text-ds-ink [font-stretch:72%] lg:text-[4.5rem]'
+const SUPPORT = 'max-w-[38rem] text-balance text-[1.125rem] leading-[1.6] text-ds-ink-2 md:text-[1.25rem]'
 
+function CallToAction({ className = '' }: { className?: string }) {
+  return (
+    <a href={CTA_HREF} className={`${actionPrimary} ${className}`}>
+      {CTA_LABEL}
+      <ArrowRightIcon className="text-[1rem]" />
+    </a>
+  )
+}
+
+// The cover without the canvas, for reduced motion and phones: the same facts
+// as the animated path, set as the top of a datasheet page. The brand square
+// and CeeDev in the display cut, the name, the one-liners as ruled rows, and
+// the primary action. Being sheet content, it sits on the sheet the way /about
+// does: paper edge to edge below 640px, and from 640px a hairline-bordered
+// paper sheet on the desk with /about's margins.
 function StaticIntro() {
   // absolute inset-0 (not min-h-full): this renders inside app/page.tsx's
   // `relative min-h-0 flex-1` wrapper, whose own `height` CSS property is
@@ -51,23 +65,25 @@ function StaticIntro() {
   // the page) lets content taller than the available space scroll within
   // this box on short phones, without either bug returning.
   return (
-    <section className="absolute inset-0 flex flex-col items-center justify-center gap-6 overflow-y-auto px-6 text-center">
-      <h1 className="text-5xl font-bold text-emerald-700 dark:text-emerald-400">CeeDev</h1>
-      <p className="text-2xl font-bold text-emerald-800 dark:text-emerald-200">{homeWordmarkName}</p>
-      <div className="flex flex-col gap-4">
-        {homeOneLiners.map(({ title, description }) => (
-          <div key={title} className="flex flex-col items-center gap-1">
-            <p className={`text-xl font-bold ${HEADLINE_GRADIENT}`}>{title}</p>
-            <p className={`text-sm ${SUPPORT_TEXT}`}>{description}</p>
-          </div>
-        ))}
+    <section className="absolute inset-0 overflow-y-auto sm:px-6 sm:py-8">
+      <div className="mx-auto flex min-h-full max-w-[75rem] bg-ds-paper sm:border sm:border-ds-rule">
+        <div className="mx-auto flex w-full max-w-[40rem] flex-col justify-center px-5 py-10 sm:px-10">
+          <h1 className="flex items-center gap-3 text-[3.25rem] leading-[0.95] font-extrabold tracking-[-0.02em] [font-stretch:72%]">
+            <span aria-hidden="true" className="size-[0.28em] shrink-0 bg-ds-accent" />
+            CeeDev
+          </h1>
+          <p className="mt-3 text-[1.25rem] font-bold text-ds-ink-2 [font-stretch:90%]">{homeWordmarkName}</p>
+          <ul className="mt-8 border-t border-ds-rule">
+            {homeOneLiners.map(({ title, description }) => (
+              <li key={title} className="border-b border-ds-rule py-4">
+                <p className="text-[1.125rem] leading-snug font-bold">{title}</p>
+                <p className="mt-1 text-[0.9375rem] leading-[1.6] text-ds-ink-2">{description}</p>
+              </li>
+            ))}
+          </ul>
+          <CallToAction className="mt-8 self-start" />
+        </div>
       </div>
-      <a
-        href={CTA_HREF}
-        className="rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
-      >
-        {CTA_LABEL}
-      </a>
     </section>
   )
 }
@@ -97,19 +113,13 @@ function ScrollOffsetBridge({ offsetRef }: { offsetRef: { current: number } }) {
     // eslint-disable-next-line react-hooks/immutability -- see comment above
     el.tabIndex = 0
     el.setAttribute('aria-label', 'Scroll to reveal introduction')
-    // intro-scroll (app/globals.css): transparent scrollbar track, faint thumb.
-    //
-    // The focus ring uses focus-visible:, not focus:. This element is focusable
-    // (tabindex=0) so keyboard users can drive the animation, which means a
-    // plain mouse click on the intro also focuses it — and `focus:` drew a 2px
-    // emerald border around the whole screen on every click. focus-visible
-    // shows the ring only for keyboard focus, which is who needs it.
-    el.classList.add(
-      'intro-scroll',
-      'focus-visible:outline-2',
-      'focus-visible:outline-emerald-400',
-      'focus-visible:outline-offset-[-2px]'
-    )
+    // intro-scroll (app/globals.css): transparent scrollbar track, faint
+    // thumb, and the sheet's green focus ring drawn inside the edge. The ring
+    // is keyboard-only (:focus-visible): the element is focusable so keyboard
+    // users can drive the animation, which means a plain mouse click on the
+    // intro also focuses it, and a ring round the whole screen on every click
+    // would be noise.
+    el.classList.add('intro-scroll')
 
     // Unlike a <textarea> or the document itself, a generic
     // tabindex="0" overflow:auto <div> does not reliably get free
@@ -213,9 +223,9 @@ function ScrollHintIcon() {
       height="38"
       viewBox="0 0 24 38"
       fill="none"
-      className="text-slate-500 dark:text-slate-300"
+      className="text-ds-ink-3"
     >
-      <rect x="1.5" y="1.5" width="21" height="35" rx="10.5" stroke="currentColor" strokeWidth="2" />
+      <rect x="1.5" y="1.5" width="21" height="35" rx="10.5" stroke="currentColor" strokeWidth="1.5" />
       <circle className="scroll-hint-wheel" cx="12" cy="11" r="2.5" fill="currentColor" />
     </svg>
   )
@@ -246,14 +256,9 @@ function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
               range={ONE_LINER_RANGES[index] ?? UNREACHABLE_RANGE}
               slidePx={SLIDE_DISTANCE_PX}
             >
-              {/* Headline: 48px, 64px from the `lg` (1024px) breakpoint. Below
-                  that the 64px headline would wrap to two lines in the 768px
-                  canvas layouts, which is why `lg` and not `md`. */}
-              <div className="flex flex-col items-center gap-4 text-center">
-                <p className={`text-balance text-5xl leading-tight font-bold lg:text-[64px] ${HEADLINE_GRADIENT}`}>
-                  {title}
-                </p>
-                <p className={`max-w-2xl text-lg text-balance md:text-xl ${SUPPORT_TEXT}`}>{description}</p>
+              <div className="flex flex-col items-center gap-5 text-center">
+                <p className={HEADLINE}>{title}</p>
+                <p className={SUPPORT}>{description}</p>
               </div>
             </FadingLine>
           ))}
@@ -271,43 +276,18 @@ function ScrollOverlay({ offsetRef }: { offsetRef: { current: number } }) {
       </div>
       <div className="absolute inset-x-0 bottom-12 flex items-center justify-center px-6">
         <FadingLine offsetRef={offsetRef} range={CTA_RANGE} hideWhenInvisible>
-          <a
-            href={CTA_HREF}
-            className="pointer-events-auto rounded-md bg-[linear-gradient(90deg,#0f766e,#15803d)] px-5 py-3 text-white transition hover:brightness-110"
-          >
-            {CTA_LABEL}
-          </a>
+          <CallToAction className="pointer-events-auto" />
         </FadingLine>
       </div>
     </div>
   )
 }
 
-export function HomeIntro() {
-  const prefersReducedMotion = usePrefersReducedMotion()
-  const isNarrowViewport = useMediaQuery(NARROW_VIEWPORT_QUERY)
-  const showStatic = prefersReducedMotion || isNarrowViewport
+// The canvas path. It reads the site theme (the static path has no need to),
+// so the dots are drawn in the contribution ramp for the desk that's showing.
+function AnimatedIntro() {
+  const { theme } = useTheme()
   const offsetRef = useRef(0)
-
-  // Nudge react-use-measure (used internally by Canvas for sizing) to
-  // re-measure shortly after mount. Canvas is loaded via a client-only
-  // dynamic import, which can resolve and mount before its container's
-  // final layout size is committed; the first ResizeObserver callback can
-  // then report the browser's default 300x150 canvas size and never fire
-  // again on its own. This must key on the SAME condition that decides
-  // whether the Canvas renders at all: crossing the narrow-viewport
-  // breakpoint upward (e.g. rotating a phone from portrait to landscape)
-  // now also mounts a fresh Canvas, and without this effect re-running for
-  // that case too, that path reproduces the same 300x150 bug.
-  useEffect(() => {
-    if (showStatic) return
-    const id = window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
-    return () => window.clearTimeout(id)
-  }, [showStatic])
-
-  if (showStatic) {
-    return <StaticIntro />
-  }
 
   return (
     // absolute inset-0, not h-full: see the comment on StaticIntro's root
@@ -326,7 +306,7 @@ export function HomeIntro() {
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ScrollControls pages={SCROLL_PAGES} damping={0.2}>
           <Suspense fallback={null}>
-            <ParticleText />
+            <ParticleText dark={theme === 'dark'} />
           </Suspense>
           <ScrollOffsetBridge offsetRef={offsetRef} />
         </ScrollControls>
@@ -334,4 +314,28 @@ export function HomeIntro() {
       <ScrollOverlay offsetRef={offsetRef} />
     </div>
   )
+}
+
+export function HomeIntro() {
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const isNarrowViewport = useMediaQuery(NARROW_VIEWPORT_QUERY)
+  const showStatic = prefersReducedMotion || isNarrowViewport
+
+  // Nudge react-use-measure (used internally by Canvas for sizing) to
+  // re-measure shortly after mount. Canvas is loaded via a client-only
+  // dynamic import, which can resolve and mount before its container's
+  // final layout size is committed; the first ResizeObserver callback can
+  // then report the browser's default 300x150 canvas size and never fire
+  // again on its own. This must key on the SAME condition that decides
+  // whether the Canvas renders at all: crossing the narrow-viewport
+  // breakpoint upward (e.g. rotating a phone from portrait to landscape)
+  // now also mounts a fresh Canvas, and without this effect re-running for
+  // that case too, that path reproduces the same 300x150 bug.
+  useEffect(() => {
+    if (showStatic) return
+    const id = window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
+    return () => window.clearTimeout(id)
+  }, [showStatic])
+
+  return showStatic ? <StaticIntro /> : <AnimatedIntro />
 }

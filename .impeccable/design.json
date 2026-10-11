@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-08T00:00:00Z",
+  "generatedAt": "2026-10-11T00:00:00Z",
   "title": "Design System: CeeDev Portfolio Datasheet",
   "extensions": {
     "colorMeta": {
@@ -274,6 +274,21 @@
           "oklch(95% 0.006 255)"
         ]
       },
+      "desk": {
+        "role": "neutral",
+        "displayName": "Desk",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(39% 0 0)",
+          "oklch(51% 0 0)",
+          "oklch(63% 0 0)",
+          "oklch(75% 0 0)",
+          "oklch(87% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
       "desk-dark": {
         "role": "neutral",
         "displayName": "Night Desk",
@@ -288,20 +303,179 @@
           "oklch(87% 0.004 255)",
           "oklch(95% 0.004 255)"
         ]
+      },
+      "desk-dot": {
+        "role": "neutral",
+        "displayName": "Desk Dot",
+        "canonical": "rgba(148, 163, 184, 0.18)",
+        "tonalRamp": [
+          "oklch(15% 0.03 257)",
+          "oklch(27% 0.03 257)",
+          "oklch(39% 0.03 257)",
+          "oklch(51% 0.03 257)",
+          "oklch(63% 0.03 257)",
+          "oklch(75% 0.03 257)",
+          "oklch(87% 0.03 257)",
+          "oklch(95% 0.03 257)"
+        ]
+      },
+      "contribution-light-1": {
+        "role": "primary",
+        "displayName": "Contribution Level 1 (light desk)",
+        "canonical": "oklch(82% 0.06 165)",
+        "tonalRamp": [
+          "oklch(15% 0.06 165)",
+          "oklch(27% 0.06 165)",
+          "oklch(39% 0.06 165)",
+          "oklch(51% 0.06 165)",
+          "oklch(63% 0.06 165)",
+          "oklch(75% 0.06 165)",
+          "oklch(87% 0.06 165)",
+          "oklch(95% 0.06 165)"
+        ]
+      },
+      "contribution-light-2": {
+        "role": "primary",
+        "displayName": "Contribution Level 2 (light desk)",
+        "canonical": "oklch(69% 0.085 165)",
+        "tonalRamp": [
+          "oklch(15% 0.085 165)",
+          "oklch(27% 0.085 165)",
+          "oklch(39% 0.085 165)",
+          "oklch(51% 0.085 165)",
+          "oklch(63% 0.085 165)",
+          "oklch(75% 0.085 165)",
+          "oklch(87% 0.085 165)",
+          "oklch(95% 0.085 165)"
+        ]
+      },
+      "contribution-light-3": {
+        "role": "primary",
+        "displayName": "Contribution Level 3 (light desk)",
+        "canonical": "oklch(57% 0.1 165)",
+        "tonalRamp": [
+          "oklch(15% 0.1 165)",
+          "oklch(27% 0.1 165)",
+          "oklch(39% 0.1 165)",
+          "oklch(51% 0.1 165)",
+          "oklch(63% 0.1 165)",
+          "oklch(75% 0.1 165)",
+          "oklch(87% 0.1 165)",
+          "oklch(95% 0.1 165)"
+        ]
+      },
+      "contribution-light-4": {
+        "role": "primary",
+        "displayName": "Contribution Level 4 (light desk)",
+        "canonical": "oklch(47% 0.1 165)",
+        "tonalRamp": [
+          "oklch(15% 0.1 165)",
+          "oklch(27% 0.1 165)",
+          "oklch(39% 0.1 165)",
+          "oklch(51% 0.1 165)",
+          "oklch(63% 0.1 165)",
+          "oklch(75% 0.1 165)",
+          "oklch(87% 0.1 165)",
+          "oklch(95% 0.1 165)"
+        ]
+      },
+      "contribution-dark-1": {
+        "role": "primary",
+        "displayName": "Contribution Level 1 (night desk)",
+        "canonical": "oklch(34% 0.06 165)",
+        "tonalRamp": [
+          "oklch(15% 0.06 165)",
+          "oklch(27% 0.06 165)",
+          "oklch(39% 0.06 165)",
+          "oklch(51% 0.06 165)",
+          "oklch(63% 0.06 165)",
+          "oklch(75% 0.06 165)",
+          "oklch(87% 0.06 165)",
+          "oklch(95% 0.06 165)"
+        ]
+      },
+      "contribution-dark-2": {
+        "role": "primary",
+        "displayName": "Contribution Level 2 (night desk)",
+        "canonical": "oklch(45% 0.08 165)",
+        "tonalRamp": [
+          "oklch(15% 0.08 165)",
+          "oklch(27% 0.08 165)",
+          "oklch(39% 0.08 165)",
+          "oklch(51% 0.08 165)",
+          "oklch(63% 0.08 165)",
+          "oklch(75% 0.08 165)",
+          "oklch(87% 0.08 165)",
+          "oklch(95% 0.08 165)"
+        ]
+      },
+      "contribution-dark-3": {
+        "role": "primary",
+        "displayName": "Contribution Level 3 (night desk)",
+        "canonical": "oklch(56% 0.095 165)",
+        "tonalRamp": [
+          "oklch(15% 0.095 165)",
+          "oklch(27% 0.095 165)",
+          "oklch(39% 0.095 165)",
+          "oklch(51% 0.095 165)",
+          "oklch(63% 0.095 165)",
+          "oklch(75% 0.095 165)",
+          "oklch(87% 0.095 165)",
+          "oklch(95% 0.095 165)"
+        ]
+      },
+      "contribution-dark-4": {
+        "role": "primary",
+        "displayName": "Contribution Level 4 (night desk)",
+        "canonical": "oklch(68% 0.1 165)",
+        "tonalRamp": [
+          "oklch(15% 0.1 165)",
+          "oklch(27% 0.1 165)",
+          "oklch(39% 0.1 165)",
+          "oklch(51% 0.1 165)",
+          "oklch(63% 0.1 165)",
+          "oklch(75% 0.1 165)",
+          "oklch(87% 0.1 165)",
+          "oklch(95% 0.1 165)"
+        ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "The name on the /about front page only (wdth 72%)."
+        "purpose": "The name on the /about front page (wdth 72%)."
+      },
+      "cover-line": {
+        "displayName": "Cover Line",
+        "purpose": "The display cut at 3.25rem: the cover's one-liners below 1024px and the static cover's CeeDev h1."
+      },
+      "cover-line-lg": {
+        "displayName": "Cover Line (lg)",
+        "purpose": "The cover's one-liners from 1024px."
       },
       "headline": {
         "displayName": "Section Head",
         "purpose": "Numbered section heads, green number first (wdth 82%)."
       },
+      "subtitle": {
+        "displayName": "Subtitle",
+        "purpose": "The professional title on /about and the static cover's name line (wdth 90%)."
+      },
       "title": {
         "displayName": "Entry Title",
-        "purpose": "Role and project titles at 1.125rem; the professional title is 1.25rem at wdth 90%."
+        "purpose": "Role, project, and static-cover one-liner titles."
+      },
+      "title-sm": {
+        "displayName": "Title Small",
+        "purpose": "An education institution; also the em size of icons in action controls."
+      },
+      "cover-support": {
+        "displayName": "Cover Support",
+        "purpose": "The supporting line under each animated one-liner, ink-2, max 38rem."
+      },
+      "cover-support-md": {
+        "displayName": "Cover Support (md)",
+        "purpose": "The supporting line from 768px."
       },
       "body-lead": {
         "displayName": "Body Lead",
@@ -311,9 +485,17 @@
         "displayName": "Body",
         "purpose": "Bullets, descriptions, table values; 65 to 70ch."
       },
+      "action": {
+        "displayName": "Action",
+        "purpose": "Action-strip controls; the same size sets Skills table text, dates, and readout hits."
+      },
       "small": {
         "displayName": "Small",
-        "purpose": "Nav links, controls, row heads, captions, notes, stack lists."
+        "purpose": "Nav links, Dark mode switch, project links, row heads, captions, notes, stack lists."
+      },
+      "fine": {
+        "displayName": "Fine",
+        "purpose": "The readout count (400) and the PDF suffix (700)."
       },
       "label": {
         "displayName": "Label",
@@ -325,7 +507,7 @@
       {
         "name": "colour-step",
         "value": "120ms cubic-bezier(0.4, 0, 0.2, 1)",
-        "purpose": "The only transition: colour, background, border, and decoration on state change."
+        "purpose": "The only transition on the sheet: colour, background, border, and decoration on state change."
       },
       {
         "name": "anchor-scroll",
@@ -335,24 +517,54 @@
       {
         "name": "reduced-motion",
         "value": "transition-duration: 0s",
-        "purpose": "Under prefers-reduced-motion every state change on the sheet is instant."
+        "purpose": "Under prefers-reduced-motion every state change on the sheet is instant, and / renders the static cover."
+      },
+      {
+        "name": "cover-scroll-track",
+        "value": "4 pages, damping 0.2, fade edge 0.06",
+        "purpose": "The / cover's scroll choreography (the one exception to print stillness), animated path only."
+      },
+      {
+        "name": "cover-wordmark",
+        "value": "visible at 0, fades out by 0.32; name assembles over 0 to 0.2",
+        "purpose": "Contribution-grid CeeDev, and the name assembling from its scatter."
+      },
+      {
+        "name": "cover-one-liners",
+        "value": "0.34-0.54, 0.56-0.76, 0.78 on; fade with a 40px slide-up",
+        "purpose": "One-liners rise into place and drift up as they leave."
+      },
+      {
+        "name": "cover-cta",
+        "value": "fades in from 0.84; visibility hidden while invisible",
+        "purpose": "View My Work cannot be clicked or focused until it shows."
+      },
+      {
+        "name": "cover-shimmer",
+        "value": "30s period per dot, own phase",
+        "purpose": "Ambient: each dot briefly steps one contribution level up or down."
+      },
+      {
+        "name": "scroll-hint-wheel",
+        "value": "1.8s ease-in-out infinite, 9px drift with fade",
+        "purpose": "The scroll hint's wheel dot; gone by offset 0.1; stopped under reduced motion."
       }
     ],
     "breakpoints": [
       {
         "name": "sm",
         "value": "640px",
-        "purpose": "Sheet gains border and desk margin; gutters 40px; Features two columns."
+        "purpose": "Sheet gains border and desk margin; gutters 40px; Features two columns; / switches from the static to the animated cover."
       },
       {
         "name": "md",
         "value": "768px",
-        "purpose": "Column heads appear; rows become grids; Projects two columns."
+        "purpose": "Column heads appear; rows become grids; Projects two columns; cover support line 1.25rem."
       },
       {
         "name": "lg",
         "value": "1024px",
-        "purpose": "One-row nav; front page 7/5 split; Stack column; two Skills tables; scroll margin 5rem (7.5rem below)."
+        "purpose": "One-row nav; front page 7/5 split; Stack column; two Skills tables; scroll margin 5rem (7.5rem below); cover lines 4.5rem."
       },
       {
         "name": "xl",
@@ -379,6 +591,14 @@
       "css": ".ds-action-secondary { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid var(--ds-rule, oklch(87% 0.01 255)); border-radius: 2px; background: var(--ds-paper, oklch(99.2% 0.003 250)); color: var(--ds-ink, oklch(21% 0.02 255)); font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-action-icon { display: inline-flex; font-size: 0.875rem; color: var(--ds-ink-3, oklch(50% 0.018 255)); } .ds-action-secondary:hover { border-color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-action-secondary:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
     },
     {
+      "name": "Cover Call to Action",
+      "kind": "button",
+      "refersTo": "action-primary",
+      "description": "The Action Strip's primary on the / cover: View My Work with a trailing right arrow.",
+      "html": "<a class=\"ds-cover-cta\" href=\"/about\">View My Work <svg viewBox=\"0 0 16 16\" width=\"1em\" height=\"1em\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M2.5 8h11M9.5 4l4 4-4 4\"/></svg></a>",
+      "css": ".ds-cover-cta { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid var(--ds-accent, oklch(47% 0.1 165)); border-radius: 2px; background: var(--ds-accent, oklch(47% 0.1 165)); color: var(--ds-accent-ink, oklch(99% 0.01 165)); font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: color 120ms, background-color 120ms, border-color 120ms; } .ds-cover-cta svg { font-size: 1rem; } .ds-cover-cta:hover { background: var(--ds-ink, oklch(21% 0.02 255)); border-color: var(--ds-ink, oklch(21% 0.02 255)); color: var(--ds-paper, oklch(99.2% 0.003 250)); } .ds-cover-cta:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
+    },
+    {
       "name": "Dark Mode Switch",
       "kind": "button",
       "refersTo": "dark-mode-switch",
@@ -390,7 +610,7 @@
       "name": "Table of Contents Nav",
       "kind": "nav",
       "refersTo": "nav",
-      "description": "Sticky paper bar: brand with green square, section links with a 2px green underline on the current one.",
+      "description": "Sticky paper bar shared by / and /about: brand with green square, section links with a 2px green underline on the current one (none on the cover).",
       "html": "<header class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-brand-mark\"></span>CeeDev</a><ul class=\"ds-nav-links\"><li><a href=\"#\">Home</a></li><li><a href=\"#\" aria-current=\"location\">About</a></li><li><a href=\"#\">Experience</a></li><li><a href=\"#\">Skills</a></li></ul></header>",
       "css": ".ds-nav { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; display: flex; align-items: center; gap: 32px; padding: 0 40px; background: var(--ds-paper, oklch(99.2% 0.003 250)); border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-brand { display: flex; align-items: center; gap: 8px; height: 56px; color: var(--ds-ink, oklch(21% 0.02 255)); font-size: 1.125rem; font-weight: 800; font-stretch: 80%; letter-spacing: -0.01em; text-decoration: none; } .ds-brand-mark { width: 12px; height: 12px; background: var(--ds-accent, oklch(47% 0.1 165)); } .ds-nav-links { display: flex; gap: 24px; height: 56px; margin: 0; padding: 0; list-style: none; font-size: 0.8125rem; font-weight: 600; } .ds-nav-links li { display: flex; } .ds-nav-links a { display: flex; align-items: center; border-bottom: 2px solid transparent; color: var(--ds-ink-2, oklch(43% 0.02 255)); text-decoration: none; transition: color 120ms, background-color 120ms, border-color 120ms, text-decoration-color 120ms; } .ds-nav-links a:hover { color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-nav-links a[aria-current] { border-bottom-color: var(--ds-accent, oklch(47% 0.1 165)); color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-nav-links a:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; }"
     },
@@ -433,18 +653,34 @@
       "description": "Ruled competency rows, each led by an 8px solid green square, two columns from 640px.",
       "html": "<div class=\"ds-features\"><p class=\"ds-features-cap\">Features</p><ul><li><span></span>Full-stack web development</li><li><span></span>REST API design</li><li><span></span>Legacy modernization</li><li><span></span>Payments integration</li></ul></div>",
       "css": ".ds-features { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-features-cap { margin: 0; font-size: 0.8125rem; font-weight: 700; } .ds-features ul { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9375rem; } .ds-features li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-features li:nth-child(-n+2) { border-top: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-features li span { width: 8px; height: 8px; flex-shrink: 0; background: var(--ds-accent, oklch(47% 0.1 165)); }"
+    },
+    {
+      "name": "Static Cover",
+      "kind": "custom",
+      "refersTo": "static-cover-sheet",
+      "description": "The / cover for reduced motion and under 640px: brand square and CeeDev in the display cut, the name, ruled one-liners, then the primary action, on the sheet.",
+      "html": "<section class=\"ds-cover\"><div class=\"ds-cover-col\"><h1 class=\"ds-cover-h1\"><span></span>CeeDev</h1><p class=\"ds-cover-name\">Carl John Caber</p><ul class=\"ds-cover-rows\"><li><p class=\"ds-cover-t\">Scalable Applications</p><p class=\"ds-cover-d\">Architected for growth without sacrificing performance.</p></li><li><p class=\"ds-cover-t\">Reliable Infrastructure</p><p class=\"ds-cover-d\">Building resilient systems that keep applications running.</p></li></ul></div></section>",
+      "css": ".ds-cover { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; max-width: 75rem; background: var(--ds-paper, oklch(99.2% 0.003 250)); border: 1px solid var(--ds-rule, oklch(87% 0.01 255)); color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-cover-col { max-width: 40rem; margin: 0 auto; padding: 40px; } .ds-cover-h1 { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 3.25rem; line-height: 0.95; font-weight: 800; letter-spacing: -0.02em; font-stretch: 72%; } .ds-cover-h1 span { width: 0.28em; height: 0.28em; flex-shrink: 0; background: var(--ds-accent, oklch(47% 0.1 165)); } .ds-cover-name { margin: 12px 0 0; font-size: 1.25rem; font-weight: 700; font-stretch: 90%; color: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-cover-rows { margin: 32px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-cover-rows li { padding: 16px 0; border-bottom: 1px solid var(--ds-rule, oklch(87% 0.01 255)); } .ds-cover-t { margin: 0; font-size: 1.125rem; line-height: 1.375; font-weight: 700; } .ds-cover-d { margin: 4px 0 0; font-size: 0.9375rem; line-height: 1.6; color: var(--ds-ink-2, oklch(43% 0.02 255)); }"
+    },
+    {
+      "name": "Scroll Hint",
+      "kind": "custom",
+      "refersTo": "scroll-hint",
+      "description": "24 by 38 mouse outline at a 1.5px stroke in ink-3; its wheel dot drifts down on a 1.8s loop, still under reduced motion.",
+      "html": "<svg class=\"ds-hint\" aria-hidden=\"true\" width=\"24\" height=\"38\" viewBox=\"0 0 24 38\" fill=\"none\"><rect x=\"1.5\" y=\"1.5\" width=\"21\" height=\"35\" rx=\"10.5\" stroke=\"currentColor\" stroke-width=\"1.5\"/><circle class=\"ds-hint-wheel\" cx=\"12\" cy=\"11\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "css": ".ds-hint { color: var(--ds-ink-3, oklch(50% 0.018 255)); } .ds-hint-wheel { animation: ds-hint-wheel 1.8s ease-in-out infinite; } @keyframes ds-hint-wheel { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(9px); } } @media (prefers-reduced-motion: reduce) { .ds-hint-wheel { animation: none; opacity: 1; } }"
     }
   ],
   "narrative": {
     "northStar": "The Component Datasheet",
-    "overview": "The `/about` route is printed, not staged. It is one sheet of paper laid on the site's dot-grid desk, typeset the way a manufacturer sets the front page of a part's datasheet: a green document bar, numbered sections opened by heavy ink rules, hairline-ruled tables with filled header strips, a functional block diagram, and square ten-cell rating meters. Every claim on the sheet points at a numbered entry elsewhere on it, and the typography and numbering exist to make those cross-references legible.\n\nDensity is welcome. Ink is cool and near-neutral, and one manufacturer green does the work an accent does on a printed spec: section numbers, entry numbers, links' primary actions, filled cells and pins, the document bar, and the current-section marker. Archivo is the only face, its width axis doing the job a second family would: condensed and heavy for the name and section heads, narrower still for table heads, regular width for reading. Dark mode is the same sheet inverted for night reading, not a second theme: same chroma, same green lifted only as far as contrast needs, and a neutral desk in place of the site's navy.\n\nThe sheet is still. Nothing enters, fades, or floats. The only movement is a 120ms colour step when a control changes state and the smooth jump to an anchor; under reduced motion both are instant.\n\nThis system governs `/about` only. The `/` route (the animated Three.js intro, its `Nav`, and the round emoji theme button) is a separate, pre-existing surface outside this system and does not follow it. The datasheet tokens resolve only inside the `.datasheet` wrapper, so `/` never inherits them.",
+    "overview": "The site is printed, not staged. `/about` is one sheet of paper laid on the site's dot-grid desk, typeset the way a manufacturer sets the front page of a part's datasheet: a green document bar, numbered sections opened by heavy ink rules, hairline-ruled tables with filled header strips, a functional block diagram, and square ten-cell rating meters. Every claim on the sheet points at a numbered entry elsewhere on it, and the typography and numbering exist to make those cross-references legible. `/` is the datasheet's cover: the same desk, the same bar, and the same face, with the CeeDev wordmark living on the desk as a green contribution grid before the reader turns to `/about`.\n\nDensity is welcome. Ink is cool and near-neutral, and one manufacturer green does the work an accent does on a printed spec: section numbers, entry numbers, links' primary actions, filled cells and pins, the document bar, the current-section marker, and on the cover the four contribution levels of the wordmark. Archivo is the only face, its width axis doing the job a second family would: condensed and heavy for the name, the cover's one-liners, and section heads, narrower still for table heads, regular width for reading. Dark mode is the same sheet inverted for night reading, not a second theme: same chroma, same green lifted only as far as contrast needs, and a neutral night desk in place of the site's old navy on every route.\n\nThe sheet is still. Nothing on it enters, fades, or floats. The only movement on the sheet is a 120ms colour step when a control changes state and the smooth jump to an anchor; under reduced motion both are instant. The cover's scroll choreography (the wordmark, the name assembling, the one-liners, the call to action) is the system's one recorded exception, it runs only on `/` from 640px, and reduced motion replaces it with a still, printed cover.\n\nThe system governs both routes. Its tokens resolve only inside the `.datasheet` wrapper, which `/` and `/about` each put around their content, with Archivo loaded once and shared. The desk (the page ground and its dot grid) sits outside the wrapper and is themed site-wide.",
     "keyCharacteristics": [
-      "One paper sheet (max 75rem) on the dot-grid desk, hairline-bordered from 640px.",
+      "One paper sheet (max 75rem) on the dot-grid desk, hairline-bordered from 640px; the cover's still path uses the same sheet.",
       "Cool ink in three steps plus one green; every text pairing at or above 4.5:1 in both themes.",
       "Archivo only, with width (72% to 90%) and weight (400 to 800) carrying hierarchy.",
       "Numbered sections and numbered entries that the block-diagram trace cross-references.",
       "Hairline rules, filled header strips, square 8px markers; no shadows, gradients, pills, or cards.",
-      "Print stillness: 120ms colour steps only, none under reduced motion."
+      "Print stillness on the sheet: 120ms colour steps only, none under reduced motion. The cover's scroll choreography is the one exception."
     ],
     "rules": [
       {
@@ -479,13 +715,18 @@
       },
       {
         "name": "The Printed Sheet Rule",
-        "body": "If it would not survive being printed, it does not belong: no shadows, gradients, blurs, glows, or translucency on the sheet.",
+        "body": "If it would not survive being printed, it does not belong: no shadows, gradients, blurs, glows, or translucency on the sheet. The cover's scroll fades are motion, not material, and are governed by the Cover Choreography Rule.",
         "section": "elevation"
       },
       {
         "name": "The Square Marker Rule",
         "body": "State and quantity are shown with the same 8px square everywhere: filled green means on, selected, or counted; open (`cell-off`) means off. The meter, the pins, the Stack links, and the Dark mode switch all speak this one mark.",
         "section": "shapes"
+      },
+      {
+        "name": "The Cover Choreography Rule",
+        "body": "Scroll-driven and ambient motion belong to the `/` cover's wordmark sequence alone, run only on the animated path, and are replaced by the static cover under reduced motion or below 640px. No other surface fades, slides, or reveals on scroll.",
+        "section": "components"
       }
     ],
     "dos": [
@@ -494,8 +735,10 @@
       "**Do** present structured facts as hairline-ruled tables with filled header strips or filled row heads.",
       "**Do** show state and quantity with the 8px square marker: green filled for on, `cell-off` for off.",
       "**Do** step hierarchy through Archivo's width axis (72% to 90%) and weights 400 to 800, with tabular numerals for anything comparable.",
-      "**Do** limit motion to 120ms colour steps and anchor scrolls, and make both instant under reduced motion.",
-      "**Do** keep a single primary action per strip, solid green, with secondaries as hairline-bordered ink controls."
+      "**Do** limit motion to 120ms colour steps and anchor scrolls, and make both instant under reduced motion; the `/` cover's scroll choreography is the one recorded exception, with the static cover as its reduced-motion and narrow-screen path.",
+      "**Do** keep a single primary action per strip, solid green, with secondaries as hairline-bordered ink controls.",
+      "**Do** use the shared table-of-contents bar on every route, marking no section current where the page holds none.",
+      "**Do** draw the contribution grid only from the theme's own ramp, so its top level is that theme's accent."
     ],
     "donts": [
       "**Don't** use gradients, shadows, blurs, or translucency on the sheet.",
@@ -503,7 +746,7 @@
       "**Don't** box content entries (roles, projects, skills) into cards; borders belong to tables, the diagram's blocks, the readout, and controls.",
       "**Don't** render skills as continuous progress bars or percentages; ratings are the ten-cell meter beside the numeral.",
       "**Don't** set experience as a vertical timeline with dots and a spine; it is a numbered revision table.",
-      "**Don't** fade, slide, or reveal content on scroll, or animate anything but colour.",
+      "**Don't** fade, slide, or reveal content on scroll, or animate anything but colour, outside the `/` cover's recorded choreography.",
       "**Don't** add a second hue, or a navy or slate ground under the dark sheet.",
       "**Don't** set uppercase tracked labels above headings as kickers; uppercase is for table, block, and readout labels and the document bar.",
       "**Don't** use emoji or text glyphs as icons; use the 16px stroked icon set."

@@ -1,17 +1,17 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import { ThemeProvider } from '@/components/ThemeProvider'
-import { AboutNav } from './AboutNav'
+import { SiteNav } from './SiteNav'
 
-function renderNav() {
+function renderNav({ onCover = false } = {}) {
   return render(
     <ThemeProvider>
-      <AboutNav />
+      <SiteNav onCover={onCover} />
     </ThemeProvider>
   )
 }
 
-describe('AboutNav', () => {
+describe('SiteNav', () => {
   it('leads with a Home link to the hero, then every section, in page order', () => {
     renderNav()
     const nav = screen.getByRole('navigation', { name: 'Sections' })
@@ -31,6 +31,14 @@ describe('AboutNav', () => {
     renderNav()
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'location')
     expect(screen.getByRole('link', { name: 'About' })).not.toHaveAttribute('aria-current')
+  })
+
+  it('marks no section as current on the / cover, which holds none of them', () => {
+    renderNav({ onCover: true })
+    const nav = screen.getByRole('navigation', { name: 'Sections' })
+    within(nav)
+      .getAllByRole('link')
+      .forEach((link) => expect(link).not.toHaveAttribute('aria-current'))
   })
 
   it('links the CeeDev brand back to the animated home page', () => {
