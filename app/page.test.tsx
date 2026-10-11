@@ -35,14 +35,13 @@ test('Home page renders the shared site nav and the (reduced-motion) intro conte
   expect(screen.getByRole('navigation', { name: 'Sections' })).toBeInTheDocument()
   expect(screen.getByRole('button', { name: 'Dark mode' })).toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'CeeDev' })).toBeInTheDocument()
+  // The intro arrives through a dynamic import that pulls in three.js. On a
+  // cold, fully parallel run that import alone has taken over 5s, so the
+  // first find waits up to 15s, and the test's own limit outlasts it. Once
+  // the heading is there the rest of the intro is too.
   expect(
-    await screen.findByRole('heading', { level: 1, name: 'CeeDev' }, { timeout: 5000 })
+    await screen.findByRole('heading', { level: 1, name: 'CeeDev' }, { timeout: 15000 })
   ).toBeInTheDocument()
   expect(screen.getByText(homeWordmarkName)).toBeInTheDocument()
-  expect(
-    await screen.findByRole('link', { name: 'View My Work' }, { timeout: 5000 })
-  ).toBeInTheDocument()
-  // The intro arrives through a dynamic import, and each find above may wait
-  // up to 5s for it; the test's own limit has to outlast those waits, or a
-  // slow, fully parallel run times the test out before the import lands.
-}, 15000)
+  expect(screen.getByRole('link', { name: 'View My Work' })).toBeInTheDocument()
+}, 20000)
