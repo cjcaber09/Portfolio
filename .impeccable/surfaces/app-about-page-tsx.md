@@ -15,7 +15,7 @@ related_targets: []
 
 - Recruiters and hiring managers deciding whether to interview Carl.
 - Action: download the résumé (`/resume.pdf`) or make contact.
-- Proof: roles, project descriptions, Supademo demos, GitHub source, and the owner-supplied Budget Tracker screenshots (React Native Web captures with synthetic data). No imagery exists for any other project, and none is to be invented.
+- Proof: roles, project descriptions, Supademo demos, GitHub source, and owner-supplied screenshots for two projects: Budget Tracker (React Native Web captures with synthetic data) and DesKit (desktop captures of a demo hotel). No imagery exists for any other project, and none is to be invented.
 - Owner's limits: not flashy, not generic, not corporate or stiff. Density is acceptable. Both light and dark themes stay.
 
 ## Direction contract
@@ -40,4 +40,5 @@ Selecting a technology in the block diagram lists exactly which jobs and project
 
 - Three projects remain placeholders with no links. They render as-is.
 - The Experience layout keeps one `<li>` with one `<h3>` per role; the Experience test scopes each role by its heading. (The ATI LLC and Andy Experiences roles merged on 2026-10-12.)
-- 2026-10-17: Budget Tracker joined Projects as the featured entry 4.1, at the owner's choice. It spans the section with a numbered Figure 2 of three real screens (Overview, Transactions, Reports) that follow the page theme. These are the only project images; they come from the app's own portfolio handoff and carry their origin in PNG metadata.
+- 2026-10-17: Budget Tracker joined Projects as the featured entry 4.1, at the owner's choice. It spans the section with a numbered Figure 2 of three real screens (Overview, Transactions, Reports) that follow the page theme. They come from the app's own portfolio handoff and carry their origin in PNG metadata.
+- 2026-10-17: DesKit (the hotel booking SaaS, retitled "DesKit — Multi-Tenant Hotel Booking SaaS") moved up to the second featured entry, 4.2, at the owner's choice, with a Figure 3 of four desktop screens (Dashboard, Reservations, Calendar, Rooms) in a 2×2 grid, one per row on a phone. The app was captured in its dark interface only, so those screens show in both page themes. Budget Tracker and DesKit hold the only project images.

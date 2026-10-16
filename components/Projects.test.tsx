@@ -15,20 +15,26 @@ describe('Projects', () => {
     })
   })
 
-  it('shows a project’s screenshots as a numbered figure after Figure 1, each screen in both themes linking to its full-size capture', () => {
+  it('shows each project’s screenshots as a numbered figure after Figure 1, every capture linking to its full size', () => {
     render(<Projects />)
-    const featured = projects.find((project) => project.figure)!
-    const screens = featured.figure!.screens
-    const figure = screen.getByRole('figure', { name: new RegExp(`^Figure 2\\. ${featured.title}:`) })
+    const withFigures = projects.filter((project) => project.figure)
+    expect(withFigures.length).toBeGreaterThan(1)
 
-    // Both themes are in the markup; CSS shows the one matching the page.
-    screens.forEach((shot) => {
-      expect(within(figure).getAllByAltText(shot.description)).toHaveLength(2)
-      expect(within(figure).getByText(shot.name)).toBeInTheDocument()
+    withFigures.forEach((project, index) => {
+      const escapedTitle = project.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const figure = screen.getByRole('figure', { name: new RegExp(`^Figure ${index + 2}\\. ${escapedTitle}:`) })
+      const screens = project.figure!.screens
+
+      // A screen captured in both themes ships both (CSS shows the one
+      // matching the page); a screen captured in one theme ships just that.
+      screens.forEach((shot) => {
+        expect(within(figure).getAllByAltText(shot.description)).toHaveLength(shot.srcDark ? 2 : 1)
+        expect(within(figure).getByText(shot.name)).toBeInTheDocument()
+      })
+      expect(within(figure).getAllByRole('link').map((link) => link.getAttribute('href'))).toEqual(
+        screens.flatMap((shot) => (shot.srcDark ? [shot.src, shot.srcDark] : [shot.src]))
+      )
     })
-    expect(within(figure).getAllByRole('link').map((link) => link.getAttribute('href'))).toEqual(
-      screens.flatMap((shot) => [shot.light, shot.dark])
-    )
   })
 
   it('never renders literal TODO text', () => {

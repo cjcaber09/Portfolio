@@ -31,18 +31,20 @@ export interface ProjectLink {
   label: string
 }
 
-// One app screen, captured in both themes; the page shows whichever matches
-// its own theme. Paths are under /public.
+// One app screen. `src` is the capture to show; when the app was also captured
+// in its dark theme, `srcDark` holds that one and the page shows whichever
+// matches its own theme. Paths are under /public.
 export interface ProjectScreen {
   name: string
   // Alt text: what the screen shows, for anyone who can't see the image.
   description: string
-  light: string
-  dark: string
+  src: string
+  srcDark?: string
 }
 
-// Real screenshots of a project, shown as a captioned figure beside it. Every
-// screen shares one pixel size, so the figure sets it once.
+// Real screenshots of a project, shown as a captioned figure beside it. The
+// figure frames every screen at one pixel size; a capture a few pixels off it
+// is trimmed at the bottom by the frame.
 export interface ProjectFigure {
   screens: ProjectScreen[]
   width: number
@@ -260,20 +262,70 @@ export const projects: Project[] = [
         {
           name: 'Overview',
           description: 'Budget Tracker Overview screen: the tracked cash total, a stack of account cards, and the month in view.',
-          light: '/projects/budget-tracker/01-overview-light.png',
-          dark: '/projects/budget-tracker/01-overview-dark.png',
+          src: '/projects/budget-tracker/01-overview-light.png',
+          srcDark: '/projects/budget-tracker/01-overview-dark.png',
         },
         {
           name: 'Transactions',
           description: 'Budget Tracker Transactions screen: search, type filters, and the list of recorded activity.',
-          light: '/projects/budget-tracker/02-transactions-light.png',
-          dark: '/projects/budget-tracker/02-transactions-dark.png',
+          src: '/projects/budget-tracker/02-transactions-light.png',
+          srcDark: '/projects/budget-tracker/02-transactions-dark.png',
         },
         {
           name: 'Reports',
           description: 'Budget Tracker Reports screen: monthly report controls and progress against each category budget.',
-          light: '/projects/budget-tracker/03-reports-light.png',
-          dark: '/projects/budget-tracker/03-reports-dark.png',
+          src: '/projects/budget-tracker/03-reports-light.png',
+          srcDark: '/projects/budget-tracker/03-reports-dark.png',
+        },
+      ],
+    },
+  },
+  // DesKit (github.com/cjcaber09/booking-app). Its screenshots are the app's
+  // own desktop captures (booking-app/.screenshots), dark interface only,
+  // signed in to a demo hotel with sample guests; the caption says so.
+  {
+    title: 'DesKit — Multi-Tenant Hotel Booking SaaS',
+    description:
+      'Building a multi-tenant hotel reservations platform with a Node.js/Express + Prisma API and a React/Vite frontend for both guest booking and hotel admin workflows. Postgres (Supabase) enforces tenant isolation via Row-Level Security and a database-level exclusion constraint that prevents double-booking a room, with Zod schemas shared between API validation and frontend forms.',
+    tech: ['React', 'TypeScript', 'Express', 'Prisma', 'PostgreSQL', 'Zod'],
+    links: [
+      {
+        url: 'https://app.supademo.com/demo/cmrmhhh940dyqqm57eawx9chv?utm_source=link',
+        label: 'User-Facing Demo',
+      },
+      {
+        url: 'https://app.supademo.com/demo/cmrmhk97e0e1qqm57nxq2oj4k',
+        label: 'Admin-Facing Demo',
+      },
+    ],
+    figure: {
+      width: 800,
+      height: 500,
+      caption:
+        'Dashboard, Reservations, Calendar, and Rooms in the staff admin app, in its dark interface. Desktop captures of a demo hotel; every guest and booking is sample data.',
+      screens: [
+        {
+          name: 'Dashboard',
+          description:
+            'DesKit Dashboard: today’s arrivals, departures, and occupancy, a chart of reservations by month, and sales totals.',
+          src: '/projects/deskit/02-dashboard.jpg',
+        },
+        {
+          name: 'Reservations',
+          description:
+            'DesKit Reservations: a searchable, status-filtered table of guests with room, check-in and check-out dates, total, booking origin, and status.',
+          src: '/projects/deskit/03-reservations.jpg',
+        },
+        {
+          name: 'Calendar',
+          description: 'DesKit Calendar: a month view of stays by room and guest, colour-coded by reservation status.',
+          src: '/projects/deskit/04-calendar.jpg',
+        },
+        {
+          name: 'Rooms',
+          description:
+            'DesKit Rooms: pending payments and a grid of rooms showing each one’s type and state: available, occupied, or dirty.',
+          src: '/projects/deskit/05-rooms.jpg',
         },
       ],
     },
@@ -298,22 +350,6 @@ export const projects: Project[] = [
     description:
       'Built custom, responsive web applications for freelance clients, translating Figma and Adobe design prototypes into pixel-perfect interfaces.',
     tech: ['React.js', 'PHP', 'Laravel'],
-  },
-  {
-    title: 'Multi-Tenant Hotel Booking SaaS',
-    description:
-      'Building a multi-tenant hotel reservations platform with a Node.js/Express + Prisma API and a React/Vite frontend for both guest booking and hotel admin workflows. Postgres (Supabase) enforces tenant isolation via Row-Level Security and a database-level exclusion constraint that prevents double-booking a room, with Zod schemas shared between API validation and frontend forms.',
-    tech: ['React', 'TypeScript', 'Express', 'Prisma', 'PostgreSQL', 'Zod'],
-    links: [
-      {
-        url: 'https://app.supademo.com/demo/cmrmhhh940dyqqm57eawx9chv?utm_source=link',
-        label: 'User-Facing Demo',
-      },
-      {
-        url: 'https://app.supademo.com/demo/cmrmhk97e0e1qqm57nxq2oj4k',
-        label: 'Admin-Facing Demo',
-      },
-    ],
   },
   {
     title: 'Team Task Management App',
