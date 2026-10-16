@@ -491,7 +491,7 @@
       },
       "small": {
         "displayName": "Small",
-        "purpose": "Nav links, Dark mode switch, project links, row heads, captions (Figure 1., Figure 2.), screen names, notes, stack lists."
+        "purpose": "Nav links, Dark mode switch, project links, row heads, captions (Figure 1., project figures Figure 2. onward), screen names, notes, stack lists."
       },
       "fine": {
         "displayName": "Fine",
@@ -642,9 +642,9 @@
       "name": "Project Figure",
       "kind": "custom",
       "refersTo": "project-figure",
-      "description": "A numbered figure of a project's real screens: three hairline-framed captures that darken to ink on hover, each named, under a bold ink \"Figure N.\" caption.",
+      "description": "A numbered figure of a project's real screens, numbered on from Figure 2 in page order: hairline-framed captures that darken to ink on hover, each named, under a bold ink \"Figure N.\" caption. Portrait (phone) screens sit three across (12px gaps, 20px from 640px); landscape (desktop) screens sit one per row, two across from 640px (20px gaps). Each frame holds the figure's aspect ratio with the capture covering it, anchored to the top. Two-theme screens follow the page theme; single-theme screens show the one capture in every theme.",
       "html": "<figure class=\"ds-pfig\"><ul class=\"ds-pfig-grid\"><li><a href=\"#\"><span class=\"ds-pfig-shot\"></span></a><p>Overview</p></li><li><a href=\"#\"><span class=\"ds-pfig-shot\"></span></a><p>Transactions</p></li><li><a href=\"#\"><span class=\"ds-pfig-shot\"></span></a><p>Reports</p></li></ul><figcaption><b>Figure 2.</b> Budget Tracker: three screens of the app, following the page theme.</figcaption></figure>",
-      "css": ".ds-pfig { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; margin: 0; color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-pfig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0; padding: 0; list-style: none; } .ds-pfig-grid a { display: block; } .ds-pfig-shot { display: block; aspect-ratio: 772 / 1688; border: 1px solid var(--ds-rule, oklch(87% 0.01 255)); background: var(--ds-fill, oklch(95.5% 0.006 255)); transition: border-color 120ms; } .ds-pfig-grid a:hover .ds-pfig-shot { border-color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-pfig-grid a:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; } .ds-pfig-grid p { margin: 8px 0 0; font-size: 0.8125rem; font-weight: 600; } .ds-pfig figcaption { margin-top: 16px; max-width: 65ch; font-size: 0.8125rem; line-height: 1.6; color: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-pfig figcaption b { color: var(--ds-ink, oklch(21% 0.02 255)); }"
+      "css": ".ds-pfig { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; margin: 0; color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-pfig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0; padding: 0; list-style: none; } .ds-pfig-grid a { display: block; } .ds-pfig-shot { display: block; aspect-ratio: 772 / 1688; border: 1px solid var(--ds-rule, oklch(87% 0.01 255)); background: var(--ds-fill, oklch(95.5% 0.006 255)); transition: border-color 120ms; } .ds-pfig-grid.ds-pfig-wide { grid-template-columns: repeat(2, 1fr); } .ds-pfig-wide .ds-pfig-shot { aspect-ratio: 800 / 500; } .ds-pfig-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; } .ds-pfig-grid a:hover .ds-pfig-shot { border-color: var(--ds-ink, oklch(21% 0.02 255)); } .ds-pfig-grid a:focus-visible { outline: 2px solid var(--ds-accent, oklch(47% 0.1 165)); outline-offset: 2px; } .ds-pfig-grid p { margin: 8px 0 0; font-size: 0.8125rem; font-weight: 600; } .ds-pfig figcaption { margin-top: 16px; max-width: 65ch; font-size: 0.8125rem; line-height: 1.6; color: var(--ds-ink-2, oklch(43% 0.02 255)); } .ds-pfig figcaption b { color: var(--ds-ink, oklch(21% 0.02 255)); }"
     },
     {
       "name": "Trace Readout",
