@@ -44,6 +44,9 @@ next-env.d.ts
 .claude/
 .superpowers/
 
+# The editable résumé source stays local; the site serves public/resume.pdf.
+/resume.docx
+
 # Impeccable working files (review captures, question logs, decision inputs,
 # the design hook's cache). Its design records, surfaces/ and design.json, are
 # committed.
