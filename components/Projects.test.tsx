@@ -15,6 +15,22 @@ describe('Projects', () => {
     })
   })
 
+  it('shows a project’s screenshots as a numbered figure after Figure 1, each screen in both themes linking to its full-size capture', () => {
+    render(<Projects />)
+    const featured = projects.find((project) => project.figure)!
+    const screens = featured.figure!.screens
+    const figure = screen.getByRole('figure', { name: new RegExp(`^Figure 2\\. ${featured.title}:`) })
+
+    // Both themes are in the markup; CSS shows the one matching the page.
+    screens.forEach((shot) => {
+      expect(within(figure).getAllByAltText(shot.description)).toHaveLength(2)
+      expect(within(figure).getByText(shot.name)).toBeInTheDocument()
+    })
+    expect(within(figure).getAllByRole('link').map((link) => link.getAttribute('href'))).toEqual(
+      screens.flatMap((shot) => [shot.light, shot.dark])
+    )
+  })
+
   it('never renders literal TODO text', () => {
     render(<Projects />)
     expect(screen.queryByText(/TODO/i)).not.toBeInTheDocument()

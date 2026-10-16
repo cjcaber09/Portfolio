@@ -15,7 +15,7 @@ related_targets: []
 
 - Recruiters and hiring managers deciding whether to interview Carl.
 - Action: download the résumé (`/resume.pdf`) or make contact.
-- Proof: roles, project descriptions, Supademo demos, GitHub source. No project imagery exists, and none is to be invented.
+- Proof: roles, project descriptions, Supademo demos, GitHub source, and the owner-supplied Budget Tracker screenshots (React Native Web captures with synthetic data). No imagery exists for any other project, and none is to be invented.
 - Owner's limits: not flashy, not generic, not corporate or stiff. Density is acceptable. Both light and dark themes stay.
 
 ## Direction contract
@@ -39,4 +39,5 @@ Selecting a technology in the block diagram lists exactly which jobs and project
 ## Unresolved
 
 - Three projects remain placeholders with no links. They render as-is.
-- The ATI LLC and Andy Experiences roles sit on an unmerged branch (`feature/add-ati-llc-experience`). The Experience layout must keep one `<li>` with one `<h3>` per role, so that branch's test keeps passing after merge.
+- The Experience layout keeps one `<li>` with one `<h3>` per role; the Experience test scopes each role by its heading. (The ATI LLC and Andy Experiences roles merged on 2026-10-12.)
+- 2026-10-17: Budget Tracker joined Projects as the featured entry 4.1, at the owner's choice. It spans the section with a numbered Figure 2 of three real screens (Overview, Transactions, Reports) that follow the page theme. These are the only project images; they come from the app's own portfolio handoff and carry their origin in PNG metadata.

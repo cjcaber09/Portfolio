@@ -48,8 +48,9 @@ Practical full-stack breadth proven on real production work, not tutorial projec
 
 - `public/resume.pdf`.
 - Supademo demos and GitHub source links, as listed in `data/content.ts` under `projects`.
+- Budget Tracker screenshots (added 2026-10-17): React Native Web captures of the real app at a 390 × 844 phone viewport, light and dark, with synthetic data, from the project's portfolio handoff (`Budget-management/portfolio`). The site shows Overview, Transactions, and Reports in `public/projects/budget-tracker/`, each cropped 8px at the right edge to remove the browser's scrollbar thumb (app content untouched) and carrying its origin in PNG metadata. They are not native-device captures and establish no App Store release.
 - Experience roles, self-rated skill groups, and education entries, all in `data/content.ts`.
-- Absent, and not to be fabricated: project screenshots or imagery, testimonials, client names beyond the employers listed, metrics or outcomes not stated in the resume, and certifications.
+- Absent, and not to be fabricated: screenshots or imagery for any other project, testimonials, client names beyond the employers listed, metrics or outcomes not stated in the resume, and certifications.
 
 ## Product Principles
 

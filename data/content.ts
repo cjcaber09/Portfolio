@@ -31,11 +31,31 @@ export interface ProjectLink {
   label: string
 }
 
+// One app screen, captured in both themes; the page shows whichever matches
+// its own theme. Paths are under /public.
+export interface ProjectScreen {
+  name: string
+  // Alt text: what the screen shows, for anyone who can't see the image.
+  description: string
+  light: string
+  dark: string
+}
+
+// Real screenshots of a project, shown as a captioned figure beside it. Every
+// screen shares one pixel size, so the figure sets it once.
+export interface ProjectFigure {
+  screens: ProjectScreen[]
+  width: number
+  height: number
+  caption: string
+}
+
 export interface Project {
   title: string
   description: string
   tech: string[]
   links?: ProjectLink[]
+  figure?: ProjectFigure
 }
 
 export interface StackTechnology {
@@ -221,6 +241,43 @@ export const skills: SkillGroup[] = [
 ]
 
 export const projects: Project[] = [
+  // Facts and captures from the project's portfolio handoff (Budget-management/
+  // portfolio/README.md). The screenshots are React Native Web captures with
+  // synthetic fixtures, and the caption says so. Each is cropped from 780 to
+  // 772px wide to drop the browser's scrollbar thumb; the app is untouched.
+  {
+    title: 'Budget Tracker',
+    description:
+      'A mobile budget tracker built with Expo, React Native, TypeScript, and Supabase. Receipt scanning (Gemini structured extraction with a Vision text fallback), monthly category budgets, bills, manually tracked account balances, and spending reports share one phone-focused app with light and dark themes. Money crosses the API as exact decimal strings, and row-level security keeps each owner’s records separate.',
+    tech: ['React Native', 'Expo', 'TypeScript', 'Supabase', 'TanStack Query', 'Gemini'],
+    links: [{ url: 'https://github.com/cjcaber09/budget-app', label: 'View Source' }],
+    figure: {
+      width: 772,
+      height: 1688,
+      caption:
+        'Overview, Transactions, and Reports, shown in the theme this page is using. React Native Web captures at a 390 × 844 phone viewport; every name and amount is synthetic.',
+      screens: [
+        {
+          name: 'Overview',
+          description: 'Budget Tracker Overview screen: the tracked cash total, a stack of account cards, and the month in view.',
+          light: '/projects/budget-tracker/01-overview-light.png',
+          dark: '/projects/budget-tracker/01-overview-dark.png',
+        },
+        {
+          name: 'Transactions',
+          description: 'Budget Tracker Transactions screen: search, type filters, and the list of recorded activity.',
+          light: '/projects/budget-tracker/02-transactions-light.png',
+          dark: '/projects/budget-tracker/02-transactions-dark.png',
+        },
+        {
+          name: 'Reports',
+          description: 'Budget Tracker Reports screen: monthly report controls and progress against each category budget.',
+          light: '/projects/budget-tracker/03-reports-light.png',
+          dark: '/projects/budget-tracker/03-reports-dark.png',
+        },
+      ],
+    },
+  },
   // TODO: replace with real project details, links, and screenshots
   {
     title: 'Legacy IBM i Modernization',

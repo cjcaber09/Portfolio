@@ -275,7 +275,7 @@ Cool-tinted ink on near-white paper with one manufacturer green; dark inverts th
 - **Body lead** (400, 1.125rem, 1.6 to 1.7): the tagline, the About summary, and the Contact lead. Capped at 60 to 65ch (38rem for the tagline).
 - **Body** (400, 0.9375rem, 1.6 to 1.65): role bullets, project descriptions, table values, and the static cover's one-liner descriptions. Capped at 65 to 70ch.
 - **Action** (600, 0.875rem): action-strip controls. The same 0.875rem size sets table text in Skills and dates, education levels, and the trace readout's hits, at reading weights.
-- **Small** (600 to 700, 0.8125rem): nav links, the Dark mode switch, project links, row heads, captions ("Device information", "Features", "Figure 1."), notes, and stack lists.
+- **Small** (600 to 700, 0.8125rem): nav links, the Dark mode switch, project links, row heads, captions ("Device information", "Features", "Figure 1.", and the project figures' "Figure 2."), notes, and stack lists.
 - **Fine** (0.75rem): the readout's count in ink-2 at 400, and the primary action's "PDF" suffix at 700, 80% opacity.
 - **Label** (700, 0.6875rem, 0.06em, width 85%, uppercase): column heads, block names in the diagram, and the readout's Roles and Projects labels. The document bar uses the same cut at 0.08em.
 - **Brand** (800, 1.125rem, width 80%, -0.01em): "CeeDev" in the nav, after a 12px green square.
@@ -296,7 +296,7 @@ The sticky table-of-contents bar matches the sheet's width and is the same on bo
 
 The `/about` front page fills the viewport from 1024px (100dvh less the bar) and splits into a 12-column grid: name, actions, device table, and Features in the left 7; the block diagram and its readout in the right 5. Below 1024px they stack. Features go two columns from 640px.
 
-Tables collapse rather than scroll. Column heads appear only from 768px, where rows become grids: Experience is 11rem / 1fr from 768px, adds an 11rem Stack column from 1024px, and fixes the role column at 38rem from 1280px; Education is 11rem / 9rem / 1fr. Below 768px each row stacks and the Stack column drops under the bullets as an inline "Stack" row. Skills split into two balanced tables from 1024px. Projects go two columns from 768px with a 48px gap.
+Tables collapse rather than scroll. Column heads appear only from 768px, where rows become grids: Experience is 11rem / 1fr from 768px, adds an 11rem Stack column from 1024px, and fixes the role column at 38rem from 1280px; Education is 11rem / 9rem / 1fr. Below 768px each row stacks and the Stack column drops under the bullets as an inline "Stack" row. Skills split into two balanced tables from 1024px. Projects go two columns from 768px with a 48px gap. A project with screenshots spans both columns; from 1024px it splits into 12 columns, its text in 5 and its figure in 7, and below 1024px the figure stacks under the text.
 
 Spacing inside tables is 12px horizontal per cell with 6px to 10px vertical; controls in a strip sit 8px apart.
 
@@ -332,6 +332,9 @@ Ten 8px squares with 2px gaps, filled green up to the self-rating and open beyon
 
 ### Block Diagram
 Figure 1 on the front page. Blocks are 1px ink-bordered paper boxes with 10px padding and a label-type block name; frontend spans the top, server and integrations sit side by side, data below. **Signals** between blocks are 1px ink lines (vertical down, horizontal across) with a small condensed ink-3 label naming what travels on them ("REST · JSON", "APIs", "SQL"). **Pins** are the technologies: 28px-high toggle buttons with an 8px marker and a 0.8125rem semibold name. Unselected pins are ink on paper with an open marker; hover fills the ground and darkens the marker to ink-2. The selected pin is solid green with green-ink text and marker. Exactly one pin is selected (React on load), and a technology no role or project names is not drawn.
+
+### Project Figure
+A project's real screenshots as a numbered figure in the idiom of Figure 1, numbered on from it ("Figure 2." for the first project that carries one). Three screens sit in a 3-column grid with 12px gaps (20px from 640px), each framed by a 1px hairline-rule border that darkens to ink on hover over the 120ms colour step, with its name in semibold Small (0.8125rem) ink below. Every screen exists in both themes and only the capture matching the page's theme is shown, so the figure inverts with the sheet. Each screen links to its full-size capture in a new tab, with a visually hidden note saying so. The figcaption sits 16px below the grid in ink-2 Small at 1.6, capped at 65ch: a bold ink "Figure N." then the project title and the caption. The only project imagery in the system is the owner-supplied Budget Tracker screens; no figure is drawn for a project without real captures.
 
 ### Trace Readout
 A hairline-framed box under the figure caption, announced as a live status. Its head row is a filled strip with the selected technology in bold at 0.9375rem and a count ("Named in 3 roles and 2 projects") at 0.75rem in ink-2. Below, label-type "Roles" and "Projects" lists give each hit as a green tabular entry number in a 28px column and an underlined link to that entry. Links anywhere on the page to `#tech-*` select the matching pin.
@@ -390,7 +393,7 @@ Print stillness on the sheet. The only animated property is colour (backgrounds,
 ### Don't:
 - **Don't** use gradients, shadows, blurs, or translucency on the sheet.
 - **Don't** round anything beyond the 2px control corner; no pills, chips, or tag capsules.
-- **Don't** box content entries (roles, projects, skills) into cards; borders belong to tables, the diagram's blocks, the readout, and controls.
+- **Don't** box content entries (roles, projects, skills) into cards; borders belong to tables, the diagram's blocks, the readout, controls, and the screen frames of a project figure.
 - **Don't** render skills as continuous progress bars or percentages; ratings are the ten-cell meter beside the numeral.
 - **Don't** set experience as a vertical timeline with dots and a spine; it is a numbered revision table.
 - **Don't** fade, slide, or reveal content on scroll, or animate anything but colour, outside the `/` cover's recorded choreography.
