@@ -41,7 +41,8 @@ describe('content data', () => {
       expect(entry.dates.length).toBeGreaterThan(0)
       expect(entry.level.length).toBeGreaterThan(0)
     })
-    expect(education[education.length - 1].school).toBe('Southland College')
+    expect(education[0].school).toBe('Southland College')
+    expect(education[0].degree).toBe('Bachelor of Science in Information Technology')
   })
 
   it('defines three home page highlights, each a headline with a supporting line', () => {

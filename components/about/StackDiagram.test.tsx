@@ -25,14 +25,15 @@ describe('StackDiagram', () => {
     expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'true')
 
     const readout = screen.getByRole('status')
-    const profound = experience.findIndex((role) => role.company === 'Profound Logic')
-    expect(within(readout).getByRole('link', { name: /Profound Logic/ })).toHaveAttribute(
+    const freelance = experience.findIndex((role) => role.company === 'Self-Employed')
+    expect(within(readout).getByRole('link', { name: /Self-Employed/ })).toHaveAttribute(
       'href',
-      '#role-profound-logic-web-developer-it-specialist'
+      '#role-self-employed-freelance-web-developer'
     )
-    expect(within(readout).getByRole('link', { name: /Profound Logic/ })).toHaveTextContent(
-      `2.${profound + 1}`
+    expect(within(readout).getByRole('link', { name: /Self-Employed/ })).toHaveTextContent(
+      `2.${freelance + 1}`
     )
+    expect(within(readout).queryByRole('link', { name: /Profound Logic/ })).not.toBeInTheDocument()
     expect(within(readout).getByRole('link', { name: /Messaging App/ })).toHaveAttribute(
       'href',
       '#project-messaging-app'

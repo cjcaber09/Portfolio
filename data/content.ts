@@ -86,7 +86,7 @@ export const profile: Profile = {
   name: 'Carl John E. Caber',
   title: 'Full-Stack Web Developer',
   tagline:
-    'Building scalable, user-friendly web applications with 5+ years of experience across JavaScript, React, Vue, and Laravel.',
+    'Building scalable, user-friendly web applications with 5+ years of experience across JavaScript, TypeScript, Vue, React, Node.js, and Laravel.',
   email: 'cjcaber09@gmail.com',
   phone: '+63 977 792 6148',
   location: 'Kabankalan City, Negros Island, Philippines',
@@ -95,7 +95,7 @@ export const profile: Profile = {
 }
 
 export const summary =
-  'Web Developer with 5+ years of experience building and maintaining scalable web applications. Skilled in JavaScript, PHP/Laravel, Node.js, Vue.js, and React.js. Experienced in API integrations, frontend UI implementation, and database management. Proficient in translating Figma and Adobe design assets into responsive web interfaces. Adept at working in Linux environments, maintaining production systems, and providing IT support. Strong problem solver with a track record of modernizing legacy systems and delivering user-friendly solutions.'
+  'Web Developer with 5+ years of experience building and maintaining scalable web applications. Skilled in JavaScript, TypeScript, Vue.js, React.js, Node.js, and PHP/Laravel. Experienced in API integrations, frontend UI implementation, and database management. Proficient in translating Figma and Adobe design assets into responsive web interfaces. Adept at working in Linux environments, maintaining production systems, and providing IT support. Strong problem solver with a track record of modernizing legacy systems and delivering user-friendly solutions.'
 
 export const coreCompetencies: string[] = [
   'Full-Stack Web Development',
@@ -125,7 +125,7 @@ export const experience: ExperienceEntry[] = [
     dates: 'April — June 2026',
     bullets: [
       'Contributed to an internal Vue.js tool, integrating Stripe for payment processing.',
-      'Improved the markdown parser to convert AI-generated replies into structured JSON and render them as formatted HTML.',
+      'Improved the markdown parser that turns AI-generated replies into structured JSON and formatted HTML.',
     ],
   },
   {
@@ -133,10 +133,10 @@ export const experience: ExperienceEntry[] = [
     company: 'Profound Logic',
     dates: '2022 — 2026',
     bullets: [
-      'Provide IT support including technical assistance, troubleshooting, and maintenance of internal IBM i systems.',
-      'Transitioned to UI development, modernizing legacy IBM i applications using JavaScript, React.js, and modern web technologies.',
-      'Design and implement responsive, user-friendly web interfaces integrated with backend IBM i services.',
-      'Identify and resolve bugs efficiently through a ticketing system, ensuring system stability and smooth user experience.',
+      'Provided IT support including technical assistance, troubleshooting, and maintenance of internal IBM i systems.',
+      'Transitioned to UI development, modernizing legacy IBM i applications using vanilla JavaScript and internal libraries.',
+      'Designed and implemented responsive, user-friendly web interfaces integrated with backend IBM i services.',
+      'Identified and resolved bugs efficiently through a ticketing system, ensuring system stability and smooth user experience.',
     ],
   },
   {
@@ -334,8 +334,8 @@ export const projects: Project[] = [
   {
     title: 'Legacy IBM i Modernization',
     description:
-      'Modernized legacy IBM i applications by building a responsive React.js front end integrated with existing IBM i backend services, improving usability while preserving core business logic.',
-    tech: ['React.js', 'JavaScript', 'IBM i'],
+      'Modernized legacy IBM i applications by building a responsive front end with vanilla JavaScript and internal libraries, integrated with existing IBM i backend services, improving usability while preserving core business logic.',
+    tech: ['Vanilla JavaScript', 'Internal Libraries', 'IBM i'],
   },
   // TODO: replace with real project details, links, and screenshots
   {
@@ -349,7 +349,7 @@ export const projects: Project[] = [
     title: 'Freelance Client Web Applications',
     description:
       'Built custom, responsive web applications for freelance clients, translating Figma and Adobe design prototypes into pixel-perfect interfaces.',
-    tech: ['React.js', 'PHP', 'Laravel'],
+    tech: ['React', 'PHP', 'Laravel'],
   },
   {
     title: 'Team Task Management App',
@@ -369,21 +369,21 @@ export const projects: Project[] = [
 
 export const education: EducationEntry[] = [
   {
-    level: 'Elementary',
-    school: 'Esteban R. Abada Memorial School - EAST',
-    dates: '2002 — 2008',
-  },
-  {
-    level: 'Highschool',
-    school: 'Southland College',
-    dates: '2008 — 2012',
-  },
-  {
     level: 'College',
     school: 'Southland College',
     degree: 'Bachelor of Science in Information Technology',
     dates: '2014 — 2018',
     location: 'Kabankalan City, Negros Island, Philippines',
+  },
+  {
+    level: 'High School',
+    school: 'Southland College',
+    dates: '2008 — 2012',
+  },
+  {
+    level: 'Elementary',
+    school: 'Esteban R. Abada Memorial School - EAST',
+    dates: '2002 — 2008',
   },
 ]
 
