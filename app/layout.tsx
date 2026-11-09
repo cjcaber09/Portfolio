@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Carl John E. Caber — Full-Stack Web Developer',
   description:
-    'Portfolio of Carl John E. Caber, a Full-Stack Web Developer specializing in React, Vue, Node.js, and Laravel.',
+    'Portfolio of Carl John E. Caber, a Full-Stack Web Developer working across Vue, React, Node.js, and Laravel.',
 }
 
 const themeInitScript = `

@@ -21,7 +21,7 @@ Success is a recruiter reaching out, or moving Carl to interview, because the pa
 
 ## Positioning
 
-Practical full-stack breadth proven on real production work, not tutorial projects. The range (React, Vue, Laravel, Node/Express, PostgreSQL/MySQL) is backed by delivery: modernizing legacy IBM i applications with a React front end, Stripe integration and an AI-reply markdown parser on an internal Vue.js tool, multi-marketplace inventory integrations (Amazon MWS, eBay, Newegg, Walmart), and a multi-tenant hotel booking SaaS with row-level-security tenant isolation.
+Practical full-stack breadth proven on real production work, not tutorial projects. The range (React, Vue, Laravel, Node/Express, PostgreSQL/MySQL) is backed by delivery: modernizing legacy IBM i applications with a vanilla JavaScript front end built on internal libraries, Stripe integration and an AI-reply markdown parser on an internal Vue.js tool, multi-marketplace inventory integrations (Amazon MWS, eBay, Newegg, Walmart), and a multi-tenant hotel booking SaaS with a React front end and row-level-security tenant isolation.
 
 ## Operating Context
 
