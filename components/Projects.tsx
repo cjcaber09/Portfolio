@@ -1,17 +1,19 @@
 import { projects, type Project } from '@/data/content'
 import { DatasheetSection } from './about/DatasheetSection'
 import { ProjectFigure } from './about/ProjectFigure'
+import { PlayDemoButton, ProjectMedia } from './about/ProjectMedia'
 import { SECTION_NUMBER, entryNumber, projectAnchorId } from './about/sections'
+import { projectLinkPrimary, projectLinkSecondary } from './actions'
 import { ExternalIcon } from './icons'
-
-const linkBase =
-  'inline-flex h-9 items-center gap-1.5 rounded-[2px] border px-3 text-[0.8125rem] font-semibold no-underline transition-colors duration-[120ms]'
 
 // Figure 1 is the block diagram on the front page; project figures follow it.
 const FIRST_PROJECT_FIGURE = 2
 
-// An entry's text: numbered title, description, stack, and links.
+// An entry's text: numbered title, description, stack, and links. A demo
+// video, when the figure has one, is the entry's first (primary) action.
 function ProjectText({ project, index }: { project: Project; index: number }) {
+  const demo = project.figure?.video !== undefined
+  const links = project.links ?? []
   return (
     <>
       <h3 className="flex items-baseline gap-3 text-[1.125rem] leading-snug font-bold">
@@ -30,19 +32,20 @@ function ProjectText({ project, index }: { project: Project; index: number }) {
           </span>
         ))}
       </p>
-      {project.links && project.links.length > 0 && (
+      {(demo || links.length > 0) && (
         <ul className="mt-5 flex flex-wrap gap-2">
-          {project.links.map((link, linkIndex) => (
+          {demo && (
+            <li>
+              <PlayDemoButton figure={project.figure!} />
+            </li>
+          )}
+          {links.map((link, linkIndex) => (
             <li key={link.url}>
               <a
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={
-                  linkIndex === 0
-                    ? `${linkBase} border-ds-accent bg-ds-accent text-ds-accent-ink hover:border-ds-ink hover:bg-ds-ink hover:text-ds-paper`
-                    : `${linkBase} border-ds-rule text-ds-ink hover:border-ds-ink`
-                }
+                className={linkIndex === 0 && !demo ? projectLinkPrimary : projectLinkSecondary}
               >
                 {link.label}
                 <ExternalIcon className="text-[0.8125rem]" />
@@ -81,16 +84,18 @@ export function Projects() {
               id={id}
               className="border-t border-ds-ink py-6 md:col-span-2 lg:grid lg:grid-cols-12 lg:gap-x-12"
             >
-              <div className="lg:col-span-5">
-                <ProjectText project={project} index={index} />
-              </div>
-              <ProjectFigure
-                figure={project.figure}
-                number={figureNumber}
-                title={project.title}
-                id={id}
-                className="mt-8 lg:col-span-7 lg:mt-1"
-              />
+              <ProjectMedia figure={project.figure} number={figureNumber} title={project.title}>
+                <div className="lg:col-span-5">
+                  <ProjectText project={project} index={index} />
+                </div>
+                <ProjectFigure
+                  figure={project.figure}
+                  number={figureNumber}
+                  title={project.title}
+                  id={id}
+                  className="mt-8 lg:col-span-7 lg:mt-1"
+                />
+              </ProjectMedia>
             </div>
           )
         })}

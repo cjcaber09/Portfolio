@@ -27,6 +27,23 @@ Object.defineProperty(window, 'IntersectionObserver', {
   value: IntersectionObserverMock,
 })
 
+// jsdom has <dialog> but not its showModal or close; the project media
+// viewer opens one. These do what the viewer relies on: set `open`, and fire
+// `close` when closed.
+HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
+  this.open = true
+}
+HTMLDialogElement.prototype.close = function close(this: HTMLDialogElement) {
+  if (!this.open) return
+  this.open = false
+  this.dispatchEvent(new Event('close'))
+}
+
+// jsdom does not implement media playback; the viewer's chapter list plays
+// the demo video from a chapter.
+HTMLMediaElement.prototype.play = () => Promise.resolve()
+HTMLMediaElement.prototype.pause = () => {}
+
 // jsdom does not implement matchMedia; the / cover reads it for
 // prefers-reduced-motion and the narrow-viewport check.
 Object.defineProperty(window, 'matchMedia', {

@@ -42,6 +42,24 @@ export interface ProjectScreen {
   srcDark?: string
 }
 
+// A chapter of a project's demo video: where it starts (m:ss) and what it shows.
+export interface VideoChapter {
+  time: string
+  label: string
+}
+
+// A project's demo video, the last item of its figure. It plays in the media
+// viewer, from `poster` until pressed, so the file loads only when played.
+export interface ProjectVideo {
+  name: string
+  // What the video shows, for anyone who can't see it.
+  description: string
+  src: string
+  poster: string
+  duration: string
+  chapters: VideoChapter[]
+}
+
 // Real screenshots of a project, shown as a captioned figure beside it. The
 // figure frames every screen at one pixel size; a capture a few pixels off it
 // is trimmed at the bottom by the frame.
@@ -50,6 +68,7 @@ export interface ProjectFigure {
   width: number
   height: number
   caption: string
+  video?: ProjectVideo
 }
 
 export interface Project {
@@ -244,21 +263,43 @@ export const skills: SkillGroup[] = [
 
 export const projects: Project[] = [
   // Facts from the project's portfolio brief (helpme/portfolio/helpme/
-  // project-brief.md). Its repository is private, so the entry links the demo
-  // video instead. The captures are stills from that demo, which runs in mock
-  // mode with sample data, and the caption says so; the caption bar the video
-  // burns in is cropped off.
+  // project-brief.md). Its repository is private, so the entry has no source
+  // link; its demo video plays in the figure instead. The captures are stills
+  // from that demo, which runs in mock mode with sample data, and the caption
+  // says so; the caption bar the video burns in is cropped off. The video's
+  // poster is its title card, and its chapters are the brief's YouTube ones.
   {
     title: 'helpme — Cover Letters You Can Check',
     description:
       'A local AI app that writes short cover letters from your own resume. Every claim cites the resume line or portfolio project it came from, and code, not the model, checks each citation before the letter is shown. A Claude-powered job-search agent searches job boards, ranks postings against the resume, and splits out sites that charge applicants to apply and postings that ask for a fee. It runs locally with a hard monthly budget and a log of every AI call.',
     tech: ['TypeScript', 'React', 'Node.js', 'Express', 'Claude API', 'Zod'],
-    links: [{ url: '/projects/helpme/helpme-demo.mp4', label: 'Demo Video' }],
     figure: {
       width: 1600,
       height: 790,
       caption:
-        'Job results, a posting flagged for asking a fee, a letter with every claim cited, and the match check pausing a weak fit. Desktop captures in mock mode; every name, job, letter and result is sample data.',
+        'Job results, a posting flagged for asking a fee, a letter with every claim cited, the match check pausing a weak fit, and the full demo. Desktop captures in mock mode; every name, job, letter and result is sample data.',
+      video: {
+        name: 'Demo video',
+        description: 'Every feature of helpme in a 5 minute 58 second demo, with captions in the picture and no audio.',
+        src: '/projects/helpme/helpme-demo.mp4',
+        poster: '/projects/helpme/helpme-poster.jpg',
+        duration: '5:58',
+        chapters: [
+          { time: '0:00', label: 'Intro' },
+          { time: '0:25', label: 'Resumes' },
+          { time: '0:54', label: 'Writing tone' },
+          { time: '1:22', label: 'Portfolio' },
+          { time: '1:45', label: 'Find jobs: search' },
+          { time: '2:21', label: 'Find jobs: results' },
+          { time: '2:53', label: 'Write a letter' },
+          { time: '3:31', label: 'Check the letter' },
+          { time: '4:13', label: 'Match check' },
+          { time: '4:46', label: 'Applications' },
+          { time: '4:59', label: 'Settings' },
+          { time: '5:22', label: 'Activity and cost' },
+          { time: '5:42', label: 'Wrap-up' },
+        ],
+      },
       screens: [
         {
           name: 'Job results',
@@ -282,6 +323,46 @@ export const projects: Project[] = [
           description:
             'Match check pausing a letter at 71% match against an 80% threshold, with Continue writing, Try another resume, and Stop.',
           src: '/projects/helpme/04-match-check.jpg',
+        },
+      ],
+    },
+  },
+  // Costify (github.com/cjcaber09/costify, private, so no link). Facts from
+  // its portfolio handoff (flutter/cost_calculator/portfolio/README.md), which
+  // rules out claiming users, revenue or a store release: the app isn't on
+  // any store. The captures are 1080 × 2274 Android emulator shots of its
+  // debug preview build with synthetic data, light and dark, unmodified.
+  {
+    title: 'Costify — Food Costing and Counter App',
+    description:
+      'A Flutter app for small food businesses, built on Supabase. It turns recipes and supplier prices into an exact cost per serving, and runs the counter (orders, pre-orders, stock, purchasing, and staff) with permissions and an audit trail enforced in the database. Every change goes through one retry-safe PostgreSQL function, money uses exact decimal arithmetic, and staff receive only the cost data their permissions allow.',
+    tech: ['Flutter', 'Dart', 'Riverpod', 'Supabase', 'PostgreSQL'],
+    figure: {
+      width: 1080,
+      height: 2274,
+      caption:
+        'Product costs, New order, and Inventory, shown in the theme this page is using. Android emulator captures of the app’s debug preview build; every business, product, customer, and amount is synthetic.',
+      screens: [
+        {
+          name: 'Product costs',
+          description:
+            'Costify product page for Chicken rice bowls: selling price ₱120.00, cost per bowl ₱80.00, estimated profit, a 33.33% margin and 50.00% markup, and the ingredient cost breakdown.',
+          src: '/projects/costify/04-product-costs-light.png',
+          srcDark: '/projects/costify/04-product-costs-dark.png',
+        },
+        {
+          name: 'New order',
+          description:
+            'Costify New order grid with descriptions shown, a pre-order badge, one item added, and a running total of ₱120.00 with Save order and Complete now.',
+          src: '/projects/costify/02-new-order-light.png',
+          srcDark: '/projects/costify/02-new-order-dark.png',
+        },
+        {
+          name: 'Inventory',
+          description:
+            'Costify Inventory: stock levels for each ingredient with In stock, Low stock and Out of stock labels, and chicken held for a pre-order.',
+          src: '/projects/costify/05-inventory-light.png',
+          srcDark: '/projects/costify/05-inventory-dark.png',
         },
       ],
     },

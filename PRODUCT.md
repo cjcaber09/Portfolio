@@ -26,7 +26,7 @@ Practical full-stack breadth proven on real production work, not tutorial projec
 ## Operating Context
 
 - Resume: a downloadable PDF (`public/resume.pdf`), linked from the hero.
-- Project proof: interactive Supademo walkthroughs (user-facing and admin-facing) for the hotel booking SaaS; public GitHub source for the task management app and the messaging app.
+- Project proof: interactive Supademo walkthroughs (user-facing and admin-facing) for the hotel booking SaaS; public GitHub source for the task management app and the messaging app; helpme's demo video, which plays in the project media viewer on `/about`.
 - Contact: email, phone, LinkedIn, and GitHub.
 - Light and dark themes, toggled from the nav; the visitor's choice persists.
 
@@ -51,7 +51,9 @@ Practical full-stack breadth proven on real production work, not tutorial projec
 - Budget Tracker screenshots (added 2026-10-17): React Native Web captures of the real app at a 390 × 844 phone viewport, light and dark, with synthetic data, from the project's portfolio handoff (`Budget-management/portfolio`). The site shows Overview, Transactions, and Reports in `public/projects/budget-tracker/`, each cropped 8px at the right edge to remove the browser's scrollbar thumb (app content untouched) and carrying its origin in PNG metadata. They are not native-device captures and establish no App Store release.
 - Experience roles, self-rated skill groups, and education entries, all in `data/content.ts`.
 - DesKit (the hotel booking SaaS) screenshots (added 2026-10-17): the app's own desktop captures of its staff admin app, dark interface only, signed in to a demo hotel with sample guests (`booking-app/.screenshots`). The site shows Dashboard, Reservations, Calendar, and Rooms in `public/projects/deskit/`, unmodified, each carrying its origin in JPEG metadata.
-- Absent, and not to be fabricated: screenshots or imagery for any project other than Budget Tracker and DesKit, testimonials, client names beyond the employers listed, metrics or outcomes not stated in the resume, and certifications.
+- helpme screenshots and demo video (added 2026-11-27): from the project's portfolio brief (`helpme/portfolio/helpme`). The demo is the brief's web-size 16:9 video (5:58, captions in the picture, no audio), recorded in mock mode with sample data, in `public/projects/helpme/` with its title-card frame as the poster. The four stills are frames of that demo with its caption bar cropped off. The repository is private, so the entry has no source link.
+- Costify screenshots (added 2026-11-28): from the project's portfolio handoff (`flutter/cost_calculator/portfolio`). Android emulator captures (1080 × 2274) of the app's debug preview build with synthetic data, light and dark, unmodified, in `public/projects/costify/`: Product costs, New order, and Inventory. The app is not on any store, and the handoff rules out claiming users, revenue, or a release. The repository is private, so the entry has no link.
+- Absent, and not to be fabricated: screenshots or imagery for any project other than helpme, Costify, Budget Tracker, and DesKit, testimonials, client names beyond the employers listed, metrics or outcomes not stated in the resume, and certifications.
 
 ## Product Principles
 
