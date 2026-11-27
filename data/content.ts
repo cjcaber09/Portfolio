@@ -243,6 +243,49 @@ export const skills: SkillGroup[] = [
 ]
 
 export const projects: Project[] = [
+  // Facts from the project's portfolio brief (helpme/portfolio/helpme/
+  // project-brief.md). Its repository is private, so the entry links the demo
+  // video instead. The captures are stills from that demo, which runs in mock
+  // mode with sample data, and the caption says so; the caption bar the video
+  // burns in is cropped off.
+  {
+    title: 'helpme — Cover Letters You Can Check',
+    description:
+      'A local AI app that writes short cover letters from your own resume. Every claim cites the resume line or portfolio project it came from, and code, not the model, checks each citation before the letter is shown. A Claude-powered job-search agent searches job boards, ranks postings against the resume, and splits out sites that charge applicants to apply and postings that ask for a fee. It runs locally with a hard monthly budget and a log of every AI call.',
+    tech: ['TypeScript', 'React', 'Node.js', 'Express', 'Claude API', 'Zod'],
+    links: [{ url: '/projects/helpme/helpme-demo.mp4', label: 'Demo Video' }],
+    figure: {
+      width: 1600,
+      height: 790,
+      caption:
+        'Job results, a posting flagged for asking a fee, a letter with every claim cited, and the match check pausing a weak fit. Desktop captures in mock mode; every name, job, letter and result is sample data.',
+      screens: [
+        {
+          name: 'Job results',
+          description:
+            'helpme Find jobs results: a Senior Frontend Engineer posting highlighted with a 90% fit score, the reason it fits, and Write letter, Save, Applied and Dismiss buttons.',
+          src: '/projects/helpme/01-job-results.jpg',
+        },
+        {
+          name: 'Fee flag',
+          description:
+            'The “Asks applicants to pay: be careful” group, flagging a sample posting that requires a $25 registration fee.',
+          src: '/projects/helpme/02-fee-flag.jpg',
+        },
+        {
+          name: 'Cited letter',
+          description: 'A sample cover letter marked “All claims cited” beside the job description it was written for.',
+          src: '/projects/helpme/03-cited-letter.jpg',
+        },
+        {
+          name: 'Match check',
+          description:
+            'Match check pausing a letter at 71% match against an 80% threshold, with Continue writing, Try another resume, and Stop.',
+          src: '/projects/helpme/04-match-check.jpg',
+        },
+      ],
+    },
+  },
   // Facts and captures from the project's portfolio handoff (Budget-management/
   // portfolio/README.md). The screenshots are React Native Web captures with
   // synthetic fixtures, and the caption says so. Each is cropped from 780 to
