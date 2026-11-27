@@ -15,7 +15,7 @@ describe('Projects', () => {
     })
   })
 
-  it('shows each project’s screenshots as a numbered figure after Figure 1, every capture linking to its full size', () => {
+  it('shows each project’s media as a numbered figure after Figure 1, naming every screen and the demo video', () => {
     render(<Projects />)
     const withFigures = projects.filter((project) => project.figure)
     expect(withFigures.length).toBeGreaterThan(1)
@@ -23,17 +23,12 @@ describe('Projects', () => {
     withFigures.forEach((project, index) => {
       const escapedTitle = project.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       const figure = screen.getByRole('figure', { name: new RegExp(`^Figure ${index + 2}\\. ${escapedTitle}:`) })
-      const screens = project.figure!.screens
-
-      // A screen captured in both themes ships both (CSS shows the one
-      // matching the page); a screen captured in one theme ships just that.
-      screens.forEach((shot) => {
-        expect(within(figure).getAllByAltText(shot.description)).toHaveLength(shot.srcDark ? 2 : 1)
+      project.figure!.screens.forEach((shot) => {
         expect(within(figure).getByText(shot.name)).toBeInTheDocument()
       })
-      expect(within(figure).getAllByRole('link').map((link) => link.getAttribute('href'))).toEqual(
-        screens.flatMap((shot) => (shot.srcDark ? [shot.src, shot.srcDark] : [shot.src]))
-      )
+      if (project.figure!.video) {
+        expect(within(figure).getByText(project.figure!.video.name)).toBeInTheDocument()
+      }
     })
   })
 

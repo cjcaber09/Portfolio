@@ -58,7 +58,10 @@
   caret-color: var(--ds-accent);
 }
 
-.dark .datasheet {
+/* The project media viewer is the night desk in both themes: screens read
+   best on it, and a light capture still shows as it was captured. */
+.dark .datasheet,
+.datasheet .media-viewer {
   --ds-paper: oklch(17.5% 0.005 255);
   --ds-fill: oklch(21.5% 0.005 255);
   --ds-ink: oklch(94% 0.004 255);
@@ -68,6 +71,15 @@
   --ds-accent: oklch(68% 0.1 165);
   --ds-accent-ink: oklch(17.5% 0.005 255);
   --ds-cell-off: oklch(30% 0.006 255);
+}
+
+.datasheet .media-viewer {
+  --viewer-desk: oklch(13% 0.004 255);
+  background: var(--viewer-desk);
+}
+
+.datasheet .media-viewer::backdrop {
+  background: oklch(13% 0.004 255);
 }
 
 .datasheet ::selection {

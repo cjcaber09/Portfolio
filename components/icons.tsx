@@ -56,6 +56,38 @@ export function ArrowRightIcon(props: SVGProps<SVGSVGElement>) {
   )
 }
 
+export function ArrowLeftIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Icon {...props}>
+      <path d="M13.5 8h-11M6.5 4l-4 4 4 4" />
+    </Icon>
+  )
+}
+
+export function CloseIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Icon {...props}>
+      <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" />
+    </Icon>
+  )
+}
+
+export function PlayIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Icon {...props}>
+      <path d="M4.5 3v10l8.5-5z" />
+    </Icon>
+  )
+}
+
+export function ExpandIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Icon {...props}>
+      <path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10" />
+    </Icon>
+  )
+}
+
 export function ArrowDownIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <Icon {...props}>
